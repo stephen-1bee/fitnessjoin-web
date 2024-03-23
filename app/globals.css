@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* font import */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Quicksand:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200;0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;0,8..60,800;0,8..60,900;1,8..60,200;1,8..60,300;1,8..60,400;1,8..60,500;1,8..60,600;1,8..60,700;1,8..60,800;1,8..60,900&display=swap");
+body {
+  font-family: "Nunito", sans-serif !important;
+}
+* {
+  font-family: "Nunito", sans-serif !important;
+}
+html {
+  font-family: "Nunito", sans-serif !important;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+.intro-title {
+  animation: slide 1s alternate forwards;
+}
+
+.intro-desc {
+  animation: slide 2s alternate forwards;
+}
+
+@keyframes slide {
+  from {
+    transform: translateY(-80px);
+  }
+  to {
+    transform: translateY(10px);
+  }
+}
+.prop-btn {
+  background-color: #113e21;
+}
+
+.prop-btn:hover {
+  background-color: #0b3219 !important;
+}
+
+.splash {
+  /* background-color: white !important;
+  z-index: 0 !important; */
+}
+
+/* .mobile-nav{
+  z-index: 1 !important;
+  background-color: white !important;
+} */
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+}
+
+.trainerImg {
+  background-image: url("/public/trainer.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.userImg {
+  background-image: url("/user.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.iconContainer {
+  animation: slideInFromTop 0.85s ease-in-out;
+}
+
+.active {
+  background-color: #eefef6;
+  padding-left: 30px;
+}
+
+.home {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 1)),
+    url("/fresh.jpg") center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.myImg {
+  border-top-right-radius: 30px !important;
+}
+
+.back-arrow {
+  animation: left-move 1s infinite alternate;
+}
+
+@keyframes left-move {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(0px);
+  }
+}
+
+.photoDetail {
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+
+.myForm,
+.trainer-login {
+  border-top-right-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.myGradient {
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+}
+
+.infoBox {
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+}
+
+.m-box:hover h2 {
+  color: #183642;
+}
+
+.m-box:hover p {
+  color: #183642;
+}
