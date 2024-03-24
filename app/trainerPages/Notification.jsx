@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import FrownOutlined from "@ant-design/icons"
 
 const Notification = () => {
   let trainer_center_id
@@ -42,7 +41,7 @@ const Notification = () => {
 
   return (
     <div>
-      <div className="w-[250px] shadow-md py-6 flex items-center bg-[#fdf9f0]  justify-center rounded-lg">
+      <div className="w-[250px] shadow-md py-6 flex items-center bg-[#fdf9f0] justify-center rounded-lg">
         {notification.length > 0 ? (
           <div className="flex flex-col gap-5">
             {notification.map((notice) => (
@@ -57,9 +56,8 @@ const Notification = () => {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-3 mt-5">
-            <p>{notification.length}</p>
-            <FrownOutlined />
+          <div className="flex flex-col items-center gap-3 mt-3">
+            🥲
             <p>No Notifications yet</p>
           </div>
         )}

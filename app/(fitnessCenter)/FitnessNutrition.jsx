@@ -65,7 +65,9 @@ const FitnessNutrition = () => {
           food: null,
           time_of_day: null,
           category: null,
+          isApproved: true,
           center_id: storedFitnessId,
+          creator_type: "center",
         }),
       }
 
@@ -98,14 +100,14 @@ const FitnessNutrition = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/nutritions/all/center/${storedFitnessId}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          setNutritionList(result.nutritions)
-          console.log(result.nutritions)
+          setNutritionList(result.admin)
+          console.log(result.admin)
         })
         .catch((error) => console.log("error", error))
     } catch (error) {

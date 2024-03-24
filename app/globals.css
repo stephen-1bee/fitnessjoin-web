@@ -84,7 +84,8 @@ html {
 }
 
 .active {
-  background-color: #eefef6;
+  background-color: #08a88a;
+  color: white;
   padding-left: 30px;
 }
 

@@ -258,14 +258,17 @@ const Center = () => {
                     key={center._id}
                     onClick={() => handleFitnessCenterClick(center._id)}
                   >
-                    <div
-                      className="h-[300px]"
-                      style={{
-                        backgroundImage: `url(http://localhost:1000/${center.photo})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    />
+                    <div className="h-[300px] relative">
+                      {center.photo ? (
+                        <img
+                          src={`http://localhost:1000/${center.photo}`}
+                          alt="Center Photo"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-black opacity-20"></div>
+                      )}
+                    </div>
                     <div className="p-10">
                       <h2 className="font-semibold text-lg gap-2">
                         {center.name}

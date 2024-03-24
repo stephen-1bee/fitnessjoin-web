@@ -263,13 +263,6 @@ const page = () => {
             <MenuOutlined className="boder border-[#ccc] border-2 p-1 rounded cursor-pointer" />
           </div>
           <div className="flex items-center gap-4">
-            <Dropdown
-              overlay={notificationUi}
-              trigger={["hover"]}
-              className="cursor-pointer"
-            >
-              <NotificationsOutlined />
-            </Dropdown>
             <h1 className="items-ceter justify-end">Welcome, {trainerName}</h1>
 
             <Dropdown
@@ -278,6 +271,14 @@ const page = () => {
               className="cursor-pointer"
             >
               <CaretDownFilled />
+            </Dropdown>
+            <Dropdown
+              overlay={notificationUi}
+              placement="bottomRight"
+              trigger={["hover"]}
+              className="cursor-pointer"
+            >
+              <NotificationsOutlined />
             </Dropdown>
           </div>
         </div>

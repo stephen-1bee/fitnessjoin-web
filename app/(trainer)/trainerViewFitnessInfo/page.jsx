@@ -107,17 +107,19 @@ const Page = () => {
           )}
         </div>
         <div className="w-full lg:w-1/2">
-          {center ? (
-            <div className="bg-white p-6 rounded-lg shadow ml-[-2rem]">
-              <Image
-                width={500}
-                height={400}
-                alt="img"
-                src={
-                  center ? `http://localhost:1000/${center.photo}` : "no photo"
-                }
-                className="rounded-md photoDetail w-full object-fit"
-              />
+          {center.photo ? (
+            <div className="bg-white p-6 rounded-lg shadow ml-[-2rem] relative">
+              {center.photo ? (
+                <Image
+                  width={500}
+                  height={400}
+                  alt="Center Photo"
+                  src={`http://localhost:1000/${center.photo}`}
+                  className="rounded-md w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-black opacity-50" />
+              )}
             </div>
           ) : (
             <Skeleton active />

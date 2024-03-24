@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Button,
   message,
@@ -12,7 +12,7 @@ import {
   Upload,
   Space,
   Tag,
-} from "antd";
+} from "antd"
 import {
   EditOutlined,
   EyeOutlined,
@@ -20,40 +20,40 @@ import {
   UploadOutlined,
   CheckOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import moment from "moment";
-import { CategoryOutlined, ArrowRight } from "@mui/icons-material";
-import TextArea from "antd/es/input/TextArea";
-import { useEffect } from "react";
-import { toast, Toaster } from "react-hot-toast";
+} from "@ant-design/icons"
+import moment from "moment"
+import { CategoryOutlined, ArrowRight } from "@mui/icons-material"
+import TextArea from "antd/es/input/TextArea"
+import { useEffect } from "react"
+import { toast, Toaster } from "react-hot-toast"
 
 const FitnessSessions = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [trainerSession, setTrainerSession] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTIme, setEndTime] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [trainerSession, setTrainerSession] = useState([])
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
+  const [startTime, setStartTime] = useState("")
+  const [endTIme, setEndTime] = useState("")
 
-  const [isEdithModal, setIsEdithModal] = useState(false);
-  const [loading, setloading] = useState(false);
-  const [allSession, setAllSessions] = useState([]);
+  const [isEdithModal, setIsEdithModal] = useState(false)
+  const [loading, setloading] = useState(false)
+  const [allSession, setAllSessions] = useState([])
 
   // format date function
   const formatteDate = (date) => {
-    return moment(date).format("dddd, MMMM D, YYYY");
-  };
+    return moment(date).format("dddd, MMMM D, YYYY")
+  }
   // format time
   const formattedTime = (time) => {
-    return moment(time, "HH:mm:ss").format("hh:mm A");
-  };
+    return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
 
   // getting fitness id from the fitnessCenter
-  let storedFitnessId;
+  let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
-    storedFitnessId = sessionStorage.getItem("fitnessCenterId");
+    storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
   // handle preview
@@ -63,7 +63,7 @@ const FitnessSessions = () => {
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/sessions/delete/${sessionid}`,
@@ -72,23 +72,23 @@ const FitnessSessions = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "session deleted successfully") {
-            toast.success(result.msg);
-            getAllSessions();
-            getTrainerSession();
+            toast.success(result.msg)
+            getAllSessions()
+            getTrainerSession()
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
-          console.log(result);
-        });
+          console.log(result)
+        })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const updateConfirm = (e) => {
-    console.log(e);
-    message.success("Session Plan successfully Updated");
-  };
+    console.log(e)
+    message.success("Session Plan successfully Updated")
+  }
 
   // const searchInput = (
   //   <Input.Search className="w-[300px]" placeholder="Search name" />
@@ -96,7 +96,7 @@ const FitnessSessions = () => {
 
   const handleCancel = (e) => {
     // Handle cancel logic if needed
-  };
+  }
 
   const addSession = async () => {
     if (
@@ -107,12 +107,12 @@ const FitnessSessions = () => {
       !startTime ||
       !endTIme
     ) {
-      return toast.error("All field are required");
+      return toast.error("All field are required")
     }
     try {
-      setloading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setloading(true)
+      var myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       var raw = JSON.stringify({
         title: title,
@@ -124,33 +124,36 @@ const FitnessSessions = () => {
         center_id: storedFitnessId,
         isApproved: true,
         creator_type: "center",
-      });
+      })
 
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
-      fetch("http://localhost:1000/api/v1/sessions/create", requestOptions)
+      await fetch(
+        "http://localhost:1000/api/v1/sessions/create",
+        requestOptions
+      )
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "session added successfully") {
-            toast.success(result.msg);
-            getAllSessions();
-            setloading(false);
-            console.log(result);
-            setIsModalVisible(false);
+            toast.success(result.msg)
+            getAllSessions()
+            setloading(false)
+            console.log(result)
+            setIsModalVisible(false)
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
-        });
+        })
     } catch (err) {
-      console.log(err);
-      toast.error(err);
+      console.log(err)
+      toast.error(err)
     }
-  };
+  }
 
   // get all sessions by center id
   const getAllSessions = async () => {
@@ -158,7 +161,7 @@ const FitnessSessions = () => {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/sessions/center-sessions/${storedFitnessId}`,
@@ -166,14 +169,14 @@ const FitnessSessions = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setAllSessions(result.center);
-          console.log(result.center);
+          setAllSessions(result.center)
+          console.log(result.center)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // get all trainer sessions
   const getTrainerSession = async () => {
@@ -181,7 +184,7 @@ const FitnessSessions = () => {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/sessions/trainer-sessions/${storedFitnessId}`,
@@ -189,49 +192,49 @@ const FitnessSessions = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setTrainerSession(result.trainer);
-          console.log(result.trainer);
+          setTrainerSession(result.trainer)
+          console.log(result.trainer)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   useEffect(() => {
-    getAllSessions();
-    getTrainerSession();
-  }, []);
+    getAllSessions()
+    getTrainerSession()
+  }, [])
 
-  const [preview, setpreview] = useState([]);
-  const [isViewModal, setisViewModal] = useState(false);
+  const [preview, setpreview] = useState([])
+  const [isViewModal, setisViewModal] = useState(false)
   const handlePreview = (info) => {
-    setisViewModal(true);
-    setpreview(info);
-  };
+    setisViewModal(true)
+    setpreview(info)
+  }
   const deleteCancel = (e) => {
-    console.log(e);
-  };
+    console.log(e)
+  }
 
   const handleToggleAcceptance = (sessionId, isApproved) => {
     const requestOptions = {
       method: "PUT",
       redirect: "follow",
-    };
+    }
 
     const endpoint = isApproved
       ? `http://localhost:1000/api/v1/sessions/disapprove/${sessionId}`
-      : `http://localhost:1000/api/v1/sessions/approve/${sessionId}`;
+      : `http://localhost:1000/api/v1/sessions/approve/${sessionId}`
 
     fetch(endpoint, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log(result);
-        getTrainerSession();
+        console.log(result)
+        getTrainerSession()
       })
       .catch((error) => {
-        console.log("error", error);
-      });
-  };
+        console.log("error", error)
+      })
+  }
 
   const column = [
     {
@@ -304,7 +307,7 @@ const FitnessSessions = () => {
         </Space>
       ),
     },
-  ];
+  ]
 
   const columnT = [
     {
@@ -387,7 +390,7 @@ const FitnessSessions = () => {
         </Space>
       ),
     },
-  ];
+  ]
 
   return (
     <div className="min-h-screen gap-5 ">
@@ -652,7 +655,7 @@ const FitnessSessions = () => {
         </div>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default FitnessSessions;
+export default FitnessSessions
