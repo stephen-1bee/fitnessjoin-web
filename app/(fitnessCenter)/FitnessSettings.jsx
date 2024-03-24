@@ -7,6 +7,7 @@ import { toast, Toaster } from "react-hot-toast"
 const FitnessSettings = () => {
   const [admin, setAdmin] = useState([])
   const [isOpened, setIsOpened] = useState(false) // State to manage isOpened switch
+  const [isNotificationOpened, setIsNotificaitionOpened] = useState(false) // State to manage isOpened switch
 
   let centerId
   // retrieve admin id
@@ -34,8 +35,7 @@ const FitnessSettings = () => {
     }
   }
 
-  const onChange = (checked) => {
-    // Modified onChange function to handle switch state
+  const onChangeOpen = async (checked) => {
     const requestOptions = {
       method: "PUT",
       redirect: "follow",
@@ -45,20 +45,46 @@ const FitnessSettings = () => {
       ? `http://localhost:1000/api/v1/admins/open/${centerId}`
       : `http://localhost:1000/api/v1/admins/close/${centerId}`
 
-    fetch(endpoint, requestOptions)
+    await fetch(endpoint, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (result.msg === "Profile opended successfully") {
           toast.success(result.msg)
           console.log(`switch to ${checked}`)
-          console.log(result)
+          console.log(result.msg)
         } else {
           toast.success("Profile closed successfully")
         }
       })
       .catch((error) => console.error(error))
 
-    setIsOpened(checked) // Update the isOpened state
+    setIsOpened(checked)
+  }
+
+  const onChangeNotification = async (checked) => {
+    const requestOptions = {
+      method: "PUT",
+      redirect: "follow",
+    }
+
+    const endpoint = checked
+      ? `http://localhost:1000/api/v1/admins/notification/on/${centerId}`
+      : `http://localhost:1000/api/v1/admins/notification/off/${centerId}`
+
+    await fetch(endpoint, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.msg === "notification has been turned on") {
+          toast.success(result.msg)
+          console.log(`switch to ${checked}`)
+          console.log(result.msg)
+        } else {
+          toast.success("notification has been turned off")
+        }
+      })
+      .catch((error) => console.error(error))
+
+    setIsNotificaitionOpened(checked)
   }
 
   useEffect(() => {
@@ -85,27 +111,15 @@ const FitnessSettings = () => {
           {" "}
           {/* Added key prop */}
           <div className="mt-10 flex gap-8 items-center">
-            <h1 className="text-xl">Opened</h1>
-            <Switch defaultChecked={isOpened} onChange={onChange} />
-          </div>
-          <div className="mt-10 flex gap-8 items-center">
-            <h1 className="text-xl">Allow Registration</h1>{" "}
-            {/* Corrected typo */}
-            <Switch
-              defaultChecked={ad.allowRegistration}
-              onChange={(checked) =>
-                handleAllowRegistrationChange(checked, ad.id)
-              }
-            />{" "}
-            {/* Assume ad.allowRegistration represents the corresponding state */}
+            <h1 className="text-xl">Open Registration</h1>
+            <Switch defaultChecked={isOpened} onChange={onChangeOpen} />
           </div>
           <div className="mt-10 flex gap-8 items-center">
             <h1 className="text-xl">Notifications</h1>
             <Switch
-              defaultChecked={ad.notifications}
-              onChange={(checked) => handleNotificationsChange(checked, ad.id)}
-            />{" "}
-            {/* Assume ad.notifications represents the corresponding state */}
+              defaultChecked={isNotificationOpened}
+              onChange={onChangeNotification}
+            />
           </div>
         </div>
       ))}
