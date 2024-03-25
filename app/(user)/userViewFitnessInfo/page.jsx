@@ -2,9 +2,13 @@
 import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import { Email, LocationOn, Phone } from "@mui/icons-material"
+import {
+  ArrowLeft,
+  EmailOutlined,
+  LocationOnOutlined,
+} from "@mui/icons-material"
 import { Skeleton, Spin, Tag } from "antd"
-import { FrownOutlined } from "@ant-design/icons"
+import { PhoneOutlined, FrownOutlined } from "@ant-design/icons"
 
 const handleRating = (rate) => {
   const stars = []
@@ -51,10 +55,18 @@ const Page = () => {
       console.error(err)
     }
   }, [])
-
+  const moveBack = () => {
+    window.history.back()
+  }
   return (
     <main className="min-h-screen flex justify-center items-center bg-[#f9fafd]">
       <div className="container mx-auto flex flex-col-reverse lg:flex-row gap-12 items-center p-4">
+        <div
+          className="bg-black rounded-full items-center absolute top-5 left-[45px] cursor-pointer"
+          onClick={() => moveBack()}
+        >
+          <ArrowLeft className="text-white" />
+        </div>
         <div className="w-full lg:w-1/2 p-6 lg:p-24 bg-white shadow-lg infoBox mr-[-2rem]">
           <h1 className="text-gray-700">Welcome to</h1>
           {loading ? (
@@ -67,14 +79,14 @@ const Page = () => {
                 {!center.desc ? "No decsription" : center.desc}
               </p>
               <p className="text-[#183642]">
-                <LocationOn className="mr-2" /> {center.location}
+                <LocationOnOutlined className="mr-2" /> {center.location}
               </p>
               <p className="text-[#183642] mb-1">
-                <Email className="mr-2" />
+                <EmailOutlined className="mr-2" />
                 {center.email}
               </p>
-              <p className="text-[#183642] mb-2">
-                <Phone className="mr-2" />
+              <p className="text-[#183642] mb-2 items-center gap-3">
+                <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
                 {center.phone}
               </p>
               <p>

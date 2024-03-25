@@ -1,69 +1,69 @@
-"use client";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Input } from "antd";
-import React, { useState } from "react";
-import Image from "next/image";
-import { Toaster, toast } from "react-hot-toast";
-import Link from "next/link";
+"use client"
+import { LockOutlined, UserOutlined } from "@ant-design/icons"
+import { Input } from "antd"
+import React, { useState } from "react"
+import Image from "next/image"
+import { Toaster, toast } from "react-hot-toast"
+import Link from "next/link"
 
 const page = () => {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  const [iscenterId, setCenterId] = useState("");
-  const [centerName, setCenterName] = useState("");
+  const [iscenterId, setCenterId] = useState("")
+  const [centerName, setCenterName] = useState("")
 
   // store fitness id
   if (typeof sessionStorage !== "undefined") {
-    sessionStorage.setItem("fitnessCenterId", iscenterId);
-    sessionStorage.setItem("centerName", centerName);
+    sessionStorage.setItem("fitnessCenterId", iscenterId)
+    sessionStorage.setItem("centerName", centerName)
   }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
-      return toast.error("All fields are required");
+      return toast.error("All fields are required")
     }
     try {
-      setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setLoading(true)
+      var myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       var raw = JSON.stringify({
         email: email,
         password: password,
-      });
+      })
 
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       await fetch("http://localhost:1000/api/v1/admins/login", requestOptions)
         .then((response) => response.json())
         .then((result) => {
           if (!email || !password) {
-            toast.error("all fields are required");
+            toast.error("all fields are required")
           } else if (result.msg === "login successful") {
-            toast.success(result.msg);
-            setLoading(false);
-            location.href = "/centerModule";
-            setCenterId(result.admin._id);
-            setCenterName(result.admin.name);
-            console.log(result.admin);
+            toast.success(result.msg)
+            setLoading(false)
+            location.href = "/centerModule"
+            setCenterId(result.admin._id)
+            setCenterName(result.admin.name)
+            console.log(result.admin)
           } else {
-            toast.error(result.message);
-            setLoading(false);
+            toast.error(result.message)
+            setLoading(false)
           }
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen home">
@@ -84,7 +84,7 @@ const page = () => {
           <Input
             prefix={<UserOutlined className="scale-x-[-1]" />}
             placeholder="vvu@gmail.com"
-            className="w-[350px] h-12 rounded-full pl-5"
+            className="w-[350px] h-12 rounded-full pl-5 outline-black"
             onChange={(e) => setEmail(e.target.value)}
           />
 
@@ -92,7 +92,7 @@ const page = () => {
           <Input.Password
             prefix={<LockOutlined />}
             placeholder="password"
-            className="w-[350px] h-12 rounded-full pl-5"
+            className="w-[350px] h-12 rounded-full pl-5 outline-none"
             onChange={(e) => setPassword(e.target.value)}
           />
 
@@ -123,10 +123,10 @@ const page = () => {
       </div>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default page;
+export default page
 
 {
   /* <div className="flex items-center justify-center min-h-screen home" */

@@ -331,13 +331,13 @@ const FitnessMembers = () => {
       </div>
 
       <div className="lg:flex-row flex-col flex lg:gap-18 gap-10 ">
-        <div className="flex flex-col">
-          <form className="">{searchInput}</form>
+        <div className="flex flex-col w-full mt-5">
           <Table columns={columns} dataSource={allUsers} />
         </div>
         <div>
-          <div className="bg-white ring-1 ring-[#ccc] shadow h-[400px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[85px] rounded-md">
+          <div className="bg-white ring-1 ring-[#ccc] shadow h-[500px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[18px] rounded-md">
             <h1 className="text-2xl font-semibold mb-2">New Users</h1>
+            <div className="border-b bg-gray-400 mb-10" />
             {newUsers?.length >= 1 ? (
               <div className="flex flex-col gap-2">
                 {newUsers.map((user) => (
@@ -357,7 +357,7 @@ const FitnessMembers = () => {
             ) : (
               <div className="flex gap-2 flex-col items-center">
                 <FrownOutlined className="m-auto" />
-                <h1>No Users</h1>
+                <h1>No new Users signed up today</h1>
               </div>
             )}
           </div>

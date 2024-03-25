@@ -1,8 +1,14 @@
 "use client"
-import { Email, LocationOn, Phone, SearchRounded } from "@mui/icons-material"
+import {
+  Phone,
+  SearchRounded,
+  ArrowLeft,
+  EmailOutlined,
+  LocationOnOutlined,
+} from "@mui/icons-material"
+import { PhoneOutlined } from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
 import { Skeleton, Spin, Tag } from "antd"
-import Image from "next/image"
 
 const handleRating = (rate) => {
   const stars = []
@@ -90,12 +96,22 @@ const Center = () => {
     setSearchResults(filteredResults)
   }
 
+  const moveBack = () => {
+    window.history.back()
+  }
+
   return (
     <div className="bg-[#edf1f7] min-h-screen flex flex-col items-center gap-5 w-full">
       <div className="w-full h-[50vh] home flex flex-col justify-center items-center">
         <div className="text-center">
+          <div
+            className="bg-white rounded-full items-center absolute top-5 left-[45px] cursor-pointer"
+            onClick={() => moveBack()}
+          >
+            <ArrowLeft />
+          </div>
           <h1 className="font-bold text-5xl mb-2 text-white">
-            Browse the range of Fitness Centers
+            Browse the range of Fitness Centerss
           </h1>
           <p className="text-[#cfcfcf] text-lg">
             Register with your preferred fitness center today
@@ -145,10 +161,10 @@ const Center = () => {
                       {result.name}
                     </h2>
                     <p className="text-gray-500 ">
-                      <LocationOn className="mr-2" /> {result.location}
+                      <LocationOnOutlined className="mr-2" /> {result.location}
                     </p>
                     <p className="text-gray-500  mb-1">
-                      <Email className="mr-2" />
+                      <EmailOutlined className="mr-2" />
                       {result.email}
                     </p>
                     <p className="text-gray-500 mb-2">
@@ -209,14 +225,15 @@ const Center = () => {
                             {recommend.name}
                           </h2>
                           <p className="text-white text-sm mt-2">
-                            <LocationOn className="mr-2" /> {recommend.location}
+                            <LocationOnOutlined className="mr-2" />{" "}
+                            {recommend.location}
                           </p>
                           <p className="text-white mb-1">
-                            <Email className="mr-2" />
+                            <EmailOutlined className="mr-2" />
                             {recommend.email}
                           </p>
                           <p className="text-white mb-2">
-                            <Phone className="mr-2" />
+                            <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
                             {recommend.phone}
                           </p>
                           <p>
@@ -274,14 +291,15 @@ const Center = () => {
                         {center.name}
                       </h2>
                       <p className="text-gray-500 ">
-                        <LocationOn className="mr-2" /> {center.location}
+                        <LocationOnOutlined className="mr-2" />{" "}
+                        {center.location}
                       </p>
                       <p className="text-gray-500  mb-1">
-                        <Email className="mr-2" />
+                        <EmailOutlined className="mr-2" />
                         {center.email}
                       </p>
-                      <p className="text-gray-500 mb-2">
-                        <Phone className="mr-2" />
+                      <p className="text-gray-500 mb-2 items-center flex gap-4">
+                        <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
                         {center.phone}
                       </p>
                       <p>

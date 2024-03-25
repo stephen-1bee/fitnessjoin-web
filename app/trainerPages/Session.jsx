@@ -3,8 +3,8 @@ import {
   EditOutlined,
   EyeOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
-import { ArrowRight, ResetTvSharp } from "@mui/icons-material";
+} from "@ant-design/icons"
+import { ArrowRight, ResetTvSharp } from "@mui/icons-material"
 import {
   Button,
   message,
@@ -18,30 +18,30 @@ import {
   Upload,
   Space,
   Tag,
-} from "antd";
-import TextArea from "antd/es/input/TextArea";
-import moment from "moment";
-import React, { useState, useEffect } from "react";
-import toast from "react-hot-toast";
+} from "antd"
+import TextArea from "antd/es/input/TextArea"
+import moment from "moment"
+import React, { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 
 const Session = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [loading, setloading] = useState(false);
-  const [addModal, setaddModal] = useState(false);
-  const [pendingSession, setPendingSession] = useState([]);
-  const [approvedSession, setApprovedSession] = useState([]);
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
+  const [startTime, setStartTime] = useState("")
+  const [endTime, setEndTime] = useState("")
+  const [loading, setloading] = useState(false)
+  const [addModal, setaddModal] = useState(false)
+  const [pendingSession, setPendingSession] = useState([])
+  const [approvedSession, setApprovedSession] = useState([])
 
   // get trainer id
-  let trainer_id;
-  let trainer_center_id;
+  let trainer_id
+  let trainer_center_id
   if (typeof sessionStorage !== "undefined") {
-    trainer_center_id = sessionStorage.getItem("trainerCenterId");
-    trainer_id = sessionStorage.getItem("trainerId");
+    trainer_center_id = sessionStorage.getItem("trainerCenterId")
+    trainer_id = sessionStorage.getItem("trainerId")
   }
 
   // handle add session
@@ -54,12 +54,12 @@ const Session = () => {
       !startDate ||
       !endTime
     ) {
-      return toast.error("All fields are required");
+      return toast.error("All fields are required")
     }
     try {
-      setloading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setloading(true)
+      var myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       var raw = JSON.stringify({
         title: title,
@@ -72,14 +72,14 @@ const Session = () => {
         trainer_id: trainer_id,
         isApproved: false,
         creator_type: "trainer",
-      });
+      })
 
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       await fetch(
         "http://localhost:1000/api/v1/sessions/create",
@@ -88,22 +88,22 @@ const Session = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "session added successfully") {
-            toast.success(result.msg);
-            getPendingSession();
-            setloading(false);
-            console.log(result);
-            setaddModal(false);
+            toast.success(result.msg)
+            getPendingSession()
+            setloading(false)
+            console.log(result)
+            setaddModal(false)
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
-        });
+        })
     } catch (err) {
-      console.log(err);
-      toast.error(err);
+      console.log(err)
+      toast.error(err)
     }
-  };
+  }
 
-  console.log(`trainer center id : ${trainer_center_id}`);
+  console.log(`trainer center id : ${trainer_center_id}`)
 
   // delete sesison
   const handleDelete = async (sessionid) => {
@@ -111,7 +111,7 @@ const Session = () => {
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/sessions/delete/${sessionid}`,
@@ -120,26 +120,26 @@ const Session = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "session deleted successfully") {
-            toast.success(result.msg);
-            getPendingSession();
+            toast.success(result.msg)
+            getPendingSession()
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
-          console.log(result);
-        });
+          console.log(result)
+        })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // format date function
   const formatteDate = (date) => {
-    return moment(date).format("dddd, MMMM D, YYYY");
-  };
+    return moment(date).format("dddd, MMMM D, YYYY")
+  }
   // format time
   const formattedTime = (time) => {
-    return moment(time, "HH:mm:ss").format("hh:mm A");
-  };
+    return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
 
   const column = [
     {
@@ -214,7 +214,7 @@ const Session = () => {
         </Space>
       ),
     },
-  ];
+  ]
 
   // get pending sessions
   const getPendingSession = async () => {
@@ -222,7 +222,7 @@ const Session = () => {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/sessions/pending/${trainer_id}`,
@@ -230,14 +230,14 @@ const Session = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setPendingSession(result.pending_sessions);
-          console.log(result.pending_sessions);
+          setPendingSession(result.pending_sessions)
+          console.log(result.pending_sessions)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // get approved session
   const getApprovedSession = async () => {
@@ -245,7 +245,7 @@ const Session = () => {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/sessions/approved/${trainer_id}`,
@@ -253,19 +253,19 @@ const Session = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setApprovedSession(result.approved_sessions);
-          console.log(result.approved_sessions);
+          setApprovedSession(result.approved_sessions)
+          console.log(result.approved_sessions)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   useEffect(() => {
-    getApprovedSession();
-    getPendingSession();
-  }, []);
+    getApprovedSession()
+    getPendingSession()
+  }, [])
 
   return (
     <div>
@@ -281,7 +281,7 @@ const Session = () => {
         <div className="flex gap-3">
           <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow-md">
             <h1 className="">
-              {pendingSession ? pendingSession?.length : "0"}
+              {approvedSession ? approvedSession?.length : "0"}
             </h1>
           </div>
           <h1 className="text-lg font-semibold p-2">Approved Sesisons</h1>
@@ -368,7 +368,7 @@ const Session = () => {
         </Form>
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default Session;
+export default Session

@@ -1,6 +1,6 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { FrownOutlined } from "@ant-design/icons";
+"use client"
+import React, { useState, useEffect } from "react"
+import { FrownOutlined } from "@ant-design/icons"
 import {
   Table,
   Input,
@@ -10,7 +10,7 @@ import {
   Form,
   Popconfirm,
   message,
-} from "antd";
+} from "antd"
 import {
   DeleteOutlined,
   PlusOutlined,
@@ -18,44 +18,44 @@ import {
   EditOutlined,
   EyeOutlined,
   UserOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 
-import { Toaster, toast } from "react-hot-toast";
-import { ArrowRight, FitnessCenterOutlined } from "@mui/icons-material";
+import { Toaster, toast } from "react-hot-toast"
+import { ArrowRight, FitnessCenterOutlined } from "@mui/icons-material"
 
 const FitnessTrainers = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [trainersData, setTrainersData] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [form] = Form.useForm();
-  const [loading, setloading] = useState(false);
-  const [isViewModal, setisViewModal] = useState(false);
-  const [isEdithModal, setIsEdithModal] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [trainersData, setTrainersData] = useState([])
+  const [searchText, setSearchText] = useState("")
+  const [form] = Form.useForm()
+  const [loading, setloading] = useState(false)
+  const [isViewModal, setisViewModal] = useState(false)
+  const [isEdithModal, setIsEdithModal] = useState(false)
 
   // getting fitness id from the fitnessCenter
-  let storedFitnessId;
+  let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
-    storedFitnessId = sessionStorage.getItem("fitnessCenterId");
+    storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
   const deleteConfirm = (e) => {
-    console.log(e);
-    message.success("Trainer successfully Deleted");
-  };
+    console.log(e)
+    message.success("Trainer successfully Deleted")
+  }
 
   const deleteCancel = (e) => {
-    console.log(e);
-  };
+    console.log(e)
+  }
 
   const updateConfirm = (e) => {
-    console.log(e);
-    message.success("Trainer successfully Updated");
-  };
+    console.log(e)
+    message.success("Trainer successfully Updated")
+  }
 
   const updateCancel = (e) => {
-    console.log(e);
-    message.error("Click on No");
-  };
+    console.log(e)
+    message.error("Click on No")
+  }
 
   // get all trainers by center id
   const fetchTrainersData = async () => {
@@ -63,7 +63,7 @@ const FitnessTrainers = () => {
       var requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/trainers/all/center/${storedFitnessId}`,
@@ -71,22 +71,22 @@ const FitnessTrainers = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setTrainersData(result.trainers);
-          console.log(result);
+          setTrainersData(result.trainers)
+          console.log(result)
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
-  const [newTrainers, setnewTrainers] = useState([]);
+  }
+  const [newTrainers, setnewTrainers] = useState([])
 
   const getNewTrainers = async () => {
     try {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/trainers/new/center/${storedFitnessId}`,
@@ -94,29 +94,29 @@ const FitnessTrainers = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setnewTrainers(result.new_trainers);
-          console.log(result.new_trainers);
+          setnewTrainers(result.new_trainers)
+          console.log(result.new_trainers)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchTrainersData();
-    getNewTrainers();
-  }, []);
+    fetchTrainersData()
+    getNewTrainers()
+  }, [])
 
   const handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-  };
+    confirm()
+    setSearchText(selectedKeys[0])
+  }
 
   const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText("");
-  };
+    clearFilters()
+    setSearchText("")
+  }
 
   const searchInput = (
     <Input
@@ -126,24 +126,24 @@ const FitnessTrainers = () => {
       onChange={(e) => setSearchText(e.target.value)}
       onPressEnter={handleSearch}
     />
-  );
+  )
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [location, setLocation] = useState("")
+  const [password, setPassword] = useState("")
 
   // add trainers
   const handleAddTrainer = async () => {
     if (!name || !email || !phone || !location || !password) {
-      setloading(false);
-      return toast.error("All fields are required");
+      setloading(false)
+      return toast.error("All fields are required")
     }
     try {
-      setloading(true);
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setloading(true)
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       const raw = JSON.stringify({
         name: name,
@@ -152,14 +152,14 @@ const FitnessTrainers = () => {
         phone: phone,
         center_id: storedFitnessId,
         password: password,
-      });
+      })
 
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       await fetch(
         "http://localhost:1000/api/v1/trainers/create",
@@ -168,22 +168,22 @@ const FitnessTrainers = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "Trainer added successfully") {
-            toast.success(result.msg);
-            setloading(false);
-            console.log(result);
-            fetchTrainersData();
-            getNewTrainers();
-            setIsModalVisible(false);
+            toast.success(result.msg)
+            setloading(false)
+            console.log(result)
+            fetchTrainersData()
+            getNewTrainers()
+            setIsModalVisible(false)
           } else {
-            toast.error(result.msg);
-            setloading(false);
+            toast.error(result.msg)
+            setloading(false)
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const handleDeleteTrainer = (trainerId) => {
     // Handle trainer deletion here
@@ -191,7 +191,7 @@ const FitnessTrainers = () => {
       var requestOptions = {
         method: "DELETE",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/trainers/delete/${trainerId}`,
@@ -200,48 +200,48 @@ const FitnessTrainers = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "Trainer deleted successfully") {
-            toast.success(result.msg);
-            console.log(result.msg);
-            fetchTrainersData();
-            getNewTrainers();
+            toast.success(result.msg)
+            console.log(result.msg)
+            fetchTrainersData()
+            getNewTrainers()
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
-          console.log(result);
+          console.log(result)
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   //handle trainer acceptance
   const handleToggleAcceptance = (trainerId, isAccepted) => {
     const requestOptions = {
       method: "PUT",
       redirect: "follow",
-    };
+    }
 
     const endpoint = isAccepted
       ? `http://localhost:1000/api/v1/trainers/withdraw/${trainerId}`
-      : `http://localhost:1000/api/v1/trainers/accept/${trainerId}`;
+      : `http://localhost:1000/api/v1/trainers/accept/${trainerId}`
 
     fetch(endpoint, requestOptions)
       .then((response) => response.text())
       .then((result) => {
-        console.log(result);
-        fetchTrainersData();
+        console.log(result)
+        fetchTrainersData()
       })
       .catch((error) => {
-        console.log("error", error);
-      });
-  };
+        console.log("error", error)
+      })
+  }
 
-  const [trainerPreview, settrainerPreview] = useState([]);
+  const [trainerPreview, settrainerPreview] = useState([])
   const handlePreview = (info) => {
-    setisViewModal(true);
-    settrainerPreview(info);
-  };
+    setisViewModal(true)
+    settrainerPreview(info)
+  }
 
   const columns = [
     {
@@ -307,7 +307,7 @@ const FitnessTrainers = () => {
         </Space>
       ),
     },
-  ];
+  ]
   return (
     <main className="min-h-screen">
       <div className="flex items-center gap-2">
@@ -330,7 +330,7 @@ const FitnessTrainers = () => {
               {trainersData ? trainersData?.length : "0"}
             </h1>
           </div>
-          <h1 className="text-2xl font-semibold py-2"> Trainers</h1>
+          <h1 className="text-2xl font-semibold py-2">Trainers</h1>
         </div>
         {/* add new trainer */}
         <div
@@ -343,14 +343,14 @@ const FitnessTrainers = () => {
       </div>
 
       <div className="lg:flex-row flex-col flex lg:gap-24 gap-10 ">
-        <div className="flex flex-col">
-          <form className="p-5">{searchInput}</form>
+        <div className="flex flex-col mt-5 w-full">
           <Table columns={columns} dataSource={trainersData} />
         </div>
 
         <div>
-          <div className="bg-white shadow h-[400px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[85px] rounded-md">
+          <div className="bg-white shadow h-[500px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[18px] rounded-md">
             <h1 className="text-2xl font-semibold mb-2">New Trainers</h1>
+            <div className="border-b bg-gray-400 mb-10" />
             {newTrainers?.length > 0 ? (
               <div className="flex flex-col gap-2">
                 {newTrainers.map((trainer) => (
@@ -368,7 +368,7 @@ const FitnessTrainers = () => {
                 ))}
               </div>
             ) : (
-              <div className="flex gap-2 flex-col items-center">
+              <div className="flex gap-2 flex-col items-center justify-center">
                 <FrownOutlined className="m-auto" />
                 <h1>No Trainers signed up today</h1>
               </div>
@@ -542,7 +542,7 @@ const FitnessTrainers = () => {
       </Modal>
       <Toaster />
     </main>
-  );
-};
+  )
+}
 
-export default FitnessTrainers;
+export default FitnessTrainers
