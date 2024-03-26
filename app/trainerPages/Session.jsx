@@ -121,6 +121,7 @@ const Session = () => {
         .then((result) => {
           if (result.msg === "session deleted successfully") {
             toast.success(result.msg)
+            getApprovedSession()
             getPendingSession()
           } else {
             toast.error(result.msg)
@@ -146,8 +147,8 @@ const Session = () => {
       title: "Title",
       dataIndex: "title",
       key: "food",
-      render: (title) =>
-        title ? title : isSession ? "Title not Available" : isSession.title, // Display "Title not found" or "Loading..." based on isSession
+      render: (title) => (title ? title : "no title"),
+      // : isSession ? "Title not Available" : isSession.title, // Display "Title not found" or "Loading..." based on isSession
     },
 
     {
@@ -185,7 +186,7 @@ const Session = () => {
       key: "isApproved",
       render: (record) => (
         <Tag color={record ? "green" : "red"}>
-          {record ? "approved" : "not-approved"}
+          {record ? "approved" : "pending"}
         </Tag>
       ),
     },

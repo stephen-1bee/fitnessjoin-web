@@ -170,7 +170,7 @@ const FitnessSessions = () => {
         .then((response) => response.json())
         .then((result) => {
           setAllSessions(result.center)
-          console.log(result.center)
+          console.log(result.center[0])
         })
         .catch((error) => console.error(error))
     } catch (err) {
@@ -179,6 +179,28 @@ const FitnessSessions = () => {
   }
 
   // get all trainer sessions
+  // const getTrainerSession = async () => {
+  //   try {
+  //     const requestOptions = {
+  //       method: "GET",
+  //       redirect: "follow",
+  //     }
+
+  //     await fetch(
+  //       `http://localhost:1000/api/v1/sessions/trainer-sessions/${storedFitnessId}`,
+  //       requestOptions
+  //     )
+  //       .then((response) => response.json())
+  //       .then((result) => {
+  //         setTrainerSession(result.trainer[0])
+  //         console.log(result.trainer[0])
+  //       })
+  //       .catch((error) => console.error(error))
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
   const getTrainerSession = async () => {
     try {
       const requestOptions = {
@@ -200,6 +222,7 @@ const FitnessSessions = () => {
       console.log(err)
     }
   }
+
   useEffect(() => {
     getAllSessions()
     getTrainerSession()
@@ -311,6 +334,14 @@ const FitnessSessions = () => {
 
   const columnT = [
     {
+      title: "From",
+      render: (_, record) => (
+        <div>
+          <p>{record.trainer[0]?.name}</p>
+        </div>
+      )
+    },
+    {
       title: "Title",
       dataIndex: "title",
       key: "food",
@@ -353,7 +384,7 @@ const FitnessSessions = () => {
       key: "isApproved",
       render: (record) => (
         <Tag color={record ? "green" : "red"}>
-          {record ? "approved" : "not-approved"}
+          {record ? "approved" : "pending"}
         </Tag>
       ),
     },
@@ -367,7 +398,7 @@ const FitnessSessions = () => {
           <Popconfirm
             title="Delete the Trainer"
             description="Are you sure to delete Trainer's Session?"
-            onConfirm={() => handleDeleteTrainer(record._id)}
+            onConfirm={() => handleDelete(record._id)}
             onCancel={deleteCancel}
             okText="Delete"
             cancelText="No"
@@ -406,6 +437,7 @@ const FitnessSessions = () => {
           <ArrowRight />
         </span>{" "}
         <h1 className="font-semibold">Sessions</h1>
+        {/* <p>{trainerSession.map((t) => t.trainer)}</p> */}
       </p>
       <div className="flex items-center justify-between mb-5">
         <div className="flex gap-2">

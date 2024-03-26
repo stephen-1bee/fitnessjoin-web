@@ -10,6 +10,7 @@ const FitnessSettings = () => {
   const [isNotificationOpened, setIsNotificaitionOpened] = useState(false)
 
   let centerId
+  let notification
   // retrieve admin id
   if (typeof sessionStorage !== "undefined") {
     centerId = sessionStorage.getItem("fitnessCenterId")

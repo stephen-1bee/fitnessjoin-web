@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react"
 
 const CenterNav = () => {
   const [notification, setNotification] = useState([])
+  const [admin, setAdmin] = useState([])
 
   // retrive center name and Id through session
   let center_id
@@ -13,6 +14,28 @@ const CenterNav = () => {
   if (typeof sessionStorage !== "undefined") {
     name = sessionStorage.getItem("centerName")
     center_id = sessionStorage.getItem("fitnessCenterId")
+  }
+
+  const handleAdmin = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/one/${center_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setAdmin(result.admin)
+          console.log(result.admin)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   // get notification api
@@ -41,6 +64,7 @@ const CenterNav = () => {
 
   useEffect(() => {
     getNotification()
+    handleAdmin()
   }, [])
 
   // logout popup
@@ -65,8 +89,9 @@ const CenterNav = () => {
 
   //notificaton ui
   const notificationUi = (
-    <div>
-      <div className="w-[250px] shadow-md py-6 flex items-center bg-[#fdf9f0] justify-center rounded-lg">
+    <div className="p-5">
+      <div className="w-[300px] shadow-md py-6 flex flex-col items-center bg-[#fdf9f0] justify-center rounded-lg">
+        <h1 className="text-xl font-semibold">Notifications</h1>
         {notification.length > 0 ? (
           <div className="flex flex-col gap-5 px-5">
             {notification.map((notice) => (
@@ -93,7 +118,7 @@ const CenterNav = () => {
   return (
     <div className="flex items-center justify-center h-[12vh] lg:pl-[750px] md:pl-[450px] pl-[40px] w-full bg-[#fdf9f0] gap-2 fixed z-[999]">
       {/* fitness name */}
-      <h1>{name ? name : null}</h1>
+      <h1>{name ? name : ""}</h1>
 
       {/* notification */}
       <Dropdown
