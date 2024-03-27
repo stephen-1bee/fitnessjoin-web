@@ -178,29 +178,6 @@ const FitnessSessions = () => {
     }
   }
 
-  // get all trainer sessions
-  // const getTrainerSession = async () => {
-  //   try {
-  //     const requestOptions = {
-  //       method: "GET",
-  //       redirect: "follow",
-  //     }
-
-  //     await fetch(
-  //       `http://localhost:1000/api/v1/sessions/trainer-sessions/${storedFitnessId}`,
-  //       requestOptions
-  //     )
-  //       .then((response) => response.json())
-  //       .then((result) => {
-  //         setTrainerSession(result.trainer[0])
-  //         console.log(result.trainer[0])
-  //       })
-  //       .catch((error) => console.error(error))
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
-
   const getTrainerSession = async () => {
     try {
       const requestOptions = {
@@ -339,7 +316,7 @@ const FitnessSessions = () => {
         <div>
           <p>{record.trainer[0]?.name}</p>
         </div>
-      )
+      ),
     },
     {
       title: "Title",

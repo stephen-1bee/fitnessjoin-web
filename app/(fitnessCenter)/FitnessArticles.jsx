@@ -264,6 +264,14 @@ const FitnessArticles = () => {
 
   const columnT = [
     {
+      title: "From",
+      render: (_, record) => (
+        <div>
+          <p>{record.trainer[0].name}</p>
+        </div>
+      ),
+    },
+    {
       title: "Photo",
       dataIndex: "photo",
       key: photo,

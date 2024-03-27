@@ -12,6 +12,7 @@ import { Toaster, toast } from "react-hot-toast"
 
 const FitnessNutrition = () => {
   const [nutritionList, setNutritionList] = useState([])
+  const [trainerNutrition, settrainerNutrition] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -30,29 +31,36 @@ const FitnessNutrition = () => {
     console.log(e)
   }
 
+  // delete nutrition
   const deleteNutrition = async (nutritionid) => {
     try {
-      var requestOptions = {
+      const requestOptions = {
         method: "DELETE",
         redirect: "follow",
       }
 
-      await fetch(
+      fetch(
         `http://localhost:1000/api/v1/nutritions/delete/${nutritionid}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          toast.success(result.msg)
-          getAllNutrition()
-          console.log(result)
+          if (result.msg === "nutrition deleted successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            getAllNutrition()
+            getTrainerNutrition()
+          } else {
+            toast.error(result.msg)
+          }
         })
-        .catch((error) => console.log("error", error))
+        .catch((error) => console.error(error))
     } catch (err) {
       console.log(err)
     }
   }
 
+  // add nutrition
   const addNutrition = async () => {
     try {
       setIsAdding(true)
@@ -92,6 +100,7 @@ const FitnessNutrition = () => {
     }
   }
 
+  // get center fitness nutrition
   const getAllNutrition = async () => {
     try {
       setIsLoading(true)
@@ -117,13 +126,36 @@ const FitnessNutrition = () => {
     }
   }
 
+  // get affiliate trainer nutrition
+  const getTrainerNutrition = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/nutritions/trainer-nutritions/${storedFitnessId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          settrainerNutrition(result.trainer)
+          console.log(result.trainer)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     getAllNutrition()
+    getTrainerNutrition()
   }, [])
 
   return (
     <div className="min-h-screen">
-      {/* <p>{storedFitnessId}</p> */}
       <div className="flex gap-2 items-center">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <FoodBankOutlined color="white" className="text-white " />
@@ -144,7 +176,7 @@ const FitnessNutrition = () => {
               {nutritionList ? nutritionList?.length : "0"}
             </h1>
           </div>
-          <h1 className="text-2xl font-semibold py-2"> Nutritions</h1>
+          <h1 className="text-2xl font-semibold py-2">My Nutritions</h1>
         </div>
         {/* generate new Nutrition */}
         <div
@@ -213,6 +245,73 @@ const FitnessNutrition = () => {
             </div>
           ))
         )}
+      </div>
+
+      {/* affiliate trainer */}
+      <div>
+        <div className="flex gap-2 py-5">
+          <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
+            <h1 className="text-lg">
+              {trainerNutrition ? trainerNutrition?.length : "0"}
+            </h1>
+          </div>
+          <h1 className="text-2xl font-semibold py-2">
+            Affiliate Trainer Nutritions
+          </h1>
+        </div>
+        <div className="flex gap-4 flex-wrap">
+          {isLoading ? (
+            <Spin size="small" />
+          ) : trainerNutrition.length === 0 ? (
+            <div className="m-auto flex py-3 flex-col items-center">
+              <p>🙁</p>
+              <p className="text-[#818181]">No nutritions yet</p>
+            </div>
+          ) : (
+            trainerNutrition.map((nutrition, index) => (
+              <div
+                key={index}
+                className="flex flex-col items-center justify-center p-5 bg-white rounded-lg hover:shadow-md cursor-pointer py-6 w-[200px]"
+              >
+                <p className="font-bold">{nutrition.food}</p>
+
+                <div className="flex flex-col gap-2 mt-3">
+                  <div className="flex items-center text-[#818181] gap-2 text-[14px]">
+                    <CloudCircleOutlined className="text-[18px]" />
+                    <p>{nutrition.time_of_day}</p>
+                  </div>
+                  <div className="flex items-center text-[#818181] gap-6 text-[14px]">
+                    <FitnessCenter className="text-[18px]" />
+                    <p>{nutrition.category}</p>
+                  </div>
+                  <hr className="mt-4" />
+                  <div className="flex items-center justify-center gap-2 text-[#818181]">
+                    <p>
+                      <EyeOutlined
+                        onClick={() => setIsModalVisible(true)}
+                        className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full"
+                      />
+                    </p>
+                    <Popconfirm
+                      title="Delete the Nutrition"
+                      description="Are you sure to delete Nutrition?"
+                      onConfirm={() => deleteNutrition(nutrition._id)}
+                      onCancel={cancel}
+                      okText="Yes"
+                      cancelText="No"
+                      okButtonProps={{
+                        style: { backgroundColor: "red", color: "white" },
+                      }}
+                    >
+                      <DeleteOutlined className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full" />
+                    </Popconfirm>
+                  </div>
+                </div>
+                <p>{nutrition.trainer[0]?.name}</p>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       <Modal

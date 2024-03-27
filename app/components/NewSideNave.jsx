@@ -44,14 +44,12 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
   return (
     <div className="justify-center p-2 fixed">
       <div>
-        <Image
-          className="ml-11 mt-4"
-          width={50}
-          height={50}
-          alt="logo"
-          src="/logo.png"
-          priority
-        />
+        <div className="flex items-center ">
+          <Image width={50} height={50} alt="logo" src="/logo.png" />
+          <p className="text-lg">
+            Fitness<span className="font-black text-[#08A88A]">Join</span>
+          </p>
+        </div>
         <div className="flex flex-col px-11 mt-5 ">
           <div className="flex flex-col py-5 gap-2 w-[fit]">
             <button

@@ -10,7 +10,7 @@ import { message, Spin, Popconfirm, Modal, Form, Input, Select } from "antd"
 import { Toaster, toast } from "react-hot-toast"
 
 const Nutrition = () => {
-  const [nutritionList, setNutritionList] = useState([])
+  const [approvedNutrition, setApprovedNutrition] = useState([])
   const [pendingNutrition, setPendingNutrtion] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
@@ -51,7 +51,7 @@ const Nutrition = () => {
 
       if (response.ok) {
         setIsAdding(false)
-        await getAllNutrition()
+        await getApprovedNutrition()
         await getPendingNutrition()
         toast.success("Nutrition added successfully")
         setIsAdding(false)
@@ -66,8 +66,10 @@ const Nutrition = () => {
     }
   }
 
-  // get all nutrition
-  const getAllNutrition = async () => {
+  // get pending nutrition
+
+  // get approved nutrition
+  const getApprovedNutrition = async () => {
     try {
       setIsLoading(true)
       const requestOptions = {
@@ -75,14 +77,14 @@ const Nutrition = () => {
         redirect: "follow",
       }
 
-      fetch(
-        `http://localhost:1000/api/v1/nutritions/all/trainer/approved/${trainer_id}`,
+      await fetch(
+        `http://localhost:1000/api/v1/nutritions/trainer/approved/${trainer_id}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          setNutritionList(result.trainer)
-          console.log(result.trainer)
+          setApprovedNutrition(result.approved_nutrition)
+          console.log(result.approved_nutrition)
           setIsLoading(false)
         })
         .catch((error) => console.error(error))
@@ -94,19 +96,21 @@ const Nutrition = () => {
   // get pending nutritions
   const getPendingNutrition = async () => {
     try {
+      setIsLoading(true)
       const requestOptions = {
         method: "GET",
         redirect: "follow",
       }
 
-      fetch(
-        `http://localhost:1000/api/v1/nutritions/all/trainer/pending/${trainer_id}`,
+      await fetch(
+        `http://localhost:1000/api/v1/nutritions/trainer/pending/${trainer_id}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          setPendingNutrtion(result.trainer)
-          console.log(result.trainer)
+          setPendingNutrtion(result.pending_nutrition)
+          console.log(result.pending_nutrition)
+          setIsLoading(false)
         })
         .catch((error) => console.error(error))
     } catch (err) {
@@ -115,7 +119,7 @@ const Nutrition = () => {
   }
 
   useEffect(() => {
-    getAllNutrition()
+    getApprovedNutrition()
     getPendingNutrition()
   }, [])
 
@@ -132,10 +136,14 @@ const Nutrition = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          toast.success(result.msg)
-          getAllNutrition()
-          getPendingNutrition()
-          console.log(result)
+          if (result.msg === "nutrition deleted successfully") {
+            toast.success(result.msg)
+            getApprovedNutrition()
+            getPendingNutrition()
+            console.log(result.msg)
+          } else {
+            toast.error(result.msg)
+          }
         })
         .catch((error) => console.log("error", error))
     } catch (err) {
@@ -157,7 +165,7 @@ const Nutrition = () => {
         <div className="flex gap-2">
           <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
             <h1 className="text-lg">
-              {nutritionList ? nutritionList?.length : "0"}
+              {approvedNutrition ? approvedNutrition?.length : "0"}
             </h1>
           </div>
           <h1 className="text-2xl font-semibold py-2">Approved Nutritions</h1>
@@ -182,13 +190,13 @@ const Nutrition = () => {
       <div className="flex gap-4 flex-wrap">
         {isLoading ? (
           <Spin size="small" />
-        ) : nutritionList.length === 0 ? (
+        ) : approvedNutrition.length === 0 ? (
           <div className="m-auto flex py-3 flex-col items-center">
             <p>🙁</p>
             <p className="text-[#818181]">No nutritions yet</p>
           </div>
         ) : (
-          nutritionList.map((nutrition, index) => (
+          approvedNutrition.map((nutrition, index) => (
             <div
               key={index}
               className="flex flex-col items-center justify-center p-5 bg-white rounded-lg hover:shadow-md cursor-pointer py-6 w-[200px]"
