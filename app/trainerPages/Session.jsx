@@ -45,7 +45,7 @@ const Session = () => {
     trainer_id = sessionStorage.getItem("trainerId")
   }
 
-  const gettrainer = async (req, res) => {
+  const gettrainer = async () => {
     try {
       const requestOptions = {
         method: "GET",

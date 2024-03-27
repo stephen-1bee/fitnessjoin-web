@@ -1,51 +1,51 @@
-"use client";
-import { UserOutlined } from "@ant-design/icons";
-import { Input } from "antd";
-import React, { useState } from "react";
-import Image from "next/image";
-import { Toaster, toast } from "react-hot-toast";
-import Link from "next/link";
-import { ArrowLeft } from "@mui/icons-material";
+"use client"
+import { UserOutlined } from "@ant-design/icons"
+import { Input } from "antd"
+import React, { useState } from "react"
+import Image from "next/image"
+import { Toaster, toast } from "react-hot-toast"
+import Link from "next/link"
+import { ArrowLeft } from "@mui/icons-material"
 
 const UserLogin = () => {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
-  let userCenterId;
+  let userCenterId
   if (typeof sessionStorage !== "undefined") {
-    userCenterId = sessionStorage.getItem("userCenterId");
+    userCenterId = sessionStorage.getItem("userCenterId")
   }
 
-  const [user_id, setuser_id] = useState("");
-  const [userCenter_id, setuserCenterId] = useState("");
+  const [user_id, setuser_id] = useState("")
+  const [userCenter_id, setuserCenterId] = useState("")
 
   if (typeof sessionStorage !== "undefined") {
-    sessionStorage.setItem("userId", user_id);
-    sessionStorage.setItem("userCenterId", userCenter_id);
+    sessionStorage.setItem("userId", user_id)
+    sessionStorage.setItem("userCenterId", userCenter_id)
   }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
-      return toast.error("All field are required");
+      return toast.error("All field are required")
     }
     try {
-      setLoading(true);
-      var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setLoading(true)
+      var myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       var raw = JSON.stringify({
         email: email,
         password: password,
-      });
+      })
 
       var requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       await fetch("http://localhost:1000/api/v1/users/login", requestOptions)
         .then((response) => response.json())
@@ -54,28 +54,28 @@ const UserLogin = () => {
           //   setLoading(false);
           //   return toast.error("You do not belong to this Fitness Center");
           // }
-          if (result.msg === "Login successful") {
+          if (result.msg === "login successful") {
             toast.success(
               `Welcome ${result.user.first_name} ${result.user.last_name}`
-            );
-            console.log(result.msg);
-            setLoading(false);
-            setuser_id(result.user._id);
-            setuserCenterId(result.user?.center_id);
-            location.href = "/userPage";
+            )
+            console.log(result.msg)
+            setLoading(false)
+            setuser_id(result.user._id)
+            setuserCenterId(result.user?.center_id)
+            location.href = "/userPage"
           } else {
-            toast.error(result.msg);
-            setLoading(false);
+            toast.error(result.msg)
+            setLoading(false)
           }
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   const moveBack = () => {
-    window.history.back();
-  };
+    window.history.back()
+  }
   return (
     <div className="flex flex-row justify-center items-center min-h-screen m-auto home">
       <div
@@ -131,9 +131,9 @@ const UserLogin = () => {
       </div>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default UserLogin;
+export default UserLogin
 
 // <div className="flex flex-row justify-center items-center min-h-screen m-auto home">

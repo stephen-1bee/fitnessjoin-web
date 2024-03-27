@@ -12,6 +12,7 @@ import {
   UserSwitchOutlined,
   SettingOutlined,
   UserOutlined,
+  MessageOutlined,
 } from "@ant-design/icons"
 import {
   CardTravelOutlined,
@@ -32,17 +33,23 @@ import Articles from "@/app/trainerPages/Articles"
 import Settings from "@/app/trainerPages/Settings"
 import Profile from "@/app/trainerPages/Profile"
 import Notification from "@/app/trainerPages/Notification"
+import { FloatButton } from "antd"
+import toast, { Toaster } from "react-hot-toast"
 
 const page = () => {
   const [activePage, setActivePage] = useState("")
   const [trainer, settrainer] = useState([])
   const [notification, setnotification] = useState([])
+  const [message, setmessage] = useState("")
 
+  console.log(message)
   let trainerName
   let trainer_center_id
+  let trainer_id
   if (typeof sessionStorage !== "undefined") {
     trainerName = sessionStorage.getItem("trainerName")
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
+    trainer_id = sessionStorage.getItem("trainerId")
   }
 
   const getNotificaiton = async () => {
@@ -89,6 +96,64 @@ const page = () => {
           <p>No Notifications yet</p>
         </div>
       )}
+    </div>
+  )
+
+  const sendFeedback = async () => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        center_id: trainer_center_id,
+        trainer_id: trainer_id,
+        message: message,
+        user_id: null,
+        creator_type: "trainer",
+      })
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        "http://localhost:1000/api/v1/feedbacks/create",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "message sent successfully") {
+            toast.success(result.msg)
+            console.log(result.msg)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const sendMessageUi = () => (
+    <div className="w-[330px] h-[350px] shadow-md py-5 flex items-center bg-white flex-col rounded-lg gap-3">
+      <h1 className="text-xl font-semibold">Inform us about anything</h1>
+      <textarea
+        type="text"
+        onChange={(e) => setmessage(e.target.value)}
+        placeholder="tell us something about your experiences"
+        rows={7}
+        className="rounded-md py-3 px-3 w-[250px] ring-1 ring-[#ccc] mt-5"
+      />
+      <button
+        onClick={() => sendFeedback()}
+        className="w-[250px] rounded-full bg-[#08A88A] py-3 text-white "
+      >
+        Send
+      </button>
     </div>
   )
 
@@ -283,9 +348,20 @@ const page = () => {
           </div>
         </div>
 
+        <Dropdown
+          overlay={sendMessageUi}
+          trigger={["click"]}
+          className="cursor-pointer"
+        >
+          <FloatButton
+            icon={<MessageOutlined />}
+            onClick={() => console.log("onClick")}
+          />
+        </Dropdown>
         {/* dynamic rendering */}
         <div className="p-10 bg-[#f0f0f0] min-h-screen">{renderedPage()}</div>
       </div>
+      <Toaster />
     </div>
   )
 }

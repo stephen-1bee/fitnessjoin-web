@@ -1,114 +1,67 @@
-"use client";
-import { UserOutlined } from "@ant-design/icons";
-import { Input } from "antd";
-import React, { useState } from "react";
-import Image from "next/image";
-import { Toaster, toast } from "react-hot-toast";
-import Link from "next/link";
-import { ArrowLeft } from "@mui/icons-material";
+"use client"
+import { UserOutlined } from "@ant-design/icons"
+import { Input } from "antd"
+import React, { useState } from "react"
+import Image from "next/image"
+import { Toaster, toast } from "react-hot-toast"
+import Link from "next/link"
+import { ArrowLeft } from "@mui/icons-material"
 
 const Page = () => {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [user_id, setuser_id] = useState("");
-  const [userCenter_Id, setUserCenterId] = useState("");
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [user_id, setuser_id] = useState("")
+  const [userCenter_Id, setUserCenterId] = useState("")
 
   if (typeof sessionStorage !== "undefined") {
-    sessionStorage.setItem("userId", user_id);
-    sessionStorage.setItem("usercenterId", userCenter_Id);
+    sessionStorage.setItem("userId", user_id)
+    sessionStorage.setItem("usercenterId", userCenter_Id)
   }
 
- 
-  //   e.preventDefault();
-  //   if (!email || !password) {
-  //     return toast.error("All field are required");
-  //   }
-  //   try {
-  //     setLoading(true);
-  //     var myHeaders = new Headers();
-  //     myHeaders.append("Content-Type", "application/json");
-
-  //     var raw = JSON.stringify({
-  //       email: email,
-  //       password: password,
-  //     });
-
-  //     var requestOptions = {
-  //       method: "POST",
-  //       headers: myHeaders,
-  //       body: raw,
-  //       redirect: "follow",
-  //     };
-
-  //     await fetch(
-  //       "https://fitness-join-api-xe62.onrender.com/api/v1/users/login",
-  //       requestOptions
-  //     )
-  //       .then((response) => response.json())
-  //       .then((result) => {
-  //         if (result.msg === "Login successful") {
-  //           toast.success(
-  //             `Welcome ${result.user.first_name} ${result.user.last_name}`
-  //           );
-  //           console.log(result.msg);
-  //           setLoading(false);
-  //           setuser_id(result.user._id);
-  //           setUserCenterId(result.user.center_id);
-  //           location.href = "/userPage";
-  //         } else {
-  //           toast.error(result.msg);
-  //           setLoading(false);
-  //         }
-  //       })
-  //       .catch((error) => console.log("error", error));
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       // check again empty entries
       if (!email || !password) {
-        toast.error("All fields are required");
+        toast.error("All fields are required")
       } else {
         let headersList = {
           Accept: "*/*",
           "User-Agent": "Thunder Client (https://www.thunderclient.com)",
           "Content-Type": "application/json",
-        };
+        }
 
         let bodyContent = JSON.stringify({
           email: email,
           password: password,
-        });
+        })
 
         let response = await fetch("http://localhost:1000/api/v1/users/login", {
           method: "POST",
           body: bodyContent,
           headers: headersList,
-        });
+        })
 
-        let data = await response.json();
-        if (data.msg === "Login successful") {
-          toast.success("Login successful");
-          setuser_id(data.user?._id);
-          location.href = "/userPage";
-          console.log(data);
+        let data = await response.json()
+        if (data.msg === "login successful") {
+          toast.success("Login successful")
+          setuser_id(data.user?._id)
+          setUserCenterId(data.user?.center_id)
+          location.href = "/userPage"
+          console.log(data)
         } else {
-          toast.error(data.msg);
+          toast.error(data.msg)
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const moveBack = () => {
-    window.history.back();
-  };
+    window.history.back()
+  }
   return (
     <div className="flex flex-row justify-center items-center min-h-screen m-auto home">
       <div
@@ -166,7 +119,7 @@ const Page = () => {
         <Toaster />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

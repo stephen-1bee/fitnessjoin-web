@@ -369,8 +369,9 @@ const Articles = () => {
             </h1>
           </div>
         </Form>
+
+        {/* Update Modal */}
       </Modal>
-      {/* Update Modal */}
       <Modal
         title="Update Article"
         open={UpdateModlaVisible}

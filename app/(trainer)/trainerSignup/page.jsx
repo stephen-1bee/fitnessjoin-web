@@ -1,41 +1,41 @@
-"use client";
-import React, { useState } from "react";
-import { Input } from "antd";
-import Image from "next/image";
-import { PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { EmailOutlined, LocationOnOutlined } from "@mui/icons-material";
-import { Toaster, toast } from "react-hot-toast";
-import Link from "next/link";
-import { ArrowLeft } from "@mui/icons-material";
+"use client"
+import React, { useState } from "react"
+import { Input } from "antd"
+import Image from "next/image"
+import { PhoneOutlined, UserOutlined } from "@ant-design/icons"
+import { EmailOutlined, LocationOnOutlined } from "@mui/icons-material"
+import { Toaster, toast } from "react-hot-toast"
+import Link from "next/link"
+import { ArrowLeft } from "@mui/icons-material"
 
 const TrainerSignup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [phone, setPhone] = useState("")
+  const [location, setLocation] = useState("")
+  const [loading, setLoading] = useState(false)
 
   // retrive center id and trainer memeberhipid
-  let trainer_center_id;
-  let trainerMembershipId;
+  let trainer_center_id
+  let trainerMembershipId
   if (typeof sessionStorage !== "undefined") {
-    trainer_center_id = sessionStorage.getItem("trainerCenterId");
-    trainerMembershipId = sessionStorage.getItem("membershipId");
+    trainer_center_id = sessionStorage.getItem("trainerCenterId")
+    trainerMembershipId = sessionStorage.getItem("membershipId")
   }
 
   const handleSignup = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!fullName || !email || !phone || !location || !password) {
-      return toast.error("All fields are required");
+      return toast.error("All fields are required")
     }
     try {
-      setLoading(true);
+      setLoading(true)
       let headersList = {
         Accept: "*/*",
         "User-Agent": "Thunder Client (https://www.thunderclient.com)",
         "Content-Type": "application/json",
-      };
+      }
 
       let bodyContent = JSON.stringify({
         name: fullName,
@@ -45,7 +45,7 @@ const TrainerSignup = () => {
         center_id: trainer_center_id,
         membership_id: trainerMembershipId,
         password: password,
-      });
+      })
 
       let response = await fetch(
         "http://localhost:1000/api/v1/trainers/create",
@@ -54,25 +54,23 @@ const TrainerSignup = () => {
           body: bodyContent,
           headers: headersList,
         }
-      );
+      )
 
-      let data = await response.json();
+      let data = await response.json()
       if (data.msg === "Trainer added successfully") {
-        toast.success(data.msg);
-        console.log(data.msg);
-        setLoading(false);
-        window.location.href = "/trainerLogin";
+        toast.success(data.msg)
+        console.log(data.msg)
+        setLoading(false)
+        window.location.href = "/trainerLogin"
       } else {
-        toast.error(data.msg);
-        setLoading(false);
+        toast.error(data.msg)
+        setLoading(false)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
-  // const handleSignup = async (e) => {
-  //   e.preventDefault();
   //   if (!fullName || !email || !phone || !location || !password) {
   //     return toast.error("All fields are required");
   //   }
@@ -121,8 +119,8 @@ const TrainerSignup = () => {
   //   }
   // };
   const moveBack = () => {
-    window.history.back();
-  };
+    window.history.back()
+  }
 
   return (
     <div className="flex flex-row justify-center items-center min-h-screen m-auto home">
@@ -190,7 +188,7 @@ const TrainerSignup = () => {
       </div>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default TrainerSignup;
+export default TrainerSignup

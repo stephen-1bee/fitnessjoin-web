@@ -1,14 +1,37 @@
 "use client"
+import { FrownOutlined } from "@ant-design/icons"
 import React, { useState, useEffect } from "react"
 
 const Notification = () => {
-  let trainer_center_id
-  if (typeof sessionStorage !== "undefined") {
-    trainer_center_id = sessionStorage.getItem("trainerCenterId")
-  }
-
   // State for storing notifications
   const [notification, setNotifications] = useState([])
+  const [trainer, setTrainer] = useState({})
+
+  let trainer_center_id
+  let trainer_id
+  if (typeof sessionStorage !== "undefined") {
+    trainer_center_id = sessionStorage.getItem("trainerCenterId")
+    trainer_id = sessionStorage.getItem("trainerId")
+  }
+
+  // get current trainer
+  const getTrainer = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      const response = await fetch(
+        `http://localhost:1000/api/v1/trainers/one/${trainer_id}`,
+        requestOptions
+      )
+      const result = await response.json()
+      setTrainer(result.trainer[0])
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const getNotificaiton = async () => {
     try {
@@ -36,6 +59,7 @@ const Notification = () => {
 
   // Init notification fetching
   useEffect(() => {
+    getTrainer()
     getNotificaiton()
   }, [])
 
@@ -57,7 +81,7 @@ const Notification = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 mt-3">
-            🥲
+            <FrownOutlined />
             <p>No Notifications yet</p>
           </div>
         )}
