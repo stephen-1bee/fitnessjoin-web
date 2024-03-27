@@ -1,6 +1,11 @@
 "use client"
 import React, { useEffect, useState } from "react"
-import { DeleteOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons"
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  FrownOutlined,
+  PlusOutlined,
+} from "@ant-design/icons"
 import {
   ArrowRight,
   CloudCircleOutlined,
@@ -15,6 +20,7 @@ const Nutrition = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [trainer, setTrainer] = useState([])
 
   // retrieve trainer id
   let trainer_id
@@ -24,8 +30,37 @@ const Nutrition = () => {
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
   }
 
+  const gettrainer = async (req, res) => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/trainers/one/${trainer_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setTrainer(result.trainer[0])
+          // console.log(result.trainer[0])
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const eligible = trainer.isAccepted
+
   // add nutrition
   const addNutrition = async () => {
+    if (eligible === false) {
+      return toast.error(
+        "You are not eligible to add Nutrition yet. Please contact the  administrator."
+      )
+    }
     try {
       setIsAdding(true)
       const requestOptions = {
@@ -65,8 +100,6 @@ const Nutrition = () => {
       setIsAdding(false)
     }
   }
-
-  // get pending nutrition
 
   // get approved nutrition
   const getApprovedNutrition = async () => {
@@ -119,6 +152,7 @@ const Nutrition = () => {
   }
 
   useEffect(() => {
+    gettrainer()
     getApprovedNutrition()
     getPendingNutrition()
   }, [])
@@ -191,9 +225,9 @@ const Nutrition = () => {
         {isLoading ? (
           <Spin size="small" />
         ) : approvedNutrition.length === 0 ? (
-          <div className="m-auto flex py-3 flex-col items-center">
-            <p>🙁</p>
-            <p className="text-[#818181]">No nutritions yet</p>
+          <div className="m-auto flex py-5 gap-2 flex-col items-center">
+            <FrownOutlined />
+            <p className="text-[#818181]">No active Nutritions Yet</p>
           </div>
         ) : (
           approvedNutrition.map((nutrition, index) => (
@@ -252,9 +286,9 @@ const Nutrition = () => {
         {isLoading ? (
           <Spin size="small" />
         ) : pendingNutrition.length === 0 ? (
-          <div className="m-auto flex py-3 flex-col items-center">
-            <p>🙁</p>
-            <p className="text-[#818181]">No nutritions yet</p>
+          <div className="m-auto flex py-5 gap-2 flex-col items-center">
+            <FrownOutlined />
+            <p className="text-[#818181]">No Pending Nutritions Yet</p>
           </div>
         ) : (
           pendingNutrition.map((nutrition, index) => (

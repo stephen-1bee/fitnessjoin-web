@@ -661,6 +661,10 @@ const FitnessSessions = () => {
             <p>{formatteDate(preview.end_date)}</p>
           </div>
           <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Date Created:</h1>
+            <p>{formatteDate(preview.dateCreated)}</p>
+          </div>
         </div>
       </Modal>
     </div>

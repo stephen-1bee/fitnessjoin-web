@@ -7,6 +7,7 @@ const Membership = () => {
   const [trainer, setTrainer] = useState(null)
   const [trainerMembership, setTrainerMembership] = useState(null)
   const [fitnessMemberships, setfitnessMemberships] = useState([])
+  const [isApproved, setisApproved] = useState("")
   const [loading, setLoading] = useState(false)
 
   // get trainer id
@@ -16,8 +17,6 @@ const Membership = () => {
     trainer_id = sessionStorage.getItem("trainerId")
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
   }
-
-  // console.log(trainerMembership);
 
   const getTrainer = async () => {
     try {
@@ -35,6 +34,7 @@ const Membership = () => {
           setTrainer(result.trainer)
           console.log(result.trainer)
           setTrainerMembership(result.trainer[0]?.membership)
+
           console.log(result.trainer[0]?.membership)
         })
         .catch((error) => console.error(error))

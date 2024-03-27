@@ -1,13 +1,27 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { message, Spin, Popconfirm, Modal, Form, Input, Select } from "antd"
+import {
+  message,
+  Spin,
+  Popconfirm,
+  Modal,
+  Form,
+  Input,
+  Select,
+  Tag,
+} from "antd"
 import {
   ArrowRight,
   CloudCircleOutlined,
   FitnessCenter,
   FoodBankOutlined,
 } from "@mui/icons-material"
-import { DeleteOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons"
+import {
+  DeleteOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  CheckOutlined,
+} from "@ant-design/icons"
 import { Toaster, toast } from "react-hot-toast"
 
 const FitnessNutrition = () => {
@@ -149,6 +163,25 @@ const FitnessNutrition = () => {
     }
   }
 
+  const handleToggle = (nutritionid, isApproved) => {
+    const requestOptions = {
+      method: "PUT",
+      redirect: "follow",
+    }
+
+    const endpoint = isApproved
+      ? `http://localhost:1000/api/v1/nutritions/disapprove/${nutritionid}`
+      : `http://localhost:1000/api/v1/nutritions/approve/${nutritionid}`
+
+    fetch(endpoint, requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        getTrainerNutrition()
+        console.log(result)
+      })
+      .catch((error) => console.error(error))
+  }
+
   useEffect(() => {
     getAllNutrition()
     getTrainerNutrition()
@@ -276,7 +309,7 @@ const FitnessNutrition = () => {
                 <p className="font-bold">{nutrition.food}</p>
 
                 <div className="flex flex-col gap-2 mt-3">
-                  <div className="flex items-center text-[#818181] gap-2 text-[14px]">
+                  <div className="flex items-center justify-center text-[#818181] gap-2 text-[14px]">
                     <CloudCircleOutlined className="text-[18px]" />
                     <p>{nutrition.time_of_day}</p>
                   </div>
@@ -285,7 +318,7 @@ const FitnessNutrition = () => {
                     <p>{nutrition.category}</p>
                   </div>
                   <hr className="mt-4" />
-                  <div className="flex items-center justify-center gap-2 text-[#818181]">
+                  <div className="flex items-center justify-center gap-1 text-[#818181]">
                     <p>
                       <EyeOutlined
                         onClick={() => setIsModalVisible(true)}
@@ -303,10 +336,30 @@ const FitnessNutrition = () => {
                         style: { backgroundColor: "red", color: "white" },
                       }}
                     >
-                      <DeleteOutlined className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full" />
+                      <DeleteOutlined className="text-[18px] mt-1 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full" />
                     </Popconfirm>
+                    <div
+                      className="bg-[#08a88a] h-7 w-7 rounded-full flex items-center justify-center hover:shadow-md"
+                      title={
+                        nutrition.isApproved
+                          ? "dissapprove nutrition"
+                          : "Approve nutrition"
+                      }
+                      onClick={() =>
+                        handleToggle(nutrition._id, nutrition.isApproved)
+                      }
+                    >
+                      <h1 className="text-white">
+                        {nutrition.isApproved ? <CheckOutlined /> : "x"}
+                      </h1>
+                    </div>
                   </div>
                 </div>
+                <p>
+                  <Tag color={nutrition.isApproved ? "green" : "red"}>
+                    {nutrition.isApproved ? "approved" : "pending"}
+                  </Tag>
+                </p>
                 <p>{nutrition.trainer[0]?.name}</p>
               </div>
             ))

@@ -15,6 +15,7 @@ import Link from "next/link"
 
 const Articles = () => {
   const [addModal, setaddModal] = useState(false)
+  const [UpdateModlaVisible, setUpdateModlaVisible] = useState(false)
   const [title, settitle] = useState("")
   const [desc, setdesc] = useState("")
   const [url, setUrl] = useState("")
@@ -22,6 +23,7 @@ const Articles = () => {
   const [loading, setloading] = useState(false)
   const [approvedArticles, setapprovedArticles] = useState([])
   const [pendingArticles, setpendingArticles] = useState([])
+  const [trainer, setTrainer] = useState([])
 
   // get trainer id
   let trainer_id
@@ -30,6 +32,30 @@ const Articles = () => {
     trainer_id = sessionStorage.getItem("trainerId")
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
   }
+
+  const gettrainer = async (req, res) => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/trainers/one/${trainer_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setTrainer(result.trainer[0])
+          // console.log(result.trainer[0])
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const eligible = trainer.isAccepted
 
   // add article
   const handleAddArticle = async () => {
@@ -153,9 +179,19 @@ const Articles = () => {
   }
 
   useEffect(() => {
+    gettrainer()
     getApprovedArticles()
     getPendingArticls()
   }, [])
+
+  const handleOpenModal = () => {
+    if (eligible === false) {
+      return toast.error(
+        "You are not eligible to add Articles yet. Please contact the  administrator."
+      )
+    }
+    setaddModal(true)
+  }
 
   const column = [
     {
@@ -220,7 +256,11 @@ const Articles = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
+          {eligible === false ? (
+            ""
+          ) : (
+            <EditOutlined onClick={() => handleOpenEditModal()} />
+          )}
           <Popconfirm
             title="Delete the Article"
             description="Are you sure to delete Article?"
@@ -231,12 +271,28 @@ const Articles = () => {
               style: { backgroundColor: "red", color: "white" },
             }}
           >
-            <DeleteOutlined />
+            {eligible === false ? (
+              ""
+            ) : (
+              <div>
+                <DeleteOutlined />
+              </div>
+            )}
           </Popconfirm>
         </Space>
       ),
     },
   ]
+
+  const handleOpenEditModal = () => {
+    if (eligible === false) {
+      return toast.error(
+        "You are not eligible to edit Articles yet. Please contact the  administrator."
+      )
+    }
+    setUpdateModlaVisible(true)
+  }
+
   return (
     <div>
       <h1 className="text-3xl">Articles</h1>
@@ -257,7 +313,7 @@ const Articles = () => {
         {/* add new article */}
         <div
           className="flex p-3 bg-[#08a88a] text-white  cursor-pointer items-center justify-center rounded-md gap-2 w-fit"
-          onClick={() => setaddModal(true)}
+          onClick={() => handleOpenModal()}
         >
           <PlusOutlined />
           <p>Add New Article</p>
@@ -314,51 +370,47 @@ const Articles = () => {
           </div>
         </Form>
       </Modal>
-      {/* <Modal
-        title="Add Article"
-        open={addModal}
-        onCancel={() => setaddModal(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setaddModal(false)}>
-            Cancel
-          </Button>,
-          <Button
-            className="bg-[#08a88a] "
-            key="submit"
-            type="primary"
-            onClick={() => handleAddArticle()}
-          >
-            {loading ? "Adding..." : "Add Article"}
-          </Button>,
-        ]}
+      {/* Update Modal */}
+      <Modal
+        title="Update Article"
+        open={UpdateModlaVisible}
+        onCancel={() => setUpdateModlaVisible(false)}
+        footer={[false]}
       >
-        <Form>
+        <Form className="flex flex-col gap-3">
           <input
             type="file"
-            onChange={(e) => setphoto(e.target.files[0])}
-            className="mb-5"
+            // onChange={(e) => setphoto(e.target.files[0])}
+            className="py-4"
           />
-          <Form.Item
-            label="Title"
-            name="title"
-            rules={[{ required: true, type: "text" }]}
-          >
-            <Input onChange={(e) => settitle(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            label="Description"
-            name="desc"
-            rules={[{ required: true, type: "text" }]}
-          >
-            <TextArea
-              rows={4}
-              placeholder="Description"
-              onChange={(e) => setdesc(e.target.value)}
-            />
-          </Form.Item>
+
+          <h1 className="text-lg">Title</h1>
+          <Input
+            // onChange={(e) => settitle(e.target.value)}
+            className="py-4"
+          />
+
+          <h1 className="text-lg">Url</h1>
+          <Input
+            placeholder="url"
+            className="py-4"
+            // onChange={(e) => setUrl(e.target.value)}
+          />
+
+          <h1 className="text-lg">Description</h1>
+          <TextArea
+            rows={4}
+            placeholder="Description"
+            // onChange={(e) => setdesc(e.target.value)}
+          />
+
+          <div className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer">
+            <h1 className="text-center">
+              {loading ? "Updating..." : "Update Article"}
+            </h1>
+          </div>
         </Form>
-        <Toaster />
-      </Modal> */}
+      </Modal>
       <Toaster />
     </div>
   )

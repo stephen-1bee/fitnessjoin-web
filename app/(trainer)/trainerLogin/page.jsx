@@ -1,77 +1,78 @@
-"use client";
-import React, { useState } from "react";
-import { Input, Select } from "antd";
-import Image from "next/image";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Toaster, toast } from "react-hot-toast";
-import Link from "next/link";
-import { ArrowLeft } from "@mui/icons-material";
+"use client"
+import React, { useState } from "react"
+import { Input, Select } from "antd"
+import Image from "next/image"
+import { LockOutlined, UserOutlined } from "@ant-design/icons"
+import { Toaster, toast } from "react-hot-toast"
+import Link from "next/link"
+import { ArrowLeft } from "@mui/icons-material"
 
 // export const metadata = { title: "Trainer Login" };
 
 const TrainerLogin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [trainer_id, setTrainer_id] = useState("");
-  const [trainerName, settrainerName] = useState("");
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [trainer_id, setTrainer_id] = useState("")
+  const [trainerName, settrainerName] = useState("")
 
   if (typeof sessionStorage !== "undefined") {
-    sessionStorage.setItem("trainerId", trainer_id);
-    sessionStorage.setItem("trainerName", trainerName);
+    sessionStorage.setItem("trainerId", trainer_id)
+    sessionStorage.setItem("trainerName", trainerName)
   }
 
-  let trainer_center_id;
+  let trainer_center_id
   if (typeof sessionStorage !== "undefined") {
-    trainer_center_id = sessionStorage.getItem("trainerCenterId");
+    trainer_center_id = sessionStorage.getItem("trainerCenterId")
   }
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
-      return toast.error("All field are required");
+      return toast.error("All field are required")
     }
     try {
-      setLoading(true);
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setLoading(true)
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       const raw = JSON.stringify({
         email: email,
         password: password,
-      });
+      })
 
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       fetch("http://localhost:1000/api/v1/trainers/login", requestOptions)
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "login successful") {
-            toast.success(result.msg);
-            console.log(result.msg);
-            setTrainer_id(result.user._id);
-            settrainerName(result.user.name);
-            setLoading(false);
-            location.href = "/trainerPage";
+            toast.success(result.msg)
+            console.log(result.msg)
+            setTrainer_id(result.user._id)
+            settrainerName(result.user.name)
+
+            setLoading(false)
+            location.href = "/trainerPage"
           } else {
-            toast.error(result.msg);
-            setLoading(false);
+            toast.error(result.msg)
+            setLoading(false)
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const moveBack = () => {
-    window.history.back();
-  };
+    window.history.back()
+  }
 
   return (
     <div className="flex flex-row justify-center items-center min-h-screen m-auto home">
@@ -128,7 +129,7 @@ const TrainerLogin = () => {
       </div>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default TrainerLogin;
+export default TrainerLogin

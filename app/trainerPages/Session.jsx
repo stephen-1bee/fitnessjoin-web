@@ -4,10 +4,8 @@ import {
   EyeOutlined,
   DeleteOutlined,
 } from "@ant-design/icons"
-import { ArrowRight, ResetTvSharp } from "@mui/icons-material"
+import { ArrowRight } from "@mui/icons-material"
 import {
-  Button,
-  message,
   Popconfirm,
   Modal,
   Form,
@@ -15,14 +13,13 @@ import {
   DatePicker,
   TimePicker,
   Table,
-  Upload,
   Space,
   Tag,
 } from "antd"
 import TextArea from "antd/es/input/TextArea"
 import moment from "moment"
 import React, { useState, useEffect } from "react"
-import toast from "react-hot-toast"
+import toast, { Toaster } from "react-hot-toast"
 
 const Session = () => {
   const [title, setTitle] = useState("")
@@ -35,6 +32,10 @@ const Session = () => {
   const [addModal, setaddModal] = useState(false)
   const [pendingSession, setPendingSession] = useState([])
   const [approvedSession, setApprovedSession] = useState([])
+  const [trainer, setTrainer] = useState([])
+  const [isViewModal, setisViewModal] = useState(false)
+  const [isEdithModal, setIsEdithModal] = useState(false)
+  const [preview, setpreview] = useState([])
 
   // get trainer id
   let trainer_id
@@ -43,6 +44,30 @@ const Session = () => {
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
     trainer_id = sessionStorage.getItem("trainerId")
   }
+
+  const gettrainer = async (req, res) => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/trainers/one/${trainer_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setTrainer(result.trainer[0])
+          // console.log(result.trainer[0])
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const eligible = trainer.isAccepted
 
   // handle add session
   const addSession = async () => {
@@ -103,7 +128,14 @@ const Session = () => {
     }
   }
 
-  console.log(`trainer center id : ${trainer_center_id}`)
+  const hanldeOpenModel = () => {
+    if (eligible === false) {
+      return toast.error(
+        "You are not eligible to add Sessions yet. Please contact the  administrator."
+      )
+    }
+    setaddModal(true)
+  }
 
   // delete sesison
   const handleDelete = async (sessionid) => {
@@ -113,7 +145,7 @@ const Session = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/sessions/delete/${sessionid}`,
         requestOptions
       )
@@ -186,7 +218,7 @@ const Session = () => {
       key: "isApproved",
       render: (record) => (
         <Tag color={record ? "green" : "red"}>
-          {record ? "approved" : "pending"}
+          {record ? "active" : "pending"}
         </Tag>
       ),
     },
@@ -195,11 +227,20 @@ const Session = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined
-            onClick={() => setIsEdithModal(true)}
-            className="cursor-pointer"
-          />
-          <EyeOutlined onClick={() => handlePreview(record)} />
+          {eligible === false ? (
+            ""
+          ) : (
+            <EditOutlined
+              className="cursor-pointer"
+              onClick={() => setIsEdithModal(true)}
+            />
+          )}
+
+          {eligible === false ? (
+            ""
+          ) : (
+            <EyeOutlined onClick={() => handlePreview(record)} />
+          )}
           <Popconfirm
             title="Delete the Session"
             description="Are you sure to delete Session?"
@@ -210,7 +251,13 @@ const Session = () => {
               style: { backgroundColor: "red", color: "white" },
             }}
           >
-            <DeleteOutlined />
+            {eligible === false ? (
+              ""
+            ) : (
+              <div>
+                <DeleteOutlined />
+              </div>
+            )}
           </Popconfirm>
         </Space>
       ),
@@ -264,9 +311,15 @@ const Session = () => {
   }
 
   useEffect(() => {
+    gettrainer()
     getApprovedSession()
     getPendingSession()
   }, [])
+
+  const handlePreview = (info) => {
+    setisViewModal(true)
+    setpreview(info)
+  }
 
   return (
     <div>
@@ -289,7 +342,7 @@ const Session = () => {
         </div>
         {/* add new session */}
         <div
-          onClick={() => setaddModal(true)}
+          onClick={() => hanldeOpenModel(true)}
           className="flex p-3 bg-[#08a88a] text-white items-center justify-center rounded-md gap-2 w-fit cursor-pointer"
         >
           <PlusOutlined />
@@ -368,6 +421,125 @@ const Session = () => {
           </div>
         </Form>
       </Modal>
+
+      {/* update modal */}
+      <Modal
+        title="Update Session"
+        open={isEdithModal}
+        onCancel={() => setIsEdithModal(false)}
+        footer={[false]}
+      >
+        <Form className="flex flex-col gap-4">
+          <div>
+            <h1 className="text-lg">Name</h1>
+            <Input
+              // onChange={(e) => (e.target.value)}
+              className="py-4"
+            />
+          </div>
+
+          <div>
+            <h1 className="text-lg">Discription</h1>
+            <TextArea
+              // onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              placeholder="Description"
+            />
+          </div>
+
+          <h1 className="text-lg">Start Date</h1>
+          <DatePicker
+            className="py-4"
+            // onChange={(date, dateString) => setStartDate(dateString)}
+          />
+
+          <h1 className="text-lg">End Date</h1>
+          <DatePicker
+            className="py-4"
+            // onChange={(date, dateString) => setEndDate(dateString)}
+          />
+
+          <h1 className="text-lg">Start TIme</h1>
+          <TimePicker
+            className="py-4"
+            // onChange={(time, timeString) => setStartTime(timeString)}
+          />
+
+          <h1 className="text-lg">End Time</h1>
+          <TimePicker
+            className="py-4"
+            // onChange={(time, timeString) => setEndTime(timeString)}
+          />
+
+          <div
+            className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
+            // onClick={() => addSession()}
+          >
+            <h1 className="text-center">
+              {loading ? "Updating..." : "Update Session"}
+            </h1>
+          </div>
+        </Form>
+      </Modal>
+
+      {/* Preview modal */}
+      <Modal
+        title="Session Preview"
+        open={isViewModal}
+        footer={false}
+        onCancel={() => setisViewModal(false)}
+      >
+        <div>
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">Session Name</h1>
+            <p>{preview.title}</p>
+          </div>
+          <br />
+
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">Description</h1>
+            <p>{preview.description}</p>
+          </div>
+          <br />
+
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">Start-Time:</h1>
+            <p>{formattedTime(preview.start_time)}</p>
+          </div>
+          <br />
+
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">End-Time:</h1>
+            <p>{formattedTime(preview.end_time)}</p>
+          </div>
+          <br />
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">Start-Date:</h1>
+            <p>{formatteDate(preview.start_date)}</p>
+          </div>
+          <br />
+
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">End-Date:</h1>
+            <p>{formatteDate(preview.end_date)}</p>
+          </div>
+          <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Date Created:</h1>
+            <p>{formatteDate(preview.dateCreated)}</p>
+          </div>
+          <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Status:</h1>
+            <p>
+              <Tag color={preview.isApproved === true ? "green" : "red"}>
+                {preview.isApproved === true ? "Active" : "Pending"}
+              </Tag>
+            </p>
+          </div>
+        </div>
+      </Modal>
+      <Toaster />
     </div>
   )
 }
