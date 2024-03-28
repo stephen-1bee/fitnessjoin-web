@@ -22,17 +22,45 @@ const FitnessMembers = () => {
     console.log(e)
   }
 
-  // get user by fitness id
-
-  const [searchText, setSearchText] = useState("")
+  // get all user state
   const [allUsers, setAllUsers] = useState([])
+
+  // add new users state
   const [firstName, setFirst_name] = useState("")
   const [lastName, setLast_name] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [phone, setPhone] = useState("")
+  const [newUsers, setnewUsers] = useState([])
 
-  const [initialValues, setInitialValues] = useState({})
+  // update state variables
+  const [updateFirstname, setupdateFirstname] = useState("")
+  const [updateLastname, setupdateLastname] = useState("")
+  const [updateEmail, setupdateEmail] = useState("")
+  const [updatePhone, setupdatePhone] = useState("")
+
+  console.log(updateFirstname)
+  console.log(updateLastname)
+  console.log(updateEmail)
+  console.log(updatePhone)
+
+  // state to get and populate current user
+  const [currentUser, setCurrentUser] = useState(null)
+
+  // state to preview user details
+  const [userInfo, setuserInfo] = useState([])
+
+  // populate user
+  const populateUser = (info) => {
+    setCurrentUser(info)
+    setIsEdithModal(true)
+  }
+
+  // handle Preview function
+  const handlePreview = (info) => {
+    setuserInfo(info)
+    setisViewModal(true)
+  }
 
   // getting fitness id from the fitnessCenter
   let storedFitnessId
@@ -87,6 +115,49 @@ const FitnessMembers = () => {
     }
   }
 
+  const userId = currentUser?._id
+
+  const hanldeUpdate = async (userId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        first_name: updateFirstname ? updateFirstname : currentUser?.first_name,
+        last_name: updateLastname ? updateLastname : currentUser?.last_name,
+        email: updateEmail ? updateEmail : currentUser?.email,
+        phone: updatePhone ? updatePhone : currentUser?.phone,
+        password: currentUser?.password,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/users/update/${userId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "user updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            setIsEdithModal(false)
+            getAllUsers()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   // get all users
   const getAllUsers = async () => {
     try {
@@ -109,8 +180,8 @@ const FitnessMembers = () => {
       console.log(err)
     }
   }
-  const [newUsers, setnewUsers] = useState([])
 
+  // get new user
   const getNewUsers = async () => {
     try {
       const requestOptions = {
@@ -146,7 +217,7 @@ const FitnessMembers = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/users/delete/${memberId}`,
         requestOptions
       )
@@ -167,30 +238,6 @@ const FitnessMembers = () => {
     }
   }
 
-  // state to preview user details
-  const [userInfo, setuserInfo] = useState([])
-
-  // handle Preview
-  const handlePreview = (info) => {
-    setisViewModal(true)
-    setuserInfo(info)
-  }
-
-  // Handle search
-  const handleSearch = (selectedKeys, confirm) => {
-    confirm()
-    setSearchText(selectedKeys[0])
-  }
-
-  const searchInput = (
-    <Input.Search
-      className="py-5  w-[900px] outline-none "
-      placeholder="Search name"
-      value={searchText}
-      onChange={(e) => setSearchText(e.target.value)}
-      onPressEnter={handleSearch}
-    />
-  )
   const columns = [
     {
       title: "First Name",
@@ -218,7 +265,7 @@ const FitnessMembers = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => handleEdit(record)} />
+          <EditOutlined onClick={() => populateUser(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Member"
@@ -237,66 +284,6 @@ const FitnessMembers = () => {
       ),
     },
   ]
-
-  const [editedUser, setEditedUser] = useState(null)
-  const [editedfirst_name, editedSetFirst_name] = useState("")
-  const [editedLast_name, editedSetLast_name] = useState("")
-  const [editedEmail, editedSetEmail] = useState("")
-  const [editedPhone, editedSetPhone] = useState("")
-
-  // console.log("Edited User: ", editedUser);
-
-  const updateUser = async () => {
-    try {
-      var myHeaders = new Headers()
-      myHeaders.append("Content-Type", "application/json")
-
-      var raw = JSON.stringify({
-        first_name: editedfirst_name,
-        last_name: editedLast_name,
-        email: editedEmail,
-        phone: editedPhone,
-        ceter_id: storedFitnessId,
-      })
-
-      var requestOptions = {
-        method: "PUT",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      }
-
-      await fetch(
-        "http://localhost:1000/api/v1/users/update/64fd0ff7013a2b35676eb483",
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.msg === "user updated successfully") {
-            toast.success(result.msg)
-            setEditedUser(false)
-            getAllUsers()
-            console.log(result)
-          } else {
-            toast.success(result.msg)
-          }
-        })
-        .catch((error) => console.log("error", error))
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleEdit = (info) => {
-    setEditedUser(info)
-    setIsEdithModal(true)
-  }
-
-  const editCancel = () => {
-    setIsEdithModal(false)
-    getAllUsers()
-    // window.location.reload()
-  }
 
   return (
     <main>
@@ -437,7 +424,8 @@ const FitnessMembers = () => {
           <div>
             <h1 className="text-lg">Firstname</h1>
             <Input
-              // onChange={(e) => setFirst_name(e.target.value)}
+              defaultValue={currentUser?.first_name}
+              onChange={(e) => setupdateFirstname(e.target.value)}
               className="py-4"
             />
           </div>
@@ -445,7 +433,8 @@ const FitnessMembers = () => {
           <div>
             <h1 className="text-lg">Lastname</h1>
             <Input
-              // onChange={(e) => setLast_name(e.target.value)}
+              defaultValue={currentUser?.last_name}
+              onChange={(e) => setupdateLastname(e.target.value)}
               className="py-4"
             />
           </div>
@@ -453,7 +442,8 @@ const FitnessMembers = () => {
           <div>
             <h1 className="text-lg">Email</h1>
             <Input
-              // onChange={(e) => setEmail(e.target.value)}
+              defaultValue={currentUser?.email}
+              onChange={(e) => setupdateEmail(e.target.value)}
               className="py-4"
             />
           </div>
@@ -461,25 +451,17 @@ const FitnessMembers = () => {
           <div>
             <h1 className="text-lg">Phone</h1>
             <Input
-              // onChange={(e) => setPhone(e.target.value)}
-              className="py-4"
-            />
-          </div>
-          <div>
-            <h1 className="text-lg">Password</h1>
-            <Input.Password
-              // onChange={(e) => setPassword(e.target.value)}
+              defaultValue={currentUser?.phone}
+              onChange={(e) => setupdatePhone(e.target.value)}
               className="py-4"
             />
           </div>
 
           <div
             className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
-            // onClick={() => addUser()}
+            onClick={() => hanldeUpdate(userId)}
           >
-            <h1 className="text-center text-[16px]">
-              {loading ? "Updating..." : "Update Client"}
-            </h1>
+            <h1 className="text-center text-[16px]">Update User</h1>
           </div>
         </Form>
       </Modal>

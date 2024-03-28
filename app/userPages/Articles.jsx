@@ -3,7 +3,7 @@ import { FrownOutlined } from "@ant-design/icons";
 
 const Articles = () => {
   return (
-    <div>
+    <div className="mt-10">
       <h1 className="text-2xl">Articles</h1>
       <br />
       {/* <Tag */}

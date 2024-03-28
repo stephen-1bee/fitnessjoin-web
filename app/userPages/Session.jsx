@@ -41,7 +41,7 @@ const Session = () => {
     getSessions();
   }, []);
   return (
-    <div>
+    <div className="">
       <h1 className="text-2xl">My Session</h1>
       <br />
       {/* <Tag */}

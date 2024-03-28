@@ -561,7 +561,7 @@ const FitnessSessions = () => {
 
       {/* update modal */}
       <Modal
-        title="Update Sessions"
+        title="Update Session"
         open={isEdithModal}
         onCancel={() => setIsEdithModal(false)}
         footer={[false]}

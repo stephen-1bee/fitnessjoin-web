@@ -83,7 +83,7 @@ const Membership = () => {
         Memberhsip
       </p>
       <br />
-      <div className="md:flex-row md:gap-[300px] gap-5 flex flex-col">
+      <div className="flex md:gap-[300px] gap-5 flex-col">
         <div className="w-fit gap-5 flex flex-col">
           <h1 className="text-2xl">My Membership</h1>
           <div className="p-5 h-[100px] bg-[dodgerblue] text-white rounded shadow-2xl md:flex-row flex w-[200px] flex-col-reverse gap-5 ">
@@ -134,7 +134,6 @@ const Membership = () => {
           </div>
         </div>
       </div>
-      {/* <Tag */}
     </div>
   )
 }

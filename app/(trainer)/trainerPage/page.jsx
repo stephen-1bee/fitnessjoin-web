@@ -139,14 +139,14 @@ const page = () => {
   }
 
   const sendMessageUi = () => (
-    <div className="w-[330px] h-[350px] shadow-md py-5 flex items-center bg-white flex-col rounded-lg gap-3">
+    <div className="w-[330px] h-[350px] shadow-md py-5 flex items-center bg-white flex-col rounded-lg gap-2">
       <h1 className="text-xl font-semibold">Inform us about anything</h1>
       <textarea
         type="text"
         onChange={(e) => setmessage(e.target.value)}
         placeholder="tell us something about your experiences"
         rows={7}
-        className="rounded-md py-3 px-3 w-[250px] ring-1 ring-[#ccc] mt-5"
+        className="rounded-md py-3 px-3 w-[250px] ring-1 ring-[#ccc] mt-5 outline-black"
       />
       <button
         onClick={() => sendFeedback()}

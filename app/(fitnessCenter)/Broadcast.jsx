@@ -1,21 +1,21 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Input, Modal, Popconfirm, Space, Table } from "antd";
-import React, { useState, useEffect } from "react";
-import { ArrowRight, BroadcastOnPersonal } from "@mui/icons-material";
-import { toast, Toaster } from "react-hot-toast";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons"
+import { Input, Modal, Popconfirm, Space, Table } from "antd"
+import React, { useState, useEffect } from "react"
+import { ArrowRight, BroadcastOnPersonal } from "@mui/icons-material"
+import { toast, Toaster } from "react-hot-toast"
 
 const Broadcast = () => {
-  const [addModal, setAddModal] = useState(false);
-  const [loading, setloading] = useState(false);
-  const [notification, setNotification] = useState([]);
-  const [message, setMessage] = useState("");
+  const [addModal, setAddModal] = useState(false)
+  const [loading, setloading] = useState(false)
+  const [notification, setNotification] = useState([])
+  const [message, setMessage] = useState("")
 
-  console.log(message);
+  console.log(message)
 
   // getting fitness id from the fitnessCenter
-  let storedFitnessId;
+  let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
-    storedFitnessId = sessionStorage.getItem("fitnessCenterId");
+    storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
   const getNotification = async () => {
@@ -23,7 +23,7 @@ const Broadcast = () => {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/notifications/center/${storedFitnessId}`,
@@ -31,36 +31,36 @@ const Broadcast = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setNotification(result.center_notification);
-          console.log(result.center_notification);
+          setNotification(result.center_notification)
+          console.log(result.center_notification)
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   useEffect(() => {
-    getNotification();
-  }, []);
+    getNotification()
+  }, [])
 
   const handleAddNotification = async () => {
     try {
-      setloading(true);
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
+      setloading(true)
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
 
       const raw = JSON.stringify({
         center_id: storedFitnessId,
         message: message,
-      });
+      })
 
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
-      };
+      }
 
       await fetch(
         "http://localhost:1000/api/v1/notifications/create",
@@ -69,21 +69,21 @@ const Broadcast = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "notification sent successfully") {
-            toast.success(result.msg);
-            console.log(result.msg);
-            setloading(true);
-            setAddModal(false);
-            getNotification();
+            toast.success(result.msg)
+            console.log(result.msg)
+            setloading(true)
+            setAddModal(false)
+            getNotification()
           } else {
-            toast.error(result.msg);
-            setAddModal(false);
+            toast.error(result.msg)
+            setAddModal(false)
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // delete
   const handleDelete = async (notificationId) => {
@@ -91,7 +91,7 @@ const Broadcast = () => {
       const requestOptions = {
         method: "DELETE",
         redirect: "follow",
-      };
+      }
 
       fetch(
         `http://localhost:1000/api/v1/notifications/delete/${notificationId}`,
@@ -100,18 +100,18 @@ const Broadcast = () => {
         .then((response) => response.json())
         .then((result) => {
           if (result.msg === "notification deleted successfully") {
-            toast.success(result.msg);
-            console.log(result);
-            getNotification();
+            toast.success(result.msg)
+            console.log(result)
+            getNotification()
           } else {
-            toast.error(result.msg);
+            toast.error(result.msg)
           }
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error(error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   const columns = [
     {
       title: "Message",
@@ -145,7 +145,7 @@ const Broadcast = () => {
         </Space>
       ),
     },
-  ];
+  ]
 
   return (
     <div>
@@ -160,7 +160,7 @@ const Broadcast = () => {
         <span>
           <ArrowRight />
         </span>
-        <h1 className="font-semibold">Broadcast</h1>
+        <h1 className="font-semibold">Broadcasts</h1>
       </p>
       <div className="flex gap-5 items-center justify-between">
         <div className="flex gap-2 items-center">
@@ -205,7 +205,7 @@ const Broadcast = () => {
       </Modal>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default Broadcast;
+export default Broadcast

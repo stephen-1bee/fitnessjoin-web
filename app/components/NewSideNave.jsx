@@ -44,14 +44,14 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
   return (
     <div className="justify-center p-2 fixed">
       <div>
-        <div className="flex items-center ">
-          <Image width={50} height={50} alt="logo" src="/logo.png" />
-          <p className="text-lg">
-            Fitness<span className="font-black text-[#08A88A]">Join</span>
-          </p>
-        </div>
         <div className="flex flex-col px-11 mt-5 ">
-          <div className="flex flex-col py-5 gap-2 w-[fit]">
+          <div className="flex items-center ">
+            <Image width={50} height={50} alt="logo" src="/logo.png" />
+            <p className="text-lg">
+              Fitness<span className="font-black text-[#08A88A]">Join</span>
+            </p>
+          </div>
+          <div className="flex flex-col py-5 gap-2 w-[fit] mt-5">
             <button
               onClick={() => handleItemClick("FitnessDashboard")}
               className={` hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform delay-750 ease-in-out transition-all  hover:translate-x-2 ${

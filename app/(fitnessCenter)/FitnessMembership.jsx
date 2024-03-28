@@ -225,7 +225,7 @@ const FitnessMembership = () => {
             <input
               type="numeric"
               onChange={(e) => setPrice(e.target.value)}
-              className="py-4 w-[50px] ring-1 ring-[#ccc] rounded-md px-3"
+              className="py-4 w-full ring-1 ring-[#ccc] rounded-md px-3"
             />
           </div>
 
@@ -261,7 +261,7 @@ const FitnessMembership = () => {
             <input
               type="numeric"
               onChange={(e) => updatePrice(e.target.value)}
-              className="py-4 w-[50px] ring-1 ring-[#ccc] rounded-md px-3"
+              className="py-4 w-full ring-1 ring-[#ccc] rounded-md px-3"
             />
           </div>
 

@@ -36,7 +36,7 @@ import { FloatButton } from "antd"
 import toast, { Toaster } from "react-hot-toast"
 
 const page = () => {
-  const [myState, setMyState] = useState("")
+  const [myState, setMyState] = useState("hidden")
   const [activeModule, setActiveModule] = useState("")
   const [user, setUser] = useState([])
   const [notification, setnotification] = useState([])
@@ -249,7 +249,7 @@ const page = () => {
   return (
     <div className="min-h-screen flex bg-[#fdfaf3]">
       {/* Sidenav */}
-      <div className="flex-[0.2.4] shadow bg-[#fdfaf3] p-9 hidden md:block">
+      <div className="flex-[0.2.4] shadow bg-[#fdfaf3] p-5 hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           <Image width={50} height={50} alt="logo" src="/logo.png" />
           <p className="text-lg">
@@ -258,7 +258,7 @@ const page = () => {
         </div>
 
         {/* Main Sidebar Elements */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 p-5">
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
             onClick={() => setActiveModule("dashboard")}
@@ -447,7 +447,7 @@ const page = () => {
               okButtonProps={{
                 style: { backgroundColor: "#c83a3a", color: "white" },
               }}
-              className="text-[]"
+              className=""
             >
               <div className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full ">
                 <LogoutOutlined />

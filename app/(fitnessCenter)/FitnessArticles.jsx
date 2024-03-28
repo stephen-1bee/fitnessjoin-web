@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react"
-import { Button, Space, Popconfirm, Modal, Input, Form, Table, Tag } from "antd"
+import {
+  Button,
+  Space,
+  Popconfirm,
+  Modal,
+  Input,
+  Form,
+  Table,
+  Tag,
+  Skeleton,
+  Empty,
+} from "antd"
 import Image from "next/image"
 import {
   CheckOutlined,
@@ -21,6 +32,7 @@ const FitnessArticles = () => {
   const [loading, setloading] = useState(false)
   const [fitnessArticles, setAllFitnessArticles] = useState([])
   const [trainerArticles, settrainerArticles] = useState([])
+  const [isViewModal, setisViewModal] = useState(false)
 
   const [title, settitle] = useState("")
   const [desc, setdesc] = useState("")
@@ -245,6 +257,7 @@ const FitnessArticles = () => {
       render: (_, record) => (
         <Space size="middle">
           <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
+          <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Article"
             description="Are you sure to delete Article?"
@@ -316,7 +329,7 @@ const FitnessArticles = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setIsEdithModal(true)} />
+          <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete article"
@@ -345,6 +358,16 @@ const FitnessArticles = () => {
       ),
     },
   ]
+
+  // state to preview article details
+  const [articlePreview, setarticlePreview] = useState([])
+
+  // handle Preview
+  const handlePreview = (info) => {
+    setisViewModal(true)
+    setarticlePreview(info)
+  }
+
   return (
     <div className="min-h-screen">
       <div className="flex gap-2 items-center">
@@ -380,10 +403,6 @@ const FitnessArticles = () => {
       </div>
 
       <div>
-        {/* <Input.Search
-          className="p-3 w-full outline-none "
-          placeholder="Search Articles"
-        /> */}
         <Table columns={column} dataSource={fitnessArticles} />
       </div>
       <div className="flex gap-2 py-3">
@@ -485,6 +504,48 @@ const FitnessArticles = () => {
         </Form>
       </Modal>
 
+      {/* preview */}
+      <Modal
+        title="User Preview"
+        open={isViewModal}
+        onCancel={() => setisViewModal(false)}
+        footer={false}
+      >
+        <div>
+          <div>
+            {articlePreview.photo ? (
+              <Image
+                width={100}
+                height={100}
+                alt="article  image"
+                src={`http:/localhost:1000/${articlePreview.photo}`}
+                className="rounded-lg"
+              />
+            ) : (
+              "no image"
+            )}
+          </div>
+          <br />
+
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">Title:</h1>
+            <p>{articlePreview.title}</p>
+          </div>
+          <br />
+
+          <div className="flex flex-col gap-1">
+            <h1 className="font-bold">url:</h1>
+            <p>{articlePreview.url}</p>
+          </div>
+          <br />
+
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Short note:</h1>
+            <p>{articlePreview.desc}</p>
+          </div>
+          <br />
+        </div>
+      </Modal>
       <Toaster />
     </div>
   )

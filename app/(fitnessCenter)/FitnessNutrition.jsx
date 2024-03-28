@@ -21,6 +21,7 @@ import {
   EyeOutlined,
   PlusOutlined,
   CheckOutlined,
+  FrownOutlined,
 } from "@ant-design/icons"
 import { Toaster, toast } from "react-hot-toast"
 
@@ -231,9 +232,9 @@ const FitnessNutrition = () => {
         {isLoading ? (
           <Spin size="small" />
         ) : nutritionList.length === 0 ? (
-          <div className="m-auto flex py-3 flex-col items-center">
-            <p>🙁</p>
-            <p className="text-[#818181]">No nutritions yet</p>
+          <div className="m-auto flex py-3 flex-col items-center gap-2">
+            <FrownOutlined />
+            <p className="text-[#818181]">No new nutritions added yet</p>
           </div>
         ) : (
           nutritionList.map((nutrition, index) => (
@@ -296,9 +297,9 @@ const FitnessNutrition = () => {
           {isLoading ? (
             <Spin size="small" />
           ) : trainerNutrition.length === 0 ? (
-            <div className="m-auto flex py-3 flex-col items-center">
-              <p>🙁</p>
-              <p className="text-[#818181]">No nutritions yet</p>
+            <div className="m-auto flex py-3 flex-col items-center gap-2">
+              <FrownOutlined />
+              <p className="text-[#818181]">No new nutritions added yet</p>
             </div>
           ) : (
             trainerNutrition.map((nutrition, index) => (
@@ -339,18 +340,25 @@ const FitnessNutrition = () => {
                       <DeleteOutlined className="text-[18px] mt-1 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full" />
                     </Popconfirm>
                     <div
-                      className="bg-[#08a88a] h-7 w-7 rounded-full flex items-center justify-center hover:shadow-md"
                       title={
                         nutrition.isApproved
-                          ? "dissapprove nutrition"
-                          : "Approve nutrition"
+                          ? "Approve nutrition"
+                          : "dissapprove nutrition"
                       }
                       onClick={() =>
                         handleToggle(nutrition._id, nutrition.isApproved)
                       }
                     >
                       <h1 className="text-white">
-                        {nutrition.isApproved ? <CheckOutlined /> : "x"}
+                        {nutrition.isApproved ? (
+                          <div className="bg-red-500 h-7 w-7 rounded-full flex items-center justify-center hover:shadow-md">
+                            <h1>x</h1>
+                          </div>
+                        ) : (
+                          <div className="bg-[#08a88a] h-7 w-7 rounded-full flex items-center justify-center hover:shadow-md">
+                            <CheckOutlined />
+                          </div>
+                        )}
                       </h1>
                     </div>
                   </div>

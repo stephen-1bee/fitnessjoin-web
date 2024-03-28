@@ -1,71 +1,31 @@
-"use client";
-import React, { useState } from "react";
-import { FloatButton } from "antd";
-import { Toaster, toast } from "react-hot-toast";
-import { Facebook, WhatsApp } from "@mui/icons-material";
+"use client"
+import React, { useState } from "react"
+import { FloatButton } from "antd"
+import { Toaster, toast } from "react-hot-toast"
+import { Facebook, WhatsApp } from "@mui/icons-material"
 
 const Footer = () => {
-  const [name, setname] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setloading] = useState(false);
+  const [name, setname] = useState("")
+  const [message, setMessage] = useState("")
+  const [loading, setloading] = useState(false)
 
-  // send message
-  // const handleMessage = async (e) => {
-  //   e.preventDefault();
-  //   if (!name || !message) {
-  //     return toast.error("all fields are required");
-  //   }
-  //   try {
-  //     setloading(true);
-  //     let headersList = {
-  //       Accept: "*/*",
-  //       "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-  //       "Content-Type": "application/json",
-  //     };
-
-  //     let bodyContent = JSON.stringify({
-  //       name: name,
-  //       message: message,
-  //     });
-
-  //     let response = await fetch(
-  //       "https://fitness-join-api-xe62.onrender.com/api/v1/contactUs/create",
-  //       {
-  //         method: "POST",
-  //         body: bodyContent,
-  //         headers: headersList,
-  //       }
-  //     );
-  //     let data = await response.json();
-  //     if (data.msg === "message sent successfuly") {
-  //       toast.success(data.msg);
-  //       setloading(false);
-  //       console.log(data);
-  //     } else {
-  //       toast.error(data.msg);
-  //       setloading(false);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
   const handleMessage = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!name || !message) {
-      return toast.error("All fields are required");
+      return toast.error("All fields are required")
     }
     try {
-      setloading(true);
+      setloading(true)
       let headersList = {
         Accept: "*/*",
         "User-Agent": "Thunder Client (https://www.thunderclient.com)",
         "Content-Type": "application/json",
-      };
+      }
 
       let bodyContent = JSON.stringify({
         name: name,
         message: message,
-      });
+      })
 
       let response = await fetch(
         "https://fitness-join-api-xe62.onrender.com/api/v1/contactUs/create",
@@ -74,21 +34,21 @@ const Footer = () => {
           body: bodyContent,
           headers: headersList,
         }
-      );
-      let data = await response.json();
+      )
+      let data = await response.json()
       if (data.msg === "message sent successfuly") {
-        toast.success(data.msg);
-        setloading(false);
-        setname("");
-        setMessage("");
+        toast.success(data.msg)
+        setloading(false)
+        setname("")
+        setMessage("")
       } else {
-        toast.error(data.msg);
-        setloading(false);
+        toast.error(data.msg)
+        setloading(false)
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
     <div
@@ -105,14 +65,14 @@ const Footer = () => {
               Feel free to reach us today
             </p>
           </div>
-         
+
           <form action="" className="flex flex-col mb-11 gap-2 w-full">
             <input
               type="name"
               placeholder="Your name"
               id="info"
               onChange={(e) => setname(e.target.value)}
-              className="bg-gray-200 p-2 rounded-lg bg-transparent border-[1-px] border-[#ccc] outline-[#08A88A] text-[#08A88A] font-semibold placehoder:text-[#ccc] outline-none placeholder:text-[#9d9d9d] w-full"
+              className="bg-gray-200 p-2 rounded-lg bg-transparent border-[1-px] border-[#ccc] outline-[#08A88A] text-[#08A88A] font-semibold placehoder:text-[#ccc] outline-none placeholder:text-[#9d9d9d] w-[200px]"
             />
             <textarea
               type="text"
@@ -141,7 +101,7 @@ const Footer = () => {
       </div>
       <Toaster />
     </div>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

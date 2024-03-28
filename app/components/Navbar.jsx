@@ -1,32 +1,32 @@
-"use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import { Close, LightModeOutlined, Menu } from "@mui/icons-material";
+"use client"
+import React, { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined"
+import { Close, LightModeOutlined, Menu } from "@mui/icons-material"
 
 const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false)
   const handleMode = () => {
-    setDarkMode((prevState) => !prevState);
-  };
-  const [menuVisible, setMenuVisible] = useState(false);
+    setDarkMode((prevState) => !prevState)
+  }
+  const [menuVisible, setMenuVisible] = useState(false)
 
   const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
+    setMenuVisible(!menuVisible)
+  }
   const closeMenu = () => {
-    setMenuVisible(false);
-  };
+    setMenuVisible(false)
+  }
 
   return (
     <nav className="flex h-[8vh]  bg-[#fdf9f0] p-5  w-full items-center justify-between lg:p-12 mb-7 gap-2  fixed z-[999]">
       <div>
-        <Link href="/" className="flex">
+        <Link href="/" className="flex items-center justify-center gap-1">
           <Image width={50} height={50} alt="logo" src="/logo.png" />
-          <h1 className="font-black ml-2 mt-3 text-lg ">
-            Fitness<span className="text-btn">Join</span>
-          </h1>
+          <p className="text-lg font-black">
+            Fitness<span className=" text-[#08A88A]">Join</span>
+          </p>
         </Link>
       </div>
       {/* Menu */}
@@ -103,7 +103,7 @@ const Navbar = () => {
         </Link>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
