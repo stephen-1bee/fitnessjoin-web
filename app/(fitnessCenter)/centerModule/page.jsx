@@ -113,15 +113,8 @@ const page = () => {
         <CenterNav />
         <div className="p-6 overflow-y-auto bg-[#f0f0f0] w-full h-full mt-[100px]">
           {renderContent()}
-        </div>{" "}
+        </div>
       </div>
-      {/* code  */}
-      {/* <CenterSideNav setActiveItem={setActiveItem} activeItem={activeItem} /> */}
-      {/* nav */}
-      {/* content */}
-      {/* <div className="p-6 overflow-y-auto mt-[10vh] bg-[#f0f0f0] w-full ml-[15rem] min-h-screen">
-        {renderContent()}
-      </div> */}
     </div>
   )
 }

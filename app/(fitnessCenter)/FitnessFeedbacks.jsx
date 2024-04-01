@@ -9,6 +9,7 @@ import { Popconfirm } from "antd"
 import React, { useState, useEffect } from "react"
 import toast, { Toaster } from "react-hot-toast"
 import { ArrowRight, Person2Outlined } from "@mui/icons-material"
+import moment from "moment"
 
 const FitnessFeedbacks = () => {
   const [trainerFeedback, settrainerFeedback] = useState([])
@@ -17,6 +18,10 @@ const FitnessFeedbacks = () => {
   let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
+  }
+
+  const formattDate = (date) => {
+    return moment(date).format("MMM dd, yyyy")
   }
 
   const getTrainerFeedback = async () => {
@@ -131,18 +136,23 @@ const FitnessFeedbacks = () => {
                       </h2>
                       <p className="text-[#818181] ml-6">{feedback.message}</p>
                     </div>
-                    <Popconfirm
-                      title="Delete Feedback"
-                      description="Are you sure to delete Traine's Feedbackr?"
-                      onConfirm={() => handleDelete(feedback._id)}
-                      okText="Delete"
-                      cancelText="No"
-                      okButtonProps={{
-                        style: { backgroundColor: "red", color: "white" },
-                      }}
-                    >
-                      <DeleteOutlined />
-                    </Popconfirm>
+                    <div className="flex flex-col gap-1 items-end ">
+                      <p className="text-[12px]">
+                        {formattDate(feedback.dateCreated)}
+                      </p>
+                      <Popconfirm
+                        title="Delete Feedback"
+                        description="Are you sure to delete User's Feedback?"
+                        onConfirm={() => handleDelete(feedback._id)}
+                        okText="Delete"
+                        cancelText="No"
+                        okButtonProps={{
+                          style: { backgroundColor: "red", color: "white" },
+                        }}
+                      >
+                        <DeleteOutlined />
+                      </Popconfirm>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -168,18 +178,23 @@ const FitnessFeedbacks = () => {
                       </h2>
                       <p className="text-[#818181] ml-6">{feedback.message}</p>
                     </div>
-                    <Popconfirm
-                      title="Delete Feedback"
-                      description="Are you sure to delete User's Feedback?"
-                      onConfirm={() => handleDelete(feedback._id)}
-                      okText="Delete"
-                      cancelText="No"
-                      okButtonProps={{
-                        style: { backgroundColor: "red", color: "white" },
-                      }}
-                    >
-                      <DeleteOutlined />
-                    </Popconfirm>
+                    <div className="flex flex-col gap-1 items-end ">
+                      <p className="text-[12px]">
+                        {formattDate(feedback.dateCreated)}
+                      </p>
+                      <Popconfirm
+                        title="Delete Feedback"
+                        description="Are you sure to delete User's Feedback?"
+                        onConfirm={() => handleDelete(feedback._id)}
+                        okText="Delete"
+                        cancelText="No"
+                        okButtonProps={{
+                          style: { backgroundColor: "red", color: "white" },
+                        }}
+                      >
+                        <DeleteOutlined />
+                      </Popconfirm>
+                    </div>
                   </div>
                 ))}
               </div>

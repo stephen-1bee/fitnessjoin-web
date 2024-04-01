@@ -16,7 +16,7 @@ const Page = () => {
 
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.setItem("userId", user_id)
-    sessionStorage.setItem("usercenterId", userCenter_Id)
+    sessionStorage.setItem("userCenterId", userCenter_Id)
   }
 
   const handleLogin = async (e) => {

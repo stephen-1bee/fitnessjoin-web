@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import {
-  Button,
   message,
   Popconfirm,
   Modal,
@@ -9,7 +8,6 @@ import {
   DatePicker,
   TimePicker,
   Table,
-  Upload,
   Space,
   Tag,
 } from "antd"
@@ -17,7 +15,6 @@ import {
   EditOutlined,
   EyeOutlined,
   PlusOutlined,
-  UploadOutlined,
   CheckOutlined,
   DeleteOutlined,
 } from "@ant-design/icons"
@@ -48,6 +45,15 @@ const FitnessSessions = () => {
   // format time
   const formattedTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
+
+  // state to hold current session
+  const [currentSession, setcurrentSession] = useState(null)
+
+  // function to populate session update field
+  const populateSession = (info) => {
+    setcurrentSession(info)
+    setIsEdithModal(true)
   }
 
   // getting fitness id from the fitnessCenter
@@ -83,19 +89,6 @@ const FitnessSessions = () => {
     } catch (err) {
       console.log(err)
     }
-  }
-
-  const updateConfirm = (e) => {
-    console.log(e)
-    message.success("Session Plan successfully Updated")
-  }
-
-  // const searchInput = (
-  //   <Input.Search className="w-[300px]" placeholder="Search name" />
-  // );
-
-  const handleCancel = (e) => {
-    // Handle cancel logic if needed
   }
 
   const addSession = async () => {
@@ -178,6 +171,7 @@ const FitnessSessions = () => {
     }
   }
 
+  // get affiliate trainer sessions
   const getTrainerSession = async () => {
     try {
       const requestOptions = {
@@ -289,7 +283,7 @@ const FitnessSessions = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setIsEdithModal(true)} />
+          <EditOutlined onClick={() => populateSession(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Session"
@@ -370,7 +364,7 @@ const FitnessSessions = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setIsEdithModal(true)} />
+          <EditOutlined onClick={() => populateSession(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Trainer"
@@ -431,58 +425,6 @@ const FitnessSessions = () => {
           <PlusOutlined />
           <h1>Add New Session</h1>
         </div>
-      </div>
-
-      {/* <Form className=" outline-none p-5">{searchInput}</Form> */}
-
-      <div className="flex gap-10">
-        {/* <div className="flex gap-5 mt-[50px] mr-[700px]  w-[250px] shadow hover:shadow-2xl transition-all duration-300 cursor-pointer rounded-lg">
-          <div className="flex items-center justify-between flex-col  w-[content]">
-            <Image
-              className="rounded-lg"
-              width={400}
-              height={400}
-              alt="Image"
-              src="/city.jpg"
-            />
-            <div className="flex mr-10 mt-2  flex-col gap-1">
-              <h1 className="font-bold text-lg mb-4 mt-1">{session.title}</h1>
-              <h1 className="text-gray-600">{session.desc}</h1>
-              <div className="flex gap-2">
-                <h1 className="text-gray-600">{session.startTime} - </h1>
-                <h1 className="text-gray-600">{session.endTime}</h1>
-              </div>
-              <div className="flex gap-2">
-                <h1 className="text-gray-600">{session.startDate} - </h1>
-                <h1 className="text-gray-600">{session.endDate} </h1>
-              </div>
-              <hr className="bg-black mb-1 mt-2" />
-              <div className="flex mb-2 gap-2 mt-2 items-center">
-                <CreateOutlinedIcon className="text-[#818181] text-[22px]" />
-                <EyeOutlined className="text-[#818181]" />
-                <Popconfirm
-                  className="border-none text-[#818181]"
-                  title="Delete"
-                  description="Do you want to delete this Article?"
-                  onConfirm={handleConfirm} // Renamed from confirm
-                  onCancel={handleCancel}
-                  okText="Yes"
-                  cancelText="No"
-                  icon={
-                    <QuestionCircleOutlined
-                      style={{
-                        color: "red",
-                      }}
-                    />
-                  }
-                >
-                  <DeleteOutline />
-                </Popconfirm>
-              </div>
-            </div>
-          </div>
-          
-        </div> */}
       </div>
 
       {/* Table */}
@@ -570,6 +512,7 @@ const FitnessSessions = () => {
           <div>
             <h1 className="text-lg">Name</h1>
             <Input
+              defaultValue={currentSession?.title}
               // onChange={(e) => (e.target.value)}
               className="py-4"
             />
@@ -578,6 +521,7 @@ const FitnessSessions = () => {
           <div>
             <h1 className="text-lg">Discription</h1>
             <TextArea
+              defaultValue={currentSession?.description}
               // onChange={(e) => setDescription(e.target.value)}
               rows={4}
               placeholder="Description"
@@ -586,6 +530,7 @@ const FitnessSessions = () => {
 
           <h1 className="text-lg">Start Date</h1>
           <DatePicker
+            defaultValue={currentSession?.start_date}
             className="py-4"
             // onChange={(date, dateString) => setStartDate(dateString)}
           />
@@ -631,39 +576,53 @@ const FitnessSessions = () => {
             <h1 className="font-bold">Session Name</h1>
             <p>{preview.title}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-bold">Description</h1>
             <p>{preview.description}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-bold">Start-Time:</h1>
             <p>{formattedTime(preview.start_time)}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">End-Time:</h1>
             <p>{formattedTime(preview.end_time)}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
+
           <div className="flex flex-col gap-1">
             <h1 className="font-bold">Start-Date:</h1>
             <p>{formatteDate(preview.start_date)}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">End-Date:</h1>
             <p>{formatteDate(preview.end_date)}</p>
           </div>
+          <div className="border-b border-[#ccc] border-[0.2px] mt-2 " />
           <br />
+
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Date Created:</h1>
             <p>{formatteDate(preview.dateCreated)}</p>
+          </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
+          <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Date Updated:</h1>
+            <p>{formatteDate(preview.dateUpdated)}</p>
           </div>
         </div>
       </Modal>

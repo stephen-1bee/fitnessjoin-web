@@ -45,6 +45,15 @@ const Session = () => {
     trainer_id = sessionStorage.getItem("trainerId")
   }
 
+  // state to hold current session
+  const [currentSession, setcurrentSession] = useState(null)
+
+  // function to populate session update field
+  const populateSession = (info) => {
+    setcurrentSession(info)
+    setIsEdithModal(true)
+  }
+
   const gettrainer = async () => {
     try {
       const requestOptions = {
@@ -180,7 +189,6 @@ const Session = () => {
       dataIndex: "title",
       key: "food",
       render: (title) => (title ? title : "no title"),
-      // : isSession ? "Title not Available" : isSession.title, // Display "Title not found" or "Loading..." based on isSession
     },
 
     {
@@ -232,15 +240,10 @@ const Session = () => {
           ) : (
             <EditOutlined
               className="cursor-pointer"
-              onClick={() => setIsEdithModal(true)}
+              onClick={() => populateSession(record)}
             />
           )}
-
-          {eligible === false ? (
-            ""
-          ) : (
-            <EyeOutlined onClick={() => handlePreview(record)} />
-          )}
+          <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Session"
             description="Are you sure to delete Session?"
@@ -433,6 +436,7 @@ const Session = () => {
           <div>
             <h1 className="text-lg">Name</h1>
             <Input
+              defaultValue={currentSession?.title}
               // onChange={(e) => (e.target.value)}
               className="py-4"
             />
@@ -441,6 +445,7 @@ const Session = () => {
           <div>
             <h1 className="text-lg">Discription</h1>
             <TextArea
+              defaultValue={currentSession?.description}
               // onChange={(e) => setDescription(e.target.value)}
               rows={4}
               placeholder="Description"
@@ -449,6 +454,11 @@ const Session = () => {
 
           <h1 className="text-lg">Start Date</h1>
           <DatePicker
+            defaultValue={
+              currentSession?.start_date
+                ? moment(currentSession?.start_date, "YYYY-MM-DD")
+                : null
+            }
             className="py-4"
             // onChange={(date, dateString) => setStartDate(dateString)}
           />

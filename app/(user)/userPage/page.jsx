@@ -47,7 +47,7 @@ const page = () => {
   let user_center_id
   if (typeof sessionStorage !== "undefined") {
     userId = sessionStorage.getItem("userId")
-    user_center_id = sessionStorage.getItem("usercenterId")
+    user_center_id = sessionStorage.getItem("userCenterId")
   }
 
   // get a user
@@ -252,9 +252,12 @@ const page = () => {
       <div className="flex-[0.2.4] shadow bg-[#fdfaf3] p-5 hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           <Image width={50} height={50} alt="logo" src="/logo.png" />
-          <p className="text-lg">
-            Fitness<span className="font-black text-[#08A88A]">Join</span>
-          </p>
+          <div className="flex flex-col items-center  mt-2">
+            <p className="text-lg">
+              Fitness<span className="font-black text-[#08A88A]">Join</span>
+            </p>
+            <h1>Client</h1>
+          </div>
         </div>
 
         {/* Main Sidebar Elements */}

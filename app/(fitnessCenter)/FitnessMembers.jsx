@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons"
 import { toast, Toaster } from "react-hot-toast"
 import { ArrowRight, Person2Outlined } from "@mui/icons-material"
+import moment from "moment"
 
 const FitnessMembers = () => {
   const [isEdithModal, setIsEdithModal] = useState(false)
@@ -39,11 +40,6 @@ const FitnessMembers = () => {
   const [updateEmail, setupdateEmail] = useState("")
   const [updatePhone, setupdatePhone] = useState("")
 
-  console.log(updateFirstname)
-  console.log(updateLastname)
-  console.log(updateEmail)
-  console.log(updatePhone)
-
   // state to get and populate current user
   const [currentUser, setCurrentUser] = useState(null)
 
@@ -60,6 +56,11 @@ const FitnessMembers = () => {
   const handlePreview = (info) => {
     setuserInfo(info)
     setisViewModal(true)
+  }
+
+  // formatt date
+  const formatteDate = (date) => {
+    return moment(date).format("dddd, MMMM D, YYYY")
   }
 
   // getting fitness id from the fitnessCenter
@@ -117,7 +118,7 @@ const FitnessMembers = () => {
 
   const userId = currentUser?._id
 
-  const hanldeUpdate = async (userId) => {
+  const handleUpdate = async (userId) => {
     try {
       const myHeaders = new Headers()
       myHeaders.append("Content-Type", "application/json")
@@ -137,7 +138,7 @@ const FitnessMembers = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/users/update/${userId}`,
         requestOptions
       )
@@ -259,7 +260,12 @@ const FitnessMembers = () => {
       dataIndex: "phone",
       key: "phone",
     },
-
+    {
+      title: "Date Created",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => formatteDate(date),
+    },
     {
       title: "Actions",
       key: "actions",
@@ -459,7 +465,7 @@ const FitnessMembers = () => {
 
           <div
             className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
-            onClick={() => hanldeUpdate(userId)}
+            onClick={() => handleUpdate(userId)}
           >
             <h1 className="text-center text-[16px]">Update User</h1>
           </div>
@@ -500,6 +506,11 @@ const FitnessMembers = () => {
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Memberhsip:</h1>
             <p>{userInfo.membership_id}</p>
+          </div>
+          <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Date Created:</h1>
+            <p>{formatteDate(userInfo.dateCreated)}</p>
           </div>
           <br />
         </div>

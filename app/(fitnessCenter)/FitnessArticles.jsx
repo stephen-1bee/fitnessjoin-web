@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import {
-  Button,
   Space,
   Popconfirm,
   Modal,
@@ -9,7 +8,6 @@ import {
   Table,
   Tag,
   Skeleton,
-  Empty,
 } from "antd"
 import Image from "next/image"
 import {
@@ -25,6 +23,7 @@ import TextArea from "antd/es/input/TextArea"
 import { Toaster, toast } from "react-hot-toast"
 import { ArrowRight } from "@mui/icons-material"
 import { Link } from "@mui/material"
+import moment from "moment"
 
 const FitnessArticles = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -34,20 +33,39 @@ const FitnessArticles = () => {
   const [trainerArticles, settrainerArticles] = useState([])
   const [isViewModal, setisViewModal] = useState(false)
 
+  // state to add new article
   const [title, settitle] = useState("")
   const [desc, setdesc] = useState("")
   const [photo, setphoto] = useState("")
   const [url, setUrl] = useState("")
+
+  // state to update article fields
+  const [updateTitle, setupdateTitle] = useState("")
+  const [updateDesc, setupdateDesc] = useState("")
+  const [updatePhoto, setupdatePhoto] = useState("")
+  const [updateUrl, setupdateUrl] = useState("")
+
+  // state to hold current article
+  const [currentArticle, setcurrentArticle] = useState(null)
+
+  // function to populate current article fields
+  const populateArticle = (info) => {
+    setcurrentArticle(info)
+    setUpdateModlaVisible(true)
+  }
 
   let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
-  const deleteCancel = (e) => {
-    console.log(e)
+  // formatt date
+  const formatteDate = (date) => {
+    return moment(date).format("dddd, MMMM D, YYYY")
   }
 
+
+  // add article api int
   const handleAddArticle = async () => {
     if (!title || !desc || !url || !photo) {
       return toast.error("All field are required")
@@ -167,6 +185,51 @@ const FitnessArticles = () => {
     }
   }
 
+  // get current article id
+  const articleId = currentArticle?._id
+
+  const handleUpdateArticle = async (articleId) => {
+    try {
+      const formdata = new FormData()
+      formdata.append(
+        "photo",
+        updatePhoto ? updatePhoto : currentArticle?.photo
+      )
+      formdata.append(
+        "title",
+        updateTitle ? updateTitle : currentArticle?.updateTitle
+      )
+      formdata.append("desc", updateDesc ? updateDesc : currentArticle?.desc)
+      formdata.append("url", updateUrl ? updateUrl : currentArticle?.url)
+
+      const requestOptions = {
+        method: "PUT",
+        body: formdata,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/articles/update/${articleId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "article updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            setUpdateModlaVisible(false)
+            getAllArticles()
+            getTrainerArticle()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     getAllArticles()
     getTrainerArticle()
@@ -242,6 +305,18 @@ const FitnessArticles = () => {
       key: "desc",
     },
     {
+      title: "Date Created",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => formatteDate(date),
+    },
+    {
+      title: "Date Updated",
+      dataIndex: "dateUpdated",
+      key: "dateUpdated",
+      render: (date) => formatteDate(date),
+    },
+    {
       title: "Status",
       dataIndex: "isApproved",
       key: "isApproved",
@@ -256,7 +331,7 @@ const FitnessArticles = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
+          <EditOutlined onClick={() => populateArticle(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Article"
@@ -305,14 +380,43 @@ const FitnessArticles = () => {
       ),
     },
     {
-      title: "Article Title",
+      title: "Title",
       dataIndex: "title",
       key: "title",
+    },
+    {
+      title: "Link",
+      dataIndex: "url",
+      key: "url",
+      render: (url) => (
+        <div>
+          {url ? (
+            <Link href={url} className="flex gap-1 items-center cursor-pointer">
+              <LinkOutlined />
+              {url}
+            </Link>
+          ) : (
+            "no url"
+          )}
+        </div>
+      ),
     },
     {
       title: "Decription",
       dataIndex: "desc",
       key: "desc",
+    },
+    {
+      title: "Date Created",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => formatteDate(date),
+    },
+    {
+      title: "Date Updated",
+      dataIndex: "dateUpdated",
+      key: "dateUpdated",
+      render: (date) => formatteDate(date),
     },
     {
       title: "Status",
@@ -329,13 +433,12 @@ const FitnessArticles = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
+          <EditOutlined onClick={() => populateArticle(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete article"
             description="Are you sure to delete Trainer's Article?"
             onConfirm={() => handleDeletArticle(record._id)}
-            onCancel={deleteCancel}
             okText="Delete"
             cancelText="No"
             okButtonProps={{
@@ -364,8 +467,8 @@ const FitnessArticles = () => {
 
   // handle Preview
   const handlePreview = (info) => {
-    setisViewModal(true)
     setarticlePreview(info)
+    setisViewModal(true)
   }
 
   return (
@@ -470,36 +573,45 @@ const FitnessArticles = () => {
         footer={[false]}
       >
         <Form className="flex flex-col gap-3">
+          <img
+            src={`http://localhost:1000/${currentArticle?.photo}`}
+            className="w-20 h-20 rounded-md"
+            alt="Preview"
+          />
           <input
             type="file"
-            // onChange={(e) => setphoto(e.target.files[0])}
+            onChange={(e) => setupdatePhoto(e.target.files[0])}
             className="py-4"
           />
 
           <h1 className="text-lg">Title</h1>
           <Input
-            // onChange={(e) => settitle(e.target.value)}
+            defaultValue={currentArticle?.title}
+            onChange={(e) => setupdateTitle(e.target.value)}
             className="py-4"
           />
 
           <h1 className="text-lg">Url</h1>
           <Input
+            defaultValue={currentArticle?.url}
             placeholder="url"
             className="py-4"
-            // onChange={(e) => setUrl(e.target.value)}
+            onChange={(e) => setupdateUrl(e.target.value)}
           />
 
           <h1 className="text-lg">Description</h1>
           <TextArea
+            defaultValue={currentArticle?.desc}
             rows={4}
             placeholder="Description"
-            // onChange={(e) => setdesc(e.target.value)}
+            onChange={(e) => setupdateDesc(e.target.value)}
           />
 
-          <div className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer">
-            <h1 className="text-center">
-              {loading ? "Updating..." : "Update Article"}
-            </h1>
+          <div
+            onClick={() => handleUpdateArticle(articleId)}
+            className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
+          >
+            <h1 className="text-center">Update Article</h1>
           </div>
         </Form>
       </Modal>
@@ -544,6 +656,14 @@ const FitnessArticles = () => {
             <p>{articlePreview.desc}</p>
           </div>
           <br />
+          <h1 className="font-bold">Date Created:</h1>
+          <p>{formatteDate(articlePreview.dateCreated)}</p>
+        </div>
+        <div className="border-b border-[#ccc] border-1 mt-2 " />
+        <br />
+        <div className="flex gap-1 flex-col">
+          <h1 className="font-bold">Date Updated:</h1>
+          <p>{formatteDate(articlePreview.dateUpdated)}</p>
         </div>
       </Modal>
       <Toaster />

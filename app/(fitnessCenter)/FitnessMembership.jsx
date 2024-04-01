@@ -1,20 +1,11 @@
 "use client"
 import React, { useEffect } from "react"
-import {
-  Button,
-  Modal,
-  Form,
-  Input,
-  Table,
-  Space,
-  Popconfirm,
-  InputNumber,
-} from "antd"
+import { Modal, Form, Input, Table, Space, Popconfirm } from "antd"
 import { useState } from "react"
-import { Add, CardMembership, ArrowRight } from "@mui/icons-material"
+import { CardMembership, ArrowRight } from "@mui/icons-material"
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons"
 import { Toaster, toast } from "react-hot-toast"
-import { Result } from "postcss"
+import moment from "moment"
 
 const FitnessMembership = () => {
   const [addModal, setAddModal] = useState(false)
@@ -22,16 +13,31 @@ const FitnessMembership = () => {
   const [loading, setloading] = useState(false)
   const [allMemberships, setAllMemberships] = useState([])
 
+  // state to add new membership
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
 
-  const [updateName, updateSetName] = useState("")
-  const [updatePrice, updateSetPrice] = useState("")
+  // state to update new membership
+  const [updateName, setupdateSetName] = useState("")
+  const [updatePrice, setupdateSetPrice] = useState("")
+
+  // state to hold current membership
+  const [currentMembership, setcurrentMembership] = useState(null)
+
+  const populateMembership = (info) => {
+    setcurrentMembership(info)
+    setUpdateModlaVisible(true)
+  }
 
   // getting fitness id from the fitnessCenter
   let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
+  }
+
+  // formatt date
+  const formatteDate = (date) => {
+    return moment(date).format("dddd, MMMM D, YYYY")
   }
 
   // Add memberships
@@ -79,8 +85,46 @@ const FitnessMembership = () => {
     }
   }
 
+  const membershipId = currentMembership?._id
+
   // update Membership
-  const handleUpdateMembership = () => {}
+  const handleUpdateMembership = (membershipId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        name: updateName ? updateName : currentMembership?.name,
+        price: updatePrice ? updatePrice : currentMembership?.price,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/memberships/update/${membershipId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "membership updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            setUpdateModlaVisible(false)
+            getMemberships()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   // Delete Membership
   const handleDleteMembership = (membershipid) => {
@@ -149,11 +193,23 @@ const FitnessMembership = () => {
       key: "price",
     },
     {
+      title: "Date Created",
+      dataIndex: "dateCreated",
+      key: "dateCreated",
+      render: (date) => formatteDate(date),
+    },
+    {
+      title: "Date Updated",
+      dataIndex: "dateUpdated",
+      key: "dateUpdated",
+      render: (date) => formatteDate(date),
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setUpdateModlaVisible(true)} />
+          <EditOutlined onClick={() => populateMembership(record)} />
           <Popconfirm
             title="Delete the Membership"
             description="Are you sure to delete Membership?"
@@ -251,7 +307,8 @@ const FitnessMembership = () => {
           <div>
             <h1 className="text-lg">Name</h1>
             <Input
-              onChange={(e) => updateName(e.target.value)}
+              defaultValue={currentMembership?.name}
+              onChange={(e) => setupdateSetName(e.target.value)}
               className="py-4"
             />
           </div>
@@ -259,19 +316,18 @@ const FitnessMembership = () => {
           <div>
             <h1 className="text-lg">Price</h1>
             <input
+              defaultValue={currentMembership?.price}
               type="numeric"
-              onChange={(e) => updatePrice(e.target.value)}
+              onChange={(e) => setupdateSetPrice(e.target.value)}
               className="py-4 w-full ring-1 ring-[#ccc] rounded-md px-3"
             />
           </div>
 
           <div
             className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center  cursor-pointer"
-            onClick={() => handleUpdateMembership()}
+            onClick={() => handleUpdateMembership(membershipId)}
           >
-            <h1 className="text-center">
-              {loading ? "Upading..." : "Update Membersip"}
-            </h1>
+            <h1 className="text-center">Update Membersip</h1>
           </div>
         </Form>
       </Modal>

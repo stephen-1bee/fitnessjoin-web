@@ -1,12 +1,8 @@
 import { Table, Space, Popconfirm, Modal, Input } from "antd"
-import {
-  EditOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  PlusOutlined,
-} from "@ant-design/icons"
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons"
 import React, { useState, useEffect } from "react"
-import { toast, Toaster, ToastIcon } from "react-hot-toast"
+import { toast, Toaster } from "react-hot-toast"
+import moment from "moment"
 import { ArrowRight, Assignment } from "@mui/icons-material"
 
 const FitnessGoals = () => {
@@ -16,12 +12,30 @@ const FitnessGoals = () => {
   const [goalField, setgoalField] = useState("")
   const [loading, setloading] = useState(false)
 
+  // state to update
+  const [updateGoal, setUpdateGoal] = useState("")
+
+  // state to populate current data
+  const [currentGoal, setcurrentGoal] = useState(null)
+
+  // function to popiulate current data
+  const populateGoal = (info) => {
+    setcurrentGoal(info)
+    setupdateModal(true)
+  }
+
+  // formatt date
+  const formatteDate = (date) => {
+    return moment(date).format("dddd, MMMM D, YYYY")
+  }
+
   // getting fitness id from the fitnessCenter
   let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
+  // add goal api
   const handleAddGoal = async () => {
     try {
       setloading(true)
@@ -117,6 +131,45 @@ const FitnessGoals = () => {
     getGoal()
   }, [])
 
+  const goalId = currentGoal?._id
+
+  const handlUpdateGoal = (goalId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        goal: updateGoal ? updateGoal : currentGoal?.goal,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/admins/goal/update/${goalId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "goal updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            setupdateModal(false)
+            getGoal()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const columns = [
     {
       title: "Goal",
@@ -127,13 +180,20 @@ const FitnessGoals = () => {
       title: "Date Created",
       dataIndex: "dateCreated",
       key: "dateCreated",
+      render: (date) => formatteDate(date),
+    },
+    {
+      title: "Date Updated",
+      dataIndex: "dateUpdated",
+      key: "dateUpdated",
+      render: (date) => formatteDate(date),
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => setupdateModal(true)} />
+          <EditOutlined onClick={() => populateGoal(record)} />
           <Popconfirm
             title="Delete the Member"
             description="Are you sure to delete Member?"
@@ -219,14 +279,15 @@ const FitnessGoals = () => {
           <br />
           <h1 className="text-lg">Goal</h1>
           <Input
+            defaultValue={currentGoal?.goal}
             placeholder=" goal"
             className="py-4"
-            // onChange={(e) => setgoalField(e.target.value)}
+            onChange={(e) => setUpdateGoal(e.target.value)}
           />
 
           <div
             className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
-            // onClick={() => handleAddGoal()}
+            onClick={() => handlUpdateGoal(goalId)}
           >
             <h1 className="text-center">
               {loading ? "Updating..." : "Update Goal"}

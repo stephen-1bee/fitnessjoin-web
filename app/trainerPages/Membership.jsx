@@ -83,10 +83,10 @@ const Membership = () => {
         Memberhsip
       </p>
       <br />
-      <div className="flex md:gap-[300px] gap-5 flex-col">
+      <div className="flex gap-10  flex-col">
         <div className="w-fit gap-5 flex flex-col">
           <h1 className="text-2xl">My Membership</h1>
-          <div className="p-5 h-[100px] bg-[dodgerblue] text-white rounded shadow-2xl md:flex-row flex w-[200px] flex-col-reverse gap-5 ">
+          <div className="p-5 bg-[dodgerblue] text-white rounded shadow-2xl md:flex-row flex w-[200px] flex-col-reverse gap-5 ">
             {trainerMembership ? (
               <div className="w-full">
                 <h2 className="text-xl font-bold">
@@ -123,11 +123,14 @@ const Membership = () => {
               </div>
             ) : (
               fitnessMemberships.map((memberhip) => (
-                <div className="flex-1 p-4 rounded-lg ring shadow w-[200px] h-[100px]">
+                <div className="flex-1 p-4 rounded-lg ring-1 gap-2 shadow w-[200px] ">
                   <div>
                     <p>{memberhip.name}</p>
                     <p>{memberhip.price}</p>
                   </div>
+                  <button className="flex  bg-[#08a88a] px-3 justify-end rounded-full py-3 w-fit text-white">
+                    Register
+                  </button>
                 </div>
               ))
             )}

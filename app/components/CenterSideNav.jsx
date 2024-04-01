@@ -9,7 +9,6 @@ import {
   Person2Outlined,
 } from "@mui/icons-material"
 import React, { useEffect, useState } from "react"
-import Image from "next/image"
 import {
   LogoutOutlined,
   QuestionCircleOutlined,
@@ -18,9 +17,7 @@ import {
   SettingOutlined,
   FrownOutlined,
 } from "@ant-design/icons"
-import { Avatar, Dropdown, message, Popconfirm, Space } from "antd"
-import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone"
-import { UserOutlined } from "@ant-design/icons"
+import { message, Popconfirm } from "antd"
 
 const centerSideNav = ({ setActiveItem, activeItem }) => {
   const [notification, setNotification] = useState([])

@@ -230,19 +230,18 @@ const page = () => {
     location.href = "/trainerLogin"
   }
 
-  // useEffect(() => {
-  //   handleCenterNotification()
-  // }, [])
-
   return (
     <div className="min-h-screen flex bg-[#f9fafd]">
       {/* side nav */}
       <div className="flex-[0.2.7] shadow bg-[#fdfaf3] p-9 hidden md:block">
         <div className="flex items-center gap-2 mb-8">
           <Image width={50} height={50} alt="logo" src="/logo.png" />
-          <p className="text-lg">
-            Fitness<span className="font-black text-[#08A88A]">Join</span>
-          </p>
+          <div className="flex flex-col items-center mt-2">
+            <p className="text-lg">
+              Fitness<span className="font-black text-[#08A88A]">Join</span>
+            </p>
+            <h1>Trainer</h1>
+          </div>
         </div>
         <div className="flex flex-col gap-3">
           <div

@@ -1,13 +1,11 @@
 "use client"
 import React, { useState } from "react"
-import { Input, Select } from "antd"
+import { Input } from "antd"
 import Image from "next/image"
-import { LockOutlined, UserOutlined } from "@ant-design/icons"
+import { UserOutlined } from "@ant-design/icons"
 import { Toaster, toast } from "react-hot-toast"
 import Link from "next/link"
 import { ArrowLeft } from "@mui/icons-material"
-
-// export const metadata = { title: "Trainer Login" };
 
 const TrainerLogin = () => {
   const [email, setEmail] = useState("")
