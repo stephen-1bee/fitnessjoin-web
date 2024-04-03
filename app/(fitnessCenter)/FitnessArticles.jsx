@@ -64,7 +64,6 @@ const FitnessArticles = () => {
     return moment(date).format("dddd, MMMM D, YYYY")
   }
 
-
   // add article api int
   const handleAddArticle = async () => {
     if (!title || !desc || !url || !photo) {
@@ -572,7 +571,7 @@ const FitnessArticles = () => {
         onCancel={() => setUpdateModlaVisible(false)}
         footer={[false]}
       >
-        <Form className="flex flex-col gap-3">
+        <Form className="flex flex-col gap-3" key={currentArticle?._id}>
           <img
             src={`http://localhost:1000/${currentArticle?.photo}`}
             className="w-20 h-20 rounded-md"

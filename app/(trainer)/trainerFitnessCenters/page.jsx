@@ -1,8 +1,15 @@
 "use client"
-import { Email, LocationOn, Phone, SearchRounded } from "@mui/icons-material"
+import {
+  ArrowLeft,
+  Email,
+  LocationOn,
+  Phone,
+  SearchRounded,
+} from "@mui/icons-material"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { Skeleton, Spin, Tag } from "antd"
+import { FrownOutlined } from "@ant-design/icons"
 
 const handleRating = (rate) => {
   const stars = []
@@ -90,10 +97,20 @@ const Center = () => {
     setSearchResults(filteredResults)
   }
 
+  const moveBack = () => {
+    window.history.back()
+  }
+
   return (
     <div className="bg-[#edf1f7] min-h-screen flex flex-col items-center gap-5 w-full">
       <div className="w-full h-[50vh] home flex flex-col justify-center items-center">
         <div className="text-center">
+          <div
+            className="bg-white rounded-full items-center absolute top-5 left-[45px] cursor-pointer"
+            onClick={() => moveBack()}
+          >
+            <ArrowLeft />
+          </div>
           <h1 className="font-bold text-5xl mb-2 text-white">
             Browse the range of Fitness Centers
           </h1>
@@ -119,10 +136,15 @@ const Center = () => {
 
       {searchQuery ? (
         searchResults.length === 0 ? (
-          <p className="text-xl mt-4">No fitness centers found</p>
+          <p className="text-xl mt-4">
+            <div className="flex flex-col items-center gap-3">
+              <FrownOutlined />
+              <p>No fitness centers found</p>
+            </div>
+          </p>
         ) : (
-          <div className="text-left mt-4">
-            <h1 className="text-xl text-left font-bold">Search Results</h1>
+          <div className="text-left mt-4 mb-5">
+            <h1 className="text-xl text-left font-bold py-2">Search Results</h1>
             <div className="flex flex-wrap gap-2 justify-center">
               {searchResults.map((result) => (
                 <div
@@ -133,7 +155,7 @@ const Center = () => {
                   <div
                     className="h-[300px]"
                     style={{
-                      backgroundImage: `url(http://localhost:1000/${center.photo})`,
+                      backgroundImage: `url(http://localhost:1000/${result.photo})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}

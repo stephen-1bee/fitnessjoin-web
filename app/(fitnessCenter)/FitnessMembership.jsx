@@ -303,7 +303,7 @@ const FitnessMembership = () => {
         onCancel={() => setUpdateModlaVisible(false)}
         footer={[false]}
       >
-        <Form className="flex flex-col gap-4">
+        <Form className="flex flex-col gap-4" key={currentMembership?._id}>
           <div>
             <h1 className="text-lg">Name</h1>
             <Input

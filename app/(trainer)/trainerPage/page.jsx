@@ -15,6 +15,7 @@ import {
   MessageOutlined,
 } from "@ant-design/icons"
 import {
+  ArticleOutlined,
   CardTravelOutlined,
   FoodBankOutlined,
   NotificationsOutlined,
@@ -290,7 +291,7 @@ const page = () => {
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
             onClick={() => setActivePage("articles")}
           >
-            <PaperClipOutlined />
+            <ArticleOutlined />
             <p>Articles</p>
           </div>
 

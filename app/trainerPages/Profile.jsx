@@ -1,5 +1,10 @@
-import { ArrowRight, TapasTwoTone } from "@mui/icons-material"
-import { Form, Input, Switch } from "antd"
+import { UserOutlined } from "@ant-design/icons"
+import {
+  ArrowRight,
+  EmailOutlined,
+  LocationOnOutlined,
+} from "@mui/icons-material"
+import { Avatar, Form, Input, Switch } from "antd"
 import React, { useState, useEffect } from "react"
 import { Toaster, toast } from "react-hot-toast"
 
@@ -52,11 +57,11 @@ const Profile = () => {
       myHeaders.append("Content-Type", "application/json")
 
       const raw = JSON.stringify({
-        name: newName ? newName : trainer.name,
-        email: newEmail ? newEmail : trainer.email,
-        location: newLocation ? newLocation : trainer.location,
-        phone: newPhone ? newPhone : trainer.phone,
-        password: newPassword ? newPassword : trainer.password,
+        name: newName ? newName : trainer?.name,
+        email: newEmail ? newEmail : trainer?.email,
+        location: newLocation ? newLocation : trainer?.location,
+        phone: newPhone ? newPhone : trainer?.phone,
+        password: newPassword ? newPassword : trainer?.password,
       })
 
       const requestOptions = {
@@ -87,6 +92,32 @@ const Profile = () => {
 
   return (
     <div className="flex gap-5 mt-5">
+      <div className="p-10 shadow bg-white rounded-lg w-[500px]">
+        <div className="flex flex-col ">
+          {/* profile */}
+          <div className="items-center justify-center flex">
+            <Avatar size={70} icon={<UserOutlined />} />
+          </div>
+          <h1 className="text-2xl font-semibold text-center">
+            {trainer?.name}
+          </h1>
+          <p className="text-center text-[15px] text-gray-600">
+            {trainer?.fitness_center[0]?.name}
+          </p>
+          <div className="border-b border-[#ccc] py-1" />
+        </div>
+        <div className="flex mt-5 items-center justify-between">
+          <div className="flex gap-2">
+            <EmailOutlined />
+            <p className=" text-gray-600 ">{trainer?.email}</p>
+          </div>
+          <h1 className=" text-gray-600">50+ trained people</h1>
+        </div>
+        <div className="text-center py-2">
+          <LocationOnOutlined />
+          {trainer?.location}
+        </div>
+      </div>
       <Form className="flex px-20 flex-col gap-4">
         <h1 className="text-3xl">Update Profile</h1>
         <div className="flex gap-5">
@@ -159,11 +190,6 @@ const Profile = () => {
           Save
         </button>
       </Form>
-
-      <div className="flex gap-8 ">
-        <h1 className="text-xl">Notifications</h1>
-        <Switch />
-      </div>
     </div>
   )
 }

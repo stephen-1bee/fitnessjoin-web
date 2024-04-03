@@ -13,7 +13,6 @@ const Notification = () => {
   }
 
   // State for storing notifications
-
   const getNotificaiton = async () => {
     try {
       const requestOptions = {
@@ -52,7 +51,7 @@ const Notification = () => {
               <div>
                 <h1>From: {notice.center[0]?.name} </h1>
                 <div className="flex gap-2 items-center ">
-                  <div className=" w-2 h-2 bg-blue-600 rounded-full " />
+                  <div className="w-2 h-2 bg-blue-600 rounded-full" />
                   <p>{notice.message}</p>
                 </div>
                 <div className="border-b mt-1" />

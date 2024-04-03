@@ -7,7 +7,6 @@ const Membership = () => {
   const [trainer, setTrainer] = useState(null)
   const [trainerMembership, setTrainerMembership] = useState(null)
   const [fitnessMemberships, setfitnessMemberships] = useState([])
-  const [isApproved, setisApproved] = useState("")
   const [loading, setLoading] = useState(false)
 
   // get trainer id

@@ -1,6 +1,6 @@
 "use client"
 import { PhoneOutlined, UserOutlined } from "@ant-design/icons"
-import { Input, Form, Select } from "antd"
+import { Input } from "antd"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { Toaster, toast } from "react-hot-toast"
@@ -150,20 +150,18 @@ const UserSignup = () => {
         />
 
         <h1>Choose a goal</h1>
-        <Select
-          placeholder="Select a goal from this fitness center"
-          className="w-[350px] rounded-full h-[25px]"
-          onChange={(e) => setGoal(e.value)}
-          options={goal?.map((g) => ({
-            value: g.goal,
-            lable: g.goal,
-          }))}
-        />
-        {/* <Input
-          placeholder="Select a goal from this fitness center"
-          className="w-[350px] rounded-full h-12"
-          onChange={(e) => setGoal(e.target.value)}
-        /> */}
+        <select
+          onChange={(e) => setgoalField(e.target.value)}
+          className="w-[350px] rounded-md h-12 ring-1 ring-[#ccc]"
+        >
+          <option value="">Select a goal from this fitness center</option>
+          {goal?.map((g) => (
+            <option key={g.goal} value={g.goal}>
+              {g.goal}
+            </option>
+          ))}
+        </select>
+
         <button
           onClick={(e) => handleSignUp(e)}
           type="submit"

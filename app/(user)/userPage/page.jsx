@@ -21,7 +21,7 @@ import {
   SportsGymnasticsOutlined,
 } from "@mui/icons-material"
 import { MenuItem } from "@mui/material"
-import { Dropdown, Popconfirm } from "antd"
+import { Dropdown, Modal, Popconfirm, Rate } from "antd"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
 import Dashboard from "@/app/userPages/Dashboard"
@@ -34,6 +34,7 @@ import Profile from "@/app/userPages/Profile"
 import Notification from "@/app/userPages/Notification"
 import { FloatButton } from "antd"
 import toast, { Toaster } from "react-hot-toast"
+import { Result } from "antd"
 
 const page = () => {
   const [myState, setMyState] = useState("hidden")
@@ -41,6 +42,12 @@ const page = () => {
   const [user, setUser] = useState([])
   const [notification, setnotification] = useState([])
   const [message, setmessage] = useState("")
+  const [openRatingModal, setopenRatingModal] = useState(false)
+  const [success, setSuccess] = useState(false)
+
+  const [value, setValue] = useState(3)
+
+  const desc = ["terrible", "bad", "normal", "good", "wonderful"]
 
   // retrieving user id
   let userId
@@ -166,7 +173,6 @@ const page = () => {
     try {
       const myHeaders = new Headers()
       myHeaders.append("Content-Type", "application/json")
-
       const raw = JSON.stringify({
         center_id: user_center_id,
         trainer_id: null,
@@ -174,14 +180,12 @@ const page = () => {
         user_id: userId,
         creator_type: "user",
       })
-
       const requestOptions = {
         method: "POST",
         headers: myHeaders,
         body: raw,
         redirect: "follow",
       }
-
       await fetch(
         "http://localhost:1000/api/v1/feedbacks/create",
         requestOptions
@@ -191,6 +195,7 @@ const page = () => {
           if (result.msg === "message sent successfully") {
             toast.success(result.msg)
             console.log(result.msg)
+            setopenRatingModal(true)
           } else {
             toast.error(result.msg)
           }
@@ -199,6 +204,10 @@ const page = () => {
     } catch (err) {
       console.log(err)
     }
+  }
+
+  const handleRating = () => {
+    setSuccess(true)
   }
 
   const sendMessageUi = () => (
@@ -211,6 +220,7 @@ const page = () => {
         rows={7}
         className="rounded-md py-3 px-3 w-[250px] ring-1 ring-[#ccc] mt-5 outline-black"
       />
+      <button onClick={() => setopenRatingModal(true)}>open</button>
       <button
         onClick={() => sendFeedback()}
         className="w-[250px] rounded-full bg-[#08A88A] py-3 text-white "
@@ -245,6 +255,21 @@ const page = () => {
         return <Dashboard />
     }
   }
+
+  const successUi = () => (
+    <div>
+      {success && (
+        <div className="z-[999]">
+          <Result
+            status="success"
+            title="Successfully Purchased Cloud Server ECS!"
+            subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+            extra={<button onClick={() => setSuccess(false)}> Continue</button>}
+          />
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <div className="min-h-screen flex bg-[#fdfaf3]">
@@ -379,6 +404,17 @@ const page = () => {
         </div>
       </div>
 
+      {success && (
+        <div className="">
+          <Result
+            status="success"
+            title="Successfully Purchased Cloud Server ECS!"
+            subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+            extra={<button onClick={() => setSuccess(false)}> Continue</button>}
+          />
+        </div>
+      )}
+
       {/* Mobile Nav */}
       <div
         className={`w-full h-full bg-[#fdfaf3] absolute z-[999] p-5 pt-7 ${myState}`}
@@ -460,7 +496,26 @@ const page = () => {
           </div>
         </div>
       </div>
-      <Toaster />
+
+      {/* rating modal */}
+      <Modal
+        open={openRatingModal}
+        footer={[false]}
+        centered
+        onCancel={() => setopenRatingModal(false)}
+      >
+        <div className="item-center justify-center flex flex-col m-auto gap-3">
+          <h1 className="text-2xl">Help us improve by rating us</h1>
+          <Rate tooltips={desc} onChange={setValue} value={value} />
+          {value ? <span>{desc[value - 1]}</span> : null}
+          <button
+            onClick={() => handleRating()}
+            className="px-4 py-4 bg-[#08A88A] rounded-full text-white"
+          >
+            Submit
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }

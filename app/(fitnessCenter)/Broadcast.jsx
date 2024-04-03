@@ -275,7 +275,7 @@ const Broadcast = () => {
         onCancel={() => closeEditModal()}
         footer={false}
       >
-        <div className=" items-center m-auto">
+        <div className=" items-center m-auto" key={currentBroadcast?._id}>
           <h1> Update Notification </h1>
           <br />
           <h1 className="text-lg">Notification</h1>

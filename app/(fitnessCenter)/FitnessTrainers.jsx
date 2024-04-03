@@ -288,7 +288,7 @@ const FitnessTrainers = () => {
       dataIndex: "phone",
       key: "phone",
     },
-    
+
     {
       title: "Is Accepted",
       dataIndex: "isAccepted",
@@ -463,7 +463,7 @@ const FitnessTrainers = () => {
         footer={[false]}
       >
         <Form className="gap-4 flex-col flex">
-          <div>
+          <div key={currentTrainer?._id}>
             <h1 className="text-lg">Name</h1>
             <Input
               defaultValue={currentTrainer?.name}

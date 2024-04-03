@@ -129,7 +129,7 @@ const FitnessFeedbacks = () => {
             {trainerFeedback.length >= 1 ? (
               <div>
                 {trainerFeedback.map((feedback) => (
-                  <div className="border-b border-[#ededed] pb-4 pt-4  flex items-center justify-between">
+                  <div className="border-b border-[#ededed] pb-4 pt-4 flex items-center justify-between">
                     <div className="flex flex-col gap-1">
                       <h2 className="font-bold flex gap-2 items-center">
                         <UserOutlined /> {feedback.trainer[0]?.name}

@@ -2,7 +2,9 @@ import "./globals.css"
 // Import Nunito font from Google Fonts
 const nunitoFontLink =
   "https://fonts.googleapis.com/css?family=Nunito:400&display=swap"
-  
+
+// AIzaSyDgj7kz2yYtJmrVWjvND_gCVz0R3DX1ADM
+
 export const metadata = {
   title: {
     absolute: "",

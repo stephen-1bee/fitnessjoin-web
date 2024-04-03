@@ -16,7 +16,6 @@ import {
   ReadOutlined,
   HomeOutlined,
   SettingOutlined,
-  FrownOutlined,
 } from "@ant-design/icons"
 import { Popconfirm } from "antd"
 
@@ -57,7 +56,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
           <div className="flex flex-col py-5 gap-2 w-[fit] mt-5">
             <button
               onClick={() => handleItemClick("FitnessDashboard")}
-              className={` hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform delay-750 ease-in-out transition-all  hover:translate-x-2 ${
+              className={` hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform delay-750 ease-in-out transition-all  hover:translate-x-2 ${
                 activeItem === "FitnessDashboard" ? "active" : ""
               }`}
             >
@@ -67,7 +66,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessMembers")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessMembers" ? "active" : ""
               }`}
             >
@@ -77,7 +76,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessTrainers")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessTrainers" ? " active" : ""
               }`}
             >
@@ -86,7 +85,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
             </button>
             <button
               onClick={() => handleItemClick("FitnessMemberships")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessMemberships" ? "active" : ""
               }`}
             >
@@ -96,7 +95,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessGoals")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessGoals" ? "active" : ""
               }`}
             >
@@ -106,7 +105,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessSessions")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessSessions" ? "active" : ""
               }`}
             >
@@ -116,7 +115,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessNutrition")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessNutrition" ? "active" : ""
               }`}
             >
@@ -126,7 +125,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessArticles")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessArticles" ? "active" : ""
               }`}
             >
@@ -135,7 +134,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
             </button>
             <button
               onClick={() => handleItemClick("FitnessFeedbacks")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessFeedbacks" ? "active" : ""
               }`}
             >
@@ -144,7 +143,7 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
             </button>
             <button
               onClick={() => handleItemClick("Broadcast")}
-              className={`hover:bg-[#08a88a] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "Broadcast" ? "active" : ""
               }`}
             >
@@ -160,8 +159,8 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
               <SettingOutlined className="text-[18px]" />
               <p className="text-[16px]">Settings</p>
             </button>
+
             <Popconfirm
-              //   className="border-none"
               title="Logout"
               description="Are you sure want to Logout?"
               onConfirm={confirm}

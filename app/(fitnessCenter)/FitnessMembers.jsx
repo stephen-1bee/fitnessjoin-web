@@ -239,6 +239,11 @@ const FitnessMembers = () => {
     }
   }
 
+  // assign trainer
+  const assignTrainer = () => {
+    alert('About to assign a trainer')
+  }
+
   const columns = [
     {
       title: "First Name",
@@ -286,6 +291,7 @@ const FitnessMembers = () => {
           >
             <DeleteOutlined />
           </Popconfirm>
+          <button className="bg-[#08a88a] px-4 py-1 text-white rounded-full" onClick={() => assignTrainer()}>Assign</button>
         </Space>
       ),
     },
@@ -427,7 +433,7 @@ const FitnessMembers = () => {
         footer={[false]}
       >
         <Form className="gap-4 flex-col flex">
-          <div>
+          <div key={currentUser?._id}>
             <h1 className="text-lg">Firstname</h1>
             <Input
               defaultValue={currentUser?.first_name}
@@ -508,6 +514,13 @@ const FitnessMembers = () => {
             <p>{userInfo.membership_id}</p>
           </div>
           <br />
+
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Goal:</h1>
+            <p>{userInfo.goal ? userInfo.goal : "no goal choosen"}</p>
+          </div>
+          <br />
+
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Date Created:</h1>
             <p>{formatteDate(userInfo.dateCreated)}</p>

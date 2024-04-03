@@ -3,7 +3,8 @@ import Link from "next/link"
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { Email, LocationOn, Phone } from "@mui/icons-material"
-import { Spin, Tag, Skeleton } from "antd"
+import { Skeleton } from "antd"
+import { PhoneOutlined, FrownOutlined } from "@ant-design/icons"
 
 const handleRating = (rate) => {
   const stars = []
@@ -51,6 +52,8 @@ const Page = () => {
     }
   }, [])
 
+  console.log(`status: ${center.isOpened}`)
+
   return (
     <main className="min-h-screen flex justify-center items-center bg-[#f9fafd]">
       <div className="container mx-auto flex flex-col-reverse lg:flex-row gap-12 items-center p-4">
@@ -97,12 +100,21 @@ const Page = () => {
                 )}
               </p>
               <div className="my-5"></div>
-              <Link
-                href="trainerMembership"
-                className="bg-[#08A88A] text-text text-md py-4 px-[5rem] rounded-full w-[100%]"
-              >
-                Register Now
-              </Link>
+              {center.isOpened === true ? (
+                <div>
+                  <Link
+                    href="trainerMembership"
+                    className="bg-[#08A88A] text-text text-md py-4 px-[5rem] rounded-full w-[100%]"
+                  >
+                    Register Now
+                  </Link>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <FrownOutlined />
+                  <p>This fitness center has closed registration</p>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -274,7 +274,7 @@ const FitnessGoals = () => {
         onCancel={() => setupdateModal(false)}
         footer={[false]}
       >
-        <div className=" items-center m-auto">
+        <div className=" items-center m-auto" key={currentGoal?._id}>
           <h1> Update Goal </h1>
           <br />
           <h1 className="text-lg">Goal</h1>

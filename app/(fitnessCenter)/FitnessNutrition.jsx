@@ -32,8 +32,21 @@ const FitnessNutrition = () => {
   const [isAdding, setIsAdding] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const confirm = (e) => {
-    console.log(e)
+  // state to handle updates
+  const [food, setfood] = useState("")
+  const [time_of_day, settime_of_day] = useState("")
+  const [category, setcategory] = useState("")
+
+  console.log(food)
+  console.log(time_of_day)
+  console.log(category)
+
+  // state to hold current nutrition
+  const [currentNutrition, setcurrentNutrition] = useState(null)
+
+  const populateNutrition = (info) => {
+    setcurrentNutrition(info)
+    setIsModalVisible(true)
   }
 
   // getting fitness id from the fitnessCenter
@@ -188,6 +201,47 @@ const FitnessNutrition = () => {
     getTrainerNutrition()
   }, [])
 
+  // handle update nutrition
+  const handleUpdate = async (nutritionId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        food: food ? food : currentNutrition?.food,
+        time_of_day: time_of_day ? time_of_day : currentNutrition?.time_of_day,
+        category: category ? category : currentNutrition?.category,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/nutritions/update/${nutritionId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "nutrition updated successfully") {
+            toast.success(result.msg)
+            console.log(result.msg)
+            getAllNutrition()
+            getTrainerNutrition()
+            setIsModalVisible(false)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div className="min-h-screen">
       <div className="flex gap-2 items-center">
@@ -212,6 +266,7 @@ const FitnessNutrition = () => {
           </div>
           <h1 className="text-2xl font-semibold py-2">My Nutritions</h1>
         </div>
+
         {/* generate new Nutrition */}
         <div
           className="flex p-3 bg-[#08a88a] text-white  cursor-pointer items-center justify-center rounded-md gap-2 w-fit"
@@ -257,7 +312,7 @@ const FitnessNutrition = () => {
                 <div className="flex items-center justify-center gap-2 text-[#818181]">
                   <p>
                     <EyeOutlined
-                      onClick={() => setIsModalVisible(true)}
+                      onClick={() => populateNutrition(nutrition)}
                       className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full"
                     />
                   </p>
@@ -322,7 +377,7 @@ const FitnessNutrition = () => {
                   <div className="flex items-center justify-center gap-1 text-[#818181]">
                     <p>
                       <EyeOutlined
-                        onClick={() => setIsModalVisible(true)}
+                        onClick={() => populateNutrition(nutrition)}
                         className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full"
                       />
                     </p>
@@ -375,6 +430,7 @@ const FitnessNutrition = () => {
         </div>
       </div>
 
+      {/* update modal */}
       <Modal
         open={isModalVisible}
         title="Update Nutrition"
@@ -382,30 +438,45 @@ const FitnessNutrition = () => {
         footer={[false]}
       >
         <Form className="flex flex-col gap-5">
-          <div>
+          <div key={currentNutrition?._id}>
             <h1 className="text-lg">Food</h1>
-            <Input className="py-4 ring-1 ring-[#ccc] outline-none" />
+            <Input
+              onChange={(e) => setfood(e.target.value)}
+              defaultValue={currentNutrition?.food}
+              className="py-4 ring-1 ring-[#ccc] outline-none"
+            />
           </div>
           <div>
             <h1 className="text-lg">Time of day</h1>
-            <Input className="py-4 ring-1 ring-[#ccc] outline-none" />
+            <Input
+              onChange={(e) => settime_of_day(e.target.value)}
+              defaultValue={currentNutrition?.time_of_day}
+              className="py-4 ring-1 ring-[#ccc] outline-none"
+            />
           </div>
 
           <div>
             <h1 className="text-lg">Nutrition Category</h1>
-            <Select name="category" className="w-full">
+            <Select
+              onChange={(e) => setcategory(e.target.value)}
+              defaultValue={currentNutrition?.category}
+              name="category"
+              className="w-full"
+            >
               <Select.Option>Low Fat</Select.Option>
               <Select.Option>High-Protein</Select.Option>
               <Select.Option>Low-Sodium</Select.Option>
               <Select.Option>Weight Loss</Select.Option>
             </Select>
           </div>
-          <button className="w-full text-white py-4 rounded-md bg-[#08a88a]">
+          <button
+            onClick={() => handleUpdate(currentNutrition._id)}
+            className="w-full text-white py-4 rounded-md bg-[#08a88a]"
+          >
             Update Nutrition
           </button>
         </Form>
       </Modal>
-
       <Toaster />
     </div>
   )

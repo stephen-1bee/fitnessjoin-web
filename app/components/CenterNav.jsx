@@ -1,12 +1,22 @@
 "use client"
-import { NotificationsNoneOutlined } from "@mui/icons-material"
-import { FrownOutlined, UserOutlined } from "@ant-design/icons"
+import {
+  DeleteOutlineOutlined,
+  NotificationsNoneOutlined,
+} from "@mui/icons-material"
+import { DeleteOutlined, FrownOutlined, UserOutlined } from "@ant-design/icons"
 import { Dropdown, Popconfirm, Avatar } from "antd"
 import React, { useState, useEffect } from "react"
+import moment from "moment"
+import toast, { Toaster } from "react-hot-toast"
+import MenuItem from "antd/es/menu/MenuItem"
 
 const CenterNav = () => {
   const [notification, setNotification] = useState([])
   const [admin, setAdmin] = useState([])
+
+  const formattDate = (date) => {
+    return moment(date).format("MMM dd, yyyy")
+  }
 
   // retrive center name and Id through session
   let center_id
@@ -39,7 +49,7 @@ const CenterNav = () => {
   }
 
   // get notification api
-  const getNotification = async (req, res) => {
+  const getNotification = async () => {
     try {
       let headersList = {
         Accept: "*/*",
@@ -62,6 +72,33 @@ const CenterNav = () => {
     }
   }
 
+  const deleteNotification = (notificationId) => {
+    try {
+      const requestOptions = {
+        method: "DELETE",
+        redirect: "follow",
+      }
+
+      fetch(
+        `http://localhost:1000/api/v1/activities/delete/${notificationId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "notification deleted successfully") {
+            toast.success(result.msg)
+            getNotification()
+            console.log(result)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     getNotification()
     handleAdmin()
@@ -72,17 +109,19 @@ const CenterNav = () => {
     {
       key: "1",
       label: (
-        <Popconfirm
-          placement="top"
-          title={"Logout"}
-          description={"Do you want logout?"}
-          okText="Yes"
-          okButtonProps={{ style: { backgroundColor: "red" } }}
-          onConfirm={() => (window.location.href = "/adminLogin")}
-          cancelText="No"
-        >
-          <button>Logout</button>
-        </Popconfirm>
+        <div className="flex flex-col gap-3 w-[150px] items-center justify-center">
+          <Popconfirm
+            placement="top"
+            title={"Logout"}
+            description={"Do you want logout?"}
+            okText="Yes"
+            okButtonProps={{ style: { backgroundColor: "red" } }}
+            onConfirm={() => (window.location.href = "/adminLogin")}
+            cancelText="No"
+          >
+            <button>Logout</button>
+          </Popconfirm>
+        </div>
       ),
     },
   ]
@@ -90,18 +129,34 @@ const CenterNav = () => {
   //notificaton ui
   const notificationUi = (
     <div className="p-5">
-      <div className="w-[300px] shadow-md py-6 flex flex-col items-center bg-[#fdf9f0] justify-center rounded-lg">
+      <div className="w-[420px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] justify-center rounded-lg overflow-y-auto">
         <h1 className="text-xl font-semibold">Notifications</h1>
-        {notification.length > 0 ? (
-          <div className="flex flex-col gap-5 px-5">
+        {notification?.length > 0 ? (
+          <div className="p-4">
             {notification.map((notice) => (
-              <div>
-                {/* <h1>From: {notice.center.name} </h1> */}
+              <div className="border-b border-[#ededed] pb-2 pt-2 flex items-center justify-between">
                 <div className="flex gap-2 items-center ">
-                  <div className=" w-[5px] h-[5px] bg-blue-600 rounded-full " />
+                  <div className=" w-[5px] h-[5px] bg-blue-600 rounded-full" />
                   <p>{notice.message}</p>
                 </div>
-                <div className="border-b mt-1" />
+
+                <div className="flex flex-col gap-1 items-end ml-2">
+                  <p className="text-[10px]">
+                    {formattDate(notice.dateCreated)}
+                  </p>
+                  <Popconfirm
+                    title="Delete Feedback"
+                    description="Are you sure to delete Feedback?"
+                    okText="Delete"
+                    onConfirm={() => deleteNotification(notice._id)}
+                    cancelText="No"
+                    okButtonProps={{
+                      style: { backgroundColor: "red", color: "white" },
+                    }}
+                  >
+                    <DeleteOutlined />
+                  </Popconfirm>
+                </div>
               </div>
             ))}
           </div>
@@ -144,6 +199,7 @@ const CenterNav = () => {
           icon={<UserOutlined />}
         />
       </Dropdown>
+      <Toaster />
     </div>
   )
 }

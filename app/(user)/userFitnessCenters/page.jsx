@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material"
 import { PhoneOutlined } from "@ant-design/icons"
 import React, { useEffect, useState } from "react"
-import { Skeleton, Spin, Tag } from "antd"
+import { Skeleton, Tag } from "antd"
 
 const handleRating = (rate) => {
   const stars = []
@@ -151,7 +151,9 @@ const Center = () => {
                   <div
                     className="h-[300px]"
                     style={{
-                      backgroundImage: `url(${result ? `result.photo` : ""})`,
+                      backgroundImage: `url(${
+                        result ? `http://localhost:1000/${result.photo}` : ""
+                      })`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                     }}
@@ -214,7 +216,9 @@ const Center = () => {
                         className="h-[300px] myGradient"
                         style={{
                           backgroundImage: `url(${
-                            recommend ? recommend.photo : ""
+                            recommend
+                              ? `http://localhost:1000/${recommend.photo}`
+                              : ""
                           })`,
                           backgroundSize: "cover",
                           backgroundPosition: "center",

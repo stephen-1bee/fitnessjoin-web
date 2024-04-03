@@ -7,7 +7,7 @@ import {
   EmailOutlined,
   LocationOnOutlined,
 } from "@mui/icons-material"
-import { Skeleton, Spin, Tag } from "antd"
+import { Skeleton } from "antd"
 import { PhoneOutlined, FrownOutlined } from "@ant-design/icons"
 
 const handleRating = (rate) => {
@@ -58,6 +58,7 @@ const Page = () => {
   const moveBack = () => {
     window.history.back()
   }
+
   return (
     <main className="min-h-screen flex justify-center items-center bg-[#f9fafd]">
       <div className="container mx-auto flex flex-col-reverse lg:flex-row gap-12 items-center p-4">

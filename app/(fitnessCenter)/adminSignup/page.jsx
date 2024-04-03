@@ -57,12 +57,13 @@ const page = () => {
       let data = await response.json()
       if (data.msg === "Fitness center created successfully") {
         toast.success(data.msg)
-        console.log(data)
+        console.log(data.msg)
         window.location.href = "/adminLogin"
         setLoading(false)
       } else {
         toast.error(data.msg)
         setLoading(false)
+        console.log(data.msg)
       }
     } catch (err) {
       console.log(err)

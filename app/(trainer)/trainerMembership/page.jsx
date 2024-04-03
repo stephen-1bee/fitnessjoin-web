@@ -91,7 +91,6 @@ export const Page = () => {
           ))
         )}
       </div>
-
       <Toaster />
     </div>
   );
