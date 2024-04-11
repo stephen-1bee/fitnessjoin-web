@@ -351,10 +351,10 @@ const FitnessMembers = () => {
         .then((response) => response.json())
         .then((result) => {
           setAssignAdding(false)
-          if(result.msg === 'User assigned to trainer successfully'){
+          if (result.msg === "User assigned to trainer successfully") {
             toast.success("User assigned to trainer successfully")
             setAssignModal(false)
-          }else{
+          } else {
             setAssignAdding(false)
             toast.error(result.msg)
           }
@@ -369,7 +369,7 @@ const FitnessMembers = () => {
 
   return (
     <main>
-        <p>User Id: {currentUserId}</p>
+      <p>User Id: {currentUserId}</p>
       <div className="flex gap-2 items-center">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <Person2Outlined color="white" className="text-white " />
@@ -402,12 +402,12 @@ const FitnessMembers = () => {
 
       <div className="lg:flex-row flex-col flex lg:gap-18 gap-10 ">
         <div className="flex flex-col w-full mt-5">
-          <div className="p-5 bg-white rounded-lg shadow">
+          <div className="p-5 bg-white rounded-lg shadow-md">
             <Table columns={columns} dataSource={allUsers} />
           </div>
         </div>
         <div>
-          {/* <div className="bg-white ring-1 ring-[#ccc] shadow h-[500px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[18px] rounded-md">
+          <div className="bg-white ring-1 ring-[#ccc] shadow h-[500px] overflow-y-auto py-4 px-10 w-[400px] lg:mt-[18px] rounded-md">
             <h1 className="text-2xl font-semibold mb-2">New Users</h1>
             <div className="border-b bg-gray-400 mb-10" />
             {newUsers?.length >= 1 ? (
@@ -432,7 +432,7 @@ const FitnessMembers = () => {
                 <h1>No new Users signed up today</h1>
               </div>
             )}
-          </div> */}
+          </div>
         </div>
       </div>
 
@@ -505,8 +505,8 @@ const FitnessMembers = () => {
         onCancel={() => setIsEdithModal(false)}
         footer={[false]}
       >
-        <Form className="gap-4 flex-col flex">
-          <div key={currentUser?._id}>
+        <Form className="gap-4 flex-col flex" key={currentUser?._id}>
+          <div>
             <h1 className="text-lg">Firstname</h1>
             <Input
               defaultValue={currentUser?.first_name}
@@ -610,7 +610,10 @@ const FitnessMembers = () => {
         footer={false}
       >
         <div className="mt-7">
-          <select className="w-full p-3 rounded-md border-[1px] border-[#ccc] border-dashed outline-none" onChange={(e) => setCurrentTrainerId(e.target.value)}>
+          <select
+            className="w-full p-3 rounded-md border-[1px] border-[#ccc] border-dashed outline-none"
+            onChange={(e) => setCurrentTrainerId(e.target.value)}
+          >
             <option value="" selected disabled>
               Select Trainer
             </option>
@@ -618,10 +621,11 @@ const FitnessMembers = () => {
               <option value={trainer._id}>{trainer.name}</option>
             ))}
           </select>
-          <button className="p-3 bg-[#08a88a] text-white rounded-md w-full mt-5" onClick={() => handleAssignTrainer()}>
-            {
-              assignAdding ? 'Assigning...' : 'Assign Trainer'
-            }
+          <button
+            className="p-3 bg-[#08a88a] text-white rounded-md w-full mt-5"
+            onClick={() => handleAssignTrainer()}
+          >
+            {assignAdding ? "Assigning..." : "Assign Trainer"}
           </button>
         </div>
       </Modal>

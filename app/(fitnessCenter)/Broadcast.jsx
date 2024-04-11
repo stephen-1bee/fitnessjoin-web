@@ -149,7 +149,7 @@ const Broadcast = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/notifications/delete/${notificationId}`,
         requestOptions
       )
@@ -168,6 +168,7 @@ const Broadcast = () => {
       console.log(err)
     }
   }
+
   const columns = [
     {
       title: "Message",
@@ -242,7 +243,7 @@ const Broadcast = () => {
           <h1>Add New Broadcast</h1>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="mt-10 bg-white shadow rounded-lg p-5">
         <Table columns={columns} dataSource={notification} />
       </div>
 

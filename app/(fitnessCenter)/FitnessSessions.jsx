@@ -480,7 +480,9 @@ const FitnessSessions = () => {
       </div>
 
       {/* Table */}
-      <Table columns={column} dataSource={allSession} />
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <Table columns={column} dataSource={allSession} />
+      </div>
       <div className="flex gap-2 py-3">
         <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
           <h1 className="text-lg">
@@ -490,7 +492,9 @@ const FitnessSessions = () => {
         <h1 className="text-2xl  py-2">Affiliate Trainer Sessions</h1>
       </div>
 
-      <Table columns={columnT} dataSource={trainerSession} />
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <Table columns={columnT} dataSource={trainerSession} />
+      </div>
       {isModalVisible ? (
         <Modal
           title="Add Session"

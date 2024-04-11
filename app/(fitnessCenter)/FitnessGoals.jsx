@@ -172,7 +172,7 @@ const FitnessGoals = () => {
 
   const columns = [
     {
-      title: "Goal",
+      title: "Goals",
       dataIndex: "goal",
       key: "goal",
     },
@@ -242,7 +242,7 @@ const FitnessGoals = () => {
           <h1>Add New Goal</h1>
         </div>
       </div>
-      <div className="mt-10">
+      <div className="bg-white p-5 rounded-lg mt-5 shadow-md">
         <Table columns={columns} dataSource={goals} />
       </div>
 

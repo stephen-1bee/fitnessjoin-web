@@ -504,7 +504,7 @@ const FitnessArticles = () => {
         </div>
       </div>
 
-      <div>
+      <div className="bg-white p-5 rounded-lg shadow-md">
         <Table columns={column} dataSource={fitnessArticles} />
       </div>
       <div className="flex gap-2 py-3">
@@ -515,8 +515,9 @@ const FitnessArticles = () => {
         </div>
         <h1 className="text-2xl  py-2">Affiliate Trainer Articles</h1>
       </div>
-      <Table columns={columnT} dataSource={trainerArticles} />
-
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <Table columns={columnT} dataSource={trainerArticles} />
+      </div>
       {isModalVisible ? (
         //  Add Modal
         <Modal

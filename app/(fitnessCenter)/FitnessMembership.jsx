@@ -261,7 +261,9 @@ const FitnessMembership = () => {
         </div>
       </div>
 
-      <Table columns={columns} dataSource={allMemberships} />
+      <div className="bg-white p-5 rounded-lg shadow-md">
+        <Table columns={columns} dataSource={allMemberships} />
+      </div>
 
       {/* Add Memberships modal */}
       <Modal

@@ -142,12 +142,14 @@ const Dashboard = () => {
               <UserSwitchOutlined className="text-[25px] text-white" />
             </div>
             <div className="flex flex-col text-left">
-              <p className="text-center text-2xl">{users ? users : null}</p>
-              {users === 1
-                ? "Assigned User"
-                : users <= 0
-                ? "No Assinged Users"
-                : "Assigned Users"}
+              <p className="text-center  text-2xl">{users ? users : null}</p>
+              {users === 1 ? (
+                <p className="text-center">Assigned User</p>
+              ) : users <= 0 ? (
+                <p className="text-center">No Assinged Users</p>
+              ) : (
+                <p className="text-center">Assigned Users</p>
+              )}
             </div>
           </div>
         </div>

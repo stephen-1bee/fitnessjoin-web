@@ -170,7 +170,7 @@ const FitnessTrainers = () => {
     }
   }
 
-  const handleDeleteTrainer = (trainerId) => {
+  const handleDeleteTrainer = async (trainerId) => {
     // Handle trainer deletion here
     try {
       var requestOptions = {
@@ -178,7 +178,7 @@ const FitnessTrainers = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/trainers/delete/${trainerId}`,
         requestOptions
       )
@@ -332,6 +332,7 @@ const FitnessTrainers = () => {
       ),
     },
   ]
+
   return (
     <main className="min-h-screen">
       <div className="flex items-center gap-2">
@@ -366,9 +367,9 @@ const FitnessTrainers = () => {
         </div>
       </div>
 
-      <div className="lg:flex-row flex-col flex lg:gap-24 gap-10 ">
+      <div className="lg:flex-row flex-col flex lg:gap-18 gap-10 ">
         <div className="flex flex-col mt-5 w-full">
-          <div className="flex bg-white p-5 rounded-lg">
+          <div className="flex bg-white p-5 rounded-lg shadow-md">
             <Table columns={columns} dataSource={trainersData} />
           </div>
         </div>
@@ -464,8 +465,8 @@ const FitnessTrainers = () => {
         onCancel={() => setIsEdithModal(false)}
         footer={[false]}
       >
-        <Form className="gap-4 flex-col flex">
-          <div key={currentTrainer?._id}>
+        <Form className="gap-4 flex-col flex" key={currentTrainer?._id}>
+          <div>
             <h1 className="text-lg">Name</h1>
             <Input
               defaultValue={currentTrainer?.name}
