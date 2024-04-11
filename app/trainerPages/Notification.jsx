@@ -9,9 +9,11 @@ const Notification = () => {
 
   let trainer_center_id
   let trainer_id
+  let notificaitonStatus
   if (typeof sessionStorage !== "undefined") {
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
     trainer_id = sessionStorage.getItem("trainerId")
+    notificaitonStatus = sessionStorage.getItem("notification")
   }
 
   // get current trainer
@@ -65,22 +67,30 @@ const Notification = () => {
 
   return (
     <div>
-      <div className="w-[250px] shadow-md py-6 flex items-center bg-[#fdf9f0] justify-center rounded-lg">
+      <div className="w-[250px] shadow-md py-5 flex items-center bg-[#fdf9f0]  justify-center rounded-lg">
         {notification.length > 0 ? (
-          <div className="flex flex-col gap-5">
-            {notification.map((notice) => (
+          <div>
+            {notificaitonStatus === "true" ? (
               <div>
-                <h1>From: {notice.center[0]?.name} </h1>
-                <div className="flex gap-2 items-center ">
-                  <div className=" w-2 h-2 bg-blue-600 rounded-full " />
-                  <p>{notice.message}</p>
-                </div>
-                <div className="border-b mt-1" />
+                {notification.map((notice) => (
+                  <div>
+                    <h1>From: {notice.center[0]?.name} </h1>
+                    <div className="flex gap-2 items-center ">
+                      <div className=" w-2 h-2 bg-blue-600 rounded-full " />
+                      <p>{notice.message}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="flex flex-col items-center justify-center m-auto gap-2">
+                <FrownOutlined />
+                <p>Notifications has been turned off</p>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="flex flex-col items-center gap-3 mt-3">
+          <div className="flex flex-col items-center gap-3 mt-5">
             <FrownOutlined />
             <p>No Notifications yet</p>
           </div>

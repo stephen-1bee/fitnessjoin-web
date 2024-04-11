@@ -1,15 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import {
-  message,
-  Spin,
-  Popconfirm,
-  Modal,
-  Form,
-  Input,
-  Select,
-  Tag,
-} from "antd"
+import { Spin, Popconfirm, Modal, Form, Input, Select, Tag } from "antd"
 import {
   ArrowRight,
   CloudCircleOutlined,
@@ -36,10 +27,7 @@ const FitnessNutrition = () => {
   const [food, setfood] = useState("")
   const [time_of_day, settime_of_day] = useState("")
   const [category, setcategory] = useState("")
-
-  console.log(food)
-  console.log(time_of_day)
-  console.log(category)
+  const [goals, setgoals] = useState([])
 
   // state to hold current nutrition
   const [currentNutrition, setcurrentNutrition] = useState(null)
@@ -242,11 +230,37 @@ const FitnessNutrition = () => {
     }
   }
 
+  const getGoals = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/goal/center/${storedFitnessId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setgoals(result.center_goals)
+          console.log(result)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getGoals()
+  }, [])
+
   return (
     <div className="min-h-screen">
       <div className="flex gap-2 items-center">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
-          <FoodBankOutlined color="white" className="text-white " />
+          <FoodBankOutlined color="white" className="text-white" />
         </div>
         <h1 className="text-2xl">Fitness Nutrition</h1>
       </div>
@@ -458,16 +472,14 @@ const FitnessNutrition = () => {
           <div>
             <h1 className="text-lg">Nutrition Category</h1>
             <Select
-              onChange={(e) => setcategory(e.target.value)}
+              className="py-4 outline-none w-full"
+              onChange={(text) => setcategory(text)}
               defaultValue={currentNutrition?.category}
-              name="category"
-              className="w-full"
-            >
-              <Select.Option>Low Fat</Select.Option>
-              <Select.Option>High-Protein</Select.Option>
-              <Select.Option>Low-Sodium</Select.Option>
-              <Select.Option>Weight Loss</Select.Option>
-            </Select>
+              options={goals.map((cat) => ({
+                value: cat.goal,
+                label: cat.goal,
+              }))}
+            />
           </div>
           <button
             onClick={() => handleUpdate(currentNutrition._id)}

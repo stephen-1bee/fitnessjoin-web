@@ -368,7 +368,9 @@ const FitnessTrainers = () => {
 
       <div className="lg:flex-row flex-col flex lg:gap-24 gap-10 ">
         <div className="flex flex-col mt-5 w-full">
-          <Table columns={columns} dataSource={trainersData} />
+          <div className="flex bg-white p-5 rounded-lg">
+            <Table columns={columns} dataSource={trainersData} />
+          </div>
         </div>
 
         <div>

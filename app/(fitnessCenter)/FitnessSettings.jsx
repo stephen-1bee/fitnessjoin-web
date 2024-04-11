@@ -8,22 +8,20 @@ import {
   ArrowRight,
   EmailOutlined,
   LocationOnOutlined,
+  Tag,
 } from "@mui/icons-material"
-import { Switch, Drawer } from "antd"
+import { Drawer, Popconfirm } from "antd"
 import { toast, Toaster } from "react-hot-toast"
 import Image from "next/image"
 
 const FitnessSettings = () => {
   // State variables
   const [admin, setAdmin] = useState([])
-  const [isOpened, setIsOpened] = useState(false)
-  const [isNotificationOpened, setIsNotificationOpened] = useState(false)
+
   const [profileModal, setprofileModal] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
 
   const [email, setEmail] = useState("")
   const [photo, setPhoto] = useState("")
-  const [password, setPassword] = useState("")
   const [businessName, setbusinessName] = useState("")
   const [desc, setDesc] = useState("")
   const [telephone, setTelephone] = useState("")
@@ -32,6 +30,17 @@ const FitnessSettings = () => {
   // Retrieve admin ID from session storage
   const centerId = sessionStorage.getItem("fitnessCenterId")
 
+  let notificationStatus
+  let profileStatus
+  if (typeof sessionStorage !== "undefined") {
+    notificationStatus = sessionStorage.getItem("notification")
+    profileStatus = sessionStorage.getItem("profile")
+  }
+
+  const [isOpened, setIsOpened] = useState(profileStatus)
+  const [isNotificationOpened, setIsNotificationOpened] =
+    useState(notificationStatus)
+
   // Function to fetch fitness center data
   const fetchFitnessCenter = async () => {
     try {
@@ -39,62 +48,68 @@ const FitnessSettings = () => {
         `http://localhost:1000/api/v1/admins/one/${centerId}`
       )
       const result = await response.json()
-
+      sessionStorage.setItem("notification", result.admin[0].isNotification)
+      sessionStorage.setItem("profile", result.admin[0].isOpened)
       // Set admin state and open status
       setAdmin(result.admin)
-      setIsOpened(result.admin.isOpened)
+      setIsOpened(result.admin?.isOpened)
+      setIsNotificationOpened(result.admin?.isNotification)
     } catch (error) {
       console.error("Error fetching fitness center data:", error)
     }
   }
 
-  // Function to handle toggling open status
-  const toggleOpenStatus = async (checked) => {
-    const endpoint = `http://localhost:1000/api/v1/admins/${
-      checked ? "open" : "close"
-    }/${centerId}`
-
+  const handleOpenNotification = async () => {
     try {
-      const response = await fetch(endpoint, { method: "PUT" })
-      const result = await response.json()
-
-      if (response.ok) {
-        const successMessage = checked
-          ? "Profile opened successfully"
-          : "Profile closed successfully"
-        toast.success(successMessage)
-        setIsOpened(checked)
-      } else {
-        toast.error(result.error || "Failed to toggle profile")
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
       }
-    } catch (error) {
-      console.error("Error toggling profile:", error)
-      toast.error("An error occurred while toggling profile")
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/notification/on/${centerId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "notification has been turned on") {
+            toast.success("Notifications enabled")
+            console.log(result)
+            fetchFitnessCenter()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
     }
   }
 
-  // Function to handle toggling notification status
-  const toggleNotificationStatus = async (checked) => {
-    const endpoint = `http://localhost:1000/api/v1/admins/notification/${
-      checked ? "off" : "on"
-    }/${centerId}`
-
+  const handleCloseNotification = async () => {
     try {
-      const response = await fetch(endpoint, { method: "PUT" })
-      const result = await response.json()
-
-      if (response.ok) {
-        const successMessage = checked
-          ? "Notification has been turned on"
-          : "Notification has been turned off"
-        toast.success(successMessage)
-        setIsNotificationOpened(checked)
-      } else {
-        toast.error(result.error || "Failed to toggle notification")
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
       }
-    } catch (error) {
-      console.error("Error toggling notification:", error)
-      toast.error("An error occurred while toggling notification")
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/notification/off/${centerId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "notification has been turned off") {
+            toast.success(result.msg)
+            fetchFitnessCenter()
+            console.log(result)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -113,7 +128,6 @@ const FitnessSettings = () => {
       formdata.append("phone", telephone ? telephone : admin[0]?.phone)
       formdata.append("name", businessName ? businessName : admin[0]?.name)
       formdata.append("desc", desc ? desc : admin[0]?.desc)
-      formdata.append("password", password ? password : admin[0]?.password)
 
       const requestOptions = {
         method: "PUT",
@@ -140,6 +154,60 @@ const FitnessSettings = () => {
     }
   }
 
+  const handleOpenProfile = async () => {
+    try {
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/open/${centerId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "Profile opended successfully") {
+            toast.success(result.msg)
+            fetchFitnessCenter()
+            console.log(result)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleCloseProfile = async () => {
+    try {
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/close/${centerId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "Profile closed successfully") {
+            toast.success(result.msg)
+            fetchFitnessCenter()
+            console.log(result)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
     <div>
       <div className="flex gap-2 items-center">
@@ -155,29 +223,118 @@ const FitnessSettings = () => {
         </span>{" "}
         Settings
       </p>
-      {admin.map((ad) => (
-        <div key={ad.id}>
-          <div className="mt-10 flex gap-8 items-center">
-            <h1 className="text-xl">Open Registration</h1>
-            <Switch defaultChecked={isOpened} onChange={toggleOpenStatus} />
+
+      <div className="bg-white p-7 rounded-lg shadow">
+        {admin.map((ad) => (
+          <div key={ad.id}>
+            <div className="mt-10 flex gap-8 items-center">
+              <h1 className="text-xl">Open Registration</h1>
+              <p>
+                {profileStatus === "true" ? (
+                  <span className="bg-[#08a88a] text-white p-3 rounded-full px-5">
+                    Enabled
+                  </span>
+                ) : (
+                  <span className="bg-[#c83a3a] text-white p-3 rounded-full px-5">
+                    Disabled
+                  </span>
+                )}
+              </p>
+              {profileStatus === "true" ? (
+                <Popconfirm
+                  description="Do you want to disable registration?"
+                  okText="Enable"
+                  okButtonProps={{
+                    style: { backgroundColor: "#c83a3a", color: "white" },
+                  }}
+                  onConfirm={() => handleCloseProfile()}
+                >
+                  <button>Disable</button>
+                </Popconfirm>
+              ) : (
+                <Popconfirm
+                  description="Do you want to enable registration?"
+                  okText="Enable"
+                  okButtonProps={{
+                    style: { backgroundColor: "#08a88a", color: "white" },
+                  }}
+                  onConfirm={() => handleOpenProfile()}
+                >
+                  <button>Enable</button>
+                </Popconfirm>
+              )}
+            </div>
+
+            <div className="mt-10 flex gap-8 items-center">
+              <h1 className="text-xl">Notifications</h1>
+
+              <div className="flex">
+                <div className="flex items-center gap-5">
+                  {notificationStatus === "true" ? (
+                    <div className="flex items-center gap-6">
+                      <p className="bg-[#08a88a] text-white p-3 rounded-full px-5">
+                        Enabled
+                      </p>
+                      {notificationStatus === "true" ? (
+                        <Popconfirm
+                          description="Do you want to disable notifications?"
+                          okText="Disable"
+                          okButtonProps={{
+                            style: {
+                              backgroundColor: "#c83a3a",
+                              color: "white",
+                            },
+                          }}
+                          onConfirm={() => handleCloseNotification()}
+                        >
+                          <button>Disable</button>
+                        </Popconfirm>
+                      ) : (
+                        <Popconfirm
+                          description="Do you want to enable notifications?"
+                          okText="Enable"
+                          okButtonProps={{
+                            style: {
+                              backgroundColor: "#08a88a",
+                              color: "white",
+                            },
+                          }}
+                          onConfirm={() => handleOpenNotification()}
+                        >
+                          <button>ENABLE IS HERE</button>
+                        </Popconfirm>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-8">
+                      <p className="bg-[#c83a3a] text-white p-3 rounded-full px-5">
+                        Disabled
+                      </p>
+                      <Popconfirm
+                        description="Do you want to enable notifications?"
+                        okText="Enable"
+                        okButtonProps={{
+                          style: { backgroundColor: "#08a88a", color: "white" },
+                        }}
+                        onConfirm={() => handleOpenNotification()}
+                      >
+                        <button>Enable</button>
+                      </Popconfirm>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="mt-10 flex gap-8 items-center">
-            <h1 className="text-xl">Notifications</h1>
-            <Switch
-              defaultChecked={isNotificationOpened}
-              onChange={toggleNotificationStatus}
-            />
-          </div>
+        ))}
+
+        <div
+          onClick={() => setprofileModal(true)}
+          className=" cursor-pointer rounded-lg w-fit py-3 mt-7 bg-[#08a88a] text-white px-9"
+        >
+          Update Profile
         </div>
-      ))}
-
-      <div
-        onClick={() => setprofileModal(true)}
-        className="border cursor-pointer rounded-lg border-1 w-fit px-3 py-3 mt-5 border-[#ccc]"
-      >
-        Update Profile
       </div>
-
       <Drawer
         title="Update Profile"
         open={profileModal}
@@ -247,26 +404,6 @@ const FitnessSettings = () => {
               type="text"
               placeholder="Bussiness name"
               className="outline-[#08A88A] rounded-lg ring-1 ring-[#ccc] px-3 py-3"
-            />
-
-            <div className="flex gap-2 cursor-pointer justify-between">
-              <h1 className="text-lg">Password</h1>
-              <div className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  onChange={() => setShowPassword(!showPassword)}
-                />
-                <p>Show Password</p>
-              </div>
-            </div>
-            <input
-              onChange={(e) =>
-                setAdmin({ ...admin[0], password: e.target.value })
-              }
-              type={showPassword ? "text" : "password"}
-              value={admin[0]?.password}
-              placeholder="password"
-              className="outline-[#08A88A] rounded-lg ring-1 ring-[#ccc] border h-[45px]"
             />
 
             <h1 className="text-lg">Phone</h1>

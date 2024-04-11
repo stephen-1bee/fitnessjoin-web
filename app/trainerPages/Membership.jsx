@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { ArrowRight } from "@mui/icons-material"
 import { FrownOutlined } from "@ant-design/icons"
 import { Spin } from "antd"
+import { toast, Toaster } from "react-hot-toast"
 
 const Membership = () => {
   const [trainer, setTrainer] = useState(null)
@@ -15,6 +16,40 @@ const Membership = () => {
   if (typeof sessionStorage !== "undefined") {
     trainer_id = sessionStorage.getItem("trainerId")
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
+  }
+
+  const handleUpdateMembership = async (membershipId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+      const raw = JSON.stringify({
+        membership_id: membershipId,
+      })
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+      fetch(
+        `http://localhost:1000/api/v1/trainers/subscribe/${trainer_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "membership subscribed successfully") {
+            toast.success("Membership Updated successfully")
+            console.log(result)
+            getTrainer()
+            getFitnessMemberships()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const getTrainer = async () => {
@@ -127,7 +162,10 @@ const Membership = () => {
                     <p>{memberhip.name}</p>
                     <p>{memberhip.price}</p>
                   </div>
-                  <button className="flex  bg-[#08a88a] px-3 justify-end rounded-full py-3 w-fit text-white">
+                  <button
+                    onClick={() => handleUpdateMembership(memberhip._id)}
+                    className="flex  bg-[#08a88a] px-3 justify-end rounded-full py-3 w-fit text-white"
+                  >
                     Register
                   </button>
                 </div>
@@ -136,6 +174,7 @@ const Membership = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   )
 }

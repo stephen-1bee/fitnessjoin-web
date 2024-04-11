@@ -11,7 +11,7 @@ import {
   CloudCircleOutlined,
   FitnessCenter,
 } from "@mui/icons-material"
-import { message, Spin, Popconfirm, Modal, Form, Input, Select } from "antd"
+import { Spin, Popconfirm, Modal, Form, Input, Select } from "antd"
 import { Toaster, toast } from "react-hot-toast"
 
 const Nutrition = () => {
@@ -19,8 +19,12 @@ const Nutrition = () => {
   const [pendingNutrition, setPendingNutrtion] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
-  const [isModalVisible, setIsModalVisible] = useState(false)
   const [trainer, setTrainer] = useState([])
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [goals, setgoals] = useState([])
+  const [food, setfood] = useState("")
+  const [time_of_day, settime_of_day] = useState("")
+  const [category, setcategory] = useState("")
 
   // retrieve trainer id
   let trainer_id
@@ -30,14 +34,15 @@ const Nutrition = () => {
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
   }
 
-  const gettrainer = async (req, res) => {
+  // get trainer
+  const gettrainer = async () => {
     try {
       const requestOptions = {
         method: "GET",
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/trainers/one/${trainer_id}`,
         requestOptions
       )
@@ -157,6 +162,13 @@ const Nutrition = () => {
     getPendingNutrition()
   }, [])
 
+  const [currentNutrition, setCurrentNutrition] = useState(null)
+
+  const populateNutrition = (info) => {
+    setCurrentNutrition(info)
+    setIsModalVisible(true)
+  }
+
   const deleteNutrition = async (nutritionid) => {
     try {
       var requestOptions = {
@@ -180,6 +192,73 @@ const Nutrition = () => {
           }
         })
         .catch((error) => console.log("error", error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getGoals = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/goal/center/${trainer_center_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setgoals(result.center_goals)
+          console.log(result)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getGoals()
+  }, [])
+
+  // handle update nutrition
+  const handleUpdate = async (nutritionId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        food: food ? food : currentNutrition?.food,
+        time_of_day: time_of_day ? time_of_day : currentNutrition?.time_of_day,
+        category: category ? category : currentNutrition?.category,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/nutritions/update/${nutritionId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "nutrition updated successfully") {
+            toast.success(result.msg)
+            console.log(result.msg)
+            getApprovedNutrition()
+            getPendingNutrition()
+            setIsModalVisible(false)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
     } catch (err) {
       console.log(err)
     }
@@ -250,7 +329,7 @@ const Nutrition = () => {
                 <div className="flex items-center justify-center gap-2 text-[#818181]">
                   <p>
                     <EyeOutlined
-                      onClick={() => setIsModalVisible(true)}
+                      onClick={() => populateNutrition(nutrition)}
                       className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full"
                     />
                   </p>
@@ -311,7 +390,7 @@ const Nutrition = () => {
                 <div className="flex items-center justify-center gap-2 text-[#818181]">
                   <p>
                     <EyeOutlined
-                      onClick={() => setIsModalVisible(true)}
+                      onClick={() => populateNutrition(nutrition)}
                       className="text-[18px] mt-1 ml-4 hover:ring-1 hover: ring-[#ccc] p-2 rounded-full"
                     />
                   </p>
@@ -340,26 +419,40 @@ const Nutrition = () => {
         onCancel={() => setIsModalVisible(false)}
         footer={[false]}
       >
-        <Form className="flex flex-col gap-5">
+        <Form className="flex flex-col gap-5" key={currentNutrition?._id}>
           <div>
             <h1 className="text-lg">Food</h1>
-            <Input className="py-4 ring-1 ring-[#ccc] outline-none" />
+            <Input
+              onChange={(e) => setfood(e.target.value)}
+              defaultValue={currentNutrition?.food}
+              className="py-4 ring-1 ring-[#ccc] outline-none"
+            />
           </div>
           <div>
             <h1 className="text-lg">Time of day</h1>
-            <Input className="py-4 ring-1 ring-[#ccc] outline-none" />
+            <Input
+              onChange={(e) => settime_of_day(e.target.value)}
+              defaultValue={currentNutrition?.time_of_day}
+              className="py-4 ring-1 ring-[#ccc] outline-none"
+            />
           </div>
 
           <div>
             <h1 className="text-lg">Nutrition Category</h1>
-            <Select name="category" className="w-full">
-              <Select.Option>Low Fat</Select.Option>
-              <Select.Option>High-Protein</Select.Option>
-              <Select.Option>Low-Sodium</Select.Option>
-              <Select.Option>Weight Loss</Select.Option>
-            </Select>
+            <Select
+              className="py-4 outline-none w-full"
+              onChange={(text) => setcategory(text)}
+              defaultValue={currentNutrition?.category}
+              options={goals.map((cat) => ({
+                value: cat.goal,
+                label: cat.goal,
+              }))}
+            />
           </div>
-          <button className="w-full text-white py-4 rounded-md bg-[#08a88a]">
+          <button
+            onClick={() => handleUpdate(currentNutrition._id)}
+            className="w-full text-white py-4 rounded-md bg-[#08a88a]"
+          >
             Update Nutrition
           </button>
         </Form>

@@ -18,6 +18,11 @@ const FitnessMembers = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isViewModal, setisViewModal] = useState(false)
   const [loading, setloading] = useState(false)
+  const [currentTrainerId, setCurrentTrainerId] = useState("")
+  const [centerTrainers, setCenterTrainer] = useState([])
+
+  // logs
+  console.log("Trainer Id: ", currentTrainerId)
 
   const deleteCancel = (e) => {
     console.log(e)
@@ -33,15 +38,18 @@ const FitnessMembers = () => {
   const [password, setPassword] = useState("")
   const [phone, setPhone] = useState("")
   const [newUsers, setnewUsers] = useState([])
+  const [assignAdding, setAssignAdding] = useState(false)
 
   // update state variables
   const [updateFirstname, setupdateFirstname] = useState("")
   const [updateLastname, setupdateLastname] = useState("")
   const [updateEmail, setupdateEmail] = useState("")
   const [updatePhone, setupdatePhone] = useState("")
+  const [currentUserId, setCurrentUserId] = useState("")
 
   // state to get and populate current user
   const [currentUser, setCurrentUser] = useState(null)
+  const [assignModal, setAssignModal] = useState(false)
 
   // state to preview user details
   const [userInfo, setuserInfo] = useState([])
@@ -67,6 +75,28 @@ const FitnessMembers = () => {
   let storedFitnessId
   if (typeof sessionStorage !== "undefined") {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
+  }
+
+  // get center trainers
+  const getCenterTrainers = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/trainers/all/center/${storedFitnessId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setCenterTrainer(result.trainers)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   // add a member
@@ -208,6 +238,7 @@ const FitnessMembers = () => {
   useEffect(() => {
     getAllUsers()
     getNewUsers()
+    getCenterTrainers()
   }, [])
 
   // delete user
@@ -240,8 +271,9 @@ const FitnessMembers = () => {
   }
 
   // assign trainer
-  const assignTrainer = () => {
-    alert('About to assign a trainer')
+  const assignTrainer = (user_id) => {
+    setAssignModal(true)
+    setCurrentUserId(user_id)
   }
 
   const columns = [
@@ -291,14 +323,53 @@ const FitnessMembers = () => {
           >
             <DeleteOutlined />
           </Popconfirm>
-          <button className="bg-[#08a88a] px-4 py-1 text-white rounded-full" onClick={() => assignTrainer()}>Assign</button>
+          <button
+            className="bg-[#08a88a] px-4 py-1 text-white rounded-full"
+            onClick={() => assignTrainer(record._id)}
+          >
+            Assign
+          </button>
         </Space>
       ),
     },
   ]
 
+  // handle assign trainer
+  const handleAssignTrainer = async (trainer_id) => {
+    try {
+      setCurrentTrainerId(trainer_id)
+      setAssignAdding(true)
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/users/assign/${currentUserId}/to/${currentTrainerId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setAssignAdding(false)
+          if(result.msg === 'User assigned to trainer successfully'){
+            toast.success("User assigned to trainer successfully")
+            setAssignModal(false)
+          }else{
+            setAssignAdding(false)
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+      setCurrentTrainerId(trainer_id)
+    } catch (err) {
+      console.log(err)
+      setAssignAdding(false)
+    }
+  }
+
   return (
     <main>
+        <p>User Id: {currentUserId}</p>
       <div className="flex gap-2 items-center">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <Person2Outlined color="white" className="text-white " />
@@ -331,10 +402,12 @@ const FitnessMembers = () => {
 
       <div className="lg:flex-row flex-col flex lg:gap-18 gap-10 ">
         <div className="flex flex-col w-full mt-5">
-          <Table columns={columns} dataSource={allUsers} />
+          <div className="p-5 bg-white rounded-lg shadow">
+            <Table columns={columns} dataSource={allUsers} />
+          </div>
         </div>
         <div>
-          <div className="bg-white ring-1 ring-[#ccc] shadow h-[500px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[18px] rounded-md">
+          {/* <div className="bg-white ring-1 ring-[#ccc] shadow h-[500px] overflow-y-auto py-5 px-10 w-[400px] lg:mt-[18px] rounded-md">
             <h1 className="text-2xl font-semibold mb-2">New Users</h1>
             <div className="border-b bg-gray-400 mb-10" />
             {newUsers?.length >= 1 ? (
@@ -359,7 +432,7 @@ const FitnessMembers = () => {
                 <h1>No new Users signed up today</h1>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -526,6 +599,30 @@ const FitnessMembers = () => {
             <p>{formatteDate(userInfo.dateCreated)}</p>
           </div>
           <br />
+        </div>
+      </Modal>
+
+      {/* Assign trainer modal */}
+      <Modal
+        open={assignModal}
+        onCancel={() => setAssignModal(false)}
+        className=""
+        footer={false}
+      >
+        <div className="mt-7">
+          <select className="w-full p-3 rounded-md border-[1px] border-[#ccc] border-dashed outline-none" onChange={(e) => setCurrentTrainerId(e.target.value)}>
+            <option value="" selected disabled>
+              Select Trainer
+            </option>
+            {centerTrainers.map((trainer) => (
+              <option value={trainer._id}>{trainer.name}</option>
+            ))}
+          </select>
+          <button className="p-3 bg-[#08a88a] text-white rounded-md w-full mt-5" onClick={() => handleAssignTrainer()}>
+            {
+              assignAdding ? 'Assigning...' : 'Assign Trainer'
+            }
+          </button>
         </div>
       </Modal>
       <Toaster />

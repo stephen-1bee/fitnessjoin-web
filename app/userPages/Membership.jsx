@@ -17,6 +17,40 @@ const Membership = () => {
     user_center_id = sessionStorage.getItem("userCenterId")
   }
 
+  const handleUpdateMembership = async (membershipId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+      const raw = JSON.stringify({
+        membership_id: membershipId,
+      })
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+      fetch(
+        `http://localhost:1000/api/v1/trainers/subscribe/${userId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "membership subscribed successfully") {
+            toast.success("Membership Updated successfully")
+            console.log(result)
+            getUser()
+            getFitnessMemberships()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   // get a user
   const getUser = async () => {
     try {
@@ -122,7 +156,10 @@ const Membership = () => {
                     <p>{memberhip.name}</p>
                     <p>{memberhip.price}</p>
                   </div>
-                  <button className="flex  bg-[#08a88a] px-3 justify-end rounded-full py-3 w-fit text-white">
+                  <button
+                    onClick={() => handleUpdateMembership(memberhip._id)}
+                    className="flex  bg-[#08a88a] px-3 justify-end rounded-full py-3 w-fit text-white"
+                  >
                     Register
                   </button>
                 </div>

@@ -21,8 +21,10 @@ const CenterNav = () => {
   // retrive center name and Id through session
   let center_id
   let name
+  let notificationOpened
   if (typeof sessionStorage !== "undefined") {
     name = sessionStorage.getItem("centerName")
+    notificationOpened = sessionStorage.getItem("notification")
     center_id = sessionStorage.getItem("fitnessCenterId")
   }
 
@@ -130,35 +132,46 @@ const CenterNav = () => {
   const notificationUi = (
     <div className="p-5">
       <div className="w-[420px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] justify-center rounded-lg overflow-y-auto">
-        <h1 className="text-xl font-semibold">Notifications</h1>
+        <h1 className="text-xl font-semibold">
+          {notificationOpened === "true" ? "Notifications" : ""}
+        </h1>
         {notification?.length > 0 ? (
-          <div className="p-4">
-            {notification.map((notice) => (
-              <div className="border-b border-[#ededed] pb-2 pt-2 flex items-center justify-between">
-                <div className="flex gap-2 items-center ">
-                  <div className=" w-[5px] h-[5px] bg-blue-600 rounded-full" />
-                  <p>{notice.message}</p>
-                </div>
+          <div>
+            {notificationOpened === "true" ? (
+              <div className="p-4">
+                {notification.map((notice) => (
+                  <div className="border-b border-[#ededed] pb-2 pt-2 flex items-center justify-between">
+                    <div className="flex gap-2 items-center ">
+                      <div className=" w-[5px] h-[5px] bg-blue-600 rounded-full" />
+                      <p>{notice.message}</p>
+                    </div>
 
-                <div className="flex flex-col gap-1 items-end ml-2">
-                  <p className="text-[10px]">
-                    {formattDate(notice.dateCreated)}
-                  </p>
-                  <Popconfirm
-                    title="Delete Feedback"
-                    description="Are you sure to delete Feedback?"
-                    okText="Delete"
-                    onConfirm={() => deleteNotification(notice._id)}
-                    cancelText="No"
-                    okButtonProps={{
-                      style: { backgroundColor: "red", color: "white" },
-                    }}
-                  >
-                    <DeleteOutlined />
-                  </Popconfirm>
-                </div>
+                    <div className="flex flex-col gap-1 items-end ml-2">
+                      <p className="text-[10px]">
+                        {formattDate(notice.dateCreated)}
+                      </p>
+                      <Popconfirm
+                        title="Delete Feedback"
+                        description="Are you sure to delete Feedback?"
+                        okText="Delete"
+                        onConfirm={() => deleteNotification(notice._id)}
+                        cancelText="No"
+                        okButtonProps={{
+                          style: { backgroundColor: "red", color: "white" },
+                        }}
+                      >
+                        <DeleteOutlined />
+                      </Popconfirm>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <div className="flex flex-col items-center gap-3 mt-5">
+                <FrownOutlined />
+                <p>notification has been turned off</p>
+              </div>
+            )}
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3 mt-5">

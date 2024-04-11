@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import {
-  message,
   Popconfirm,
   Modal,
   Form,
@@ -32,7 +31,15 @@ const FitnessSessions = () => {
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
   const [startTime, setStartTime] = useState("")
-  const [endTIme, setEndTime] = useState("")
+  const [endTime, setEndTime] = useState("")
+
+  // state for update fields
+  const [newTitle, setnewTitle] = useState("")
+  const [newDesc, setnewDesc] = useState("")
+  const [newStartDate, setnewStartDate] = useState("")
+  const [newEndDate, setnewEndDate] = useState("")
+  const [newStartTime, setnewStartTime] = useState("")
+  const [newEndTime, setnewEndTime] = useState("")
 
   const [isEdithModal, setIsEdithModal] = useState(false)
   const [loading, setloading] = useState(false)
@@ -42,6 +49,7 @@ const FitnessSessions = () => {
   const formatteDate = (date) => {
     return moment(date).format("dddd, MMMM D, YYYY")
   }
+
   // format time
   const formattedTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A")
@@ -62,8 +70,7 @@ const FitnessSessions = () => {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
-  // handle preview
-
+  // handle delete session
   const handleDelete = async (sessionid) => {
     try {
       var requestOptions = {
@@ -71,7 +78,7 @@ const FitnessSessions = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/sessions/delete/${sessionid}`,
         requestOptions
       )
@@ -91,6 +98,7 @@ const FitnessSessions = () => {
     }
   }
 
+  // handle add session
   const addSession = async () => {
     if (
       !title ||
@@ -98,7 +106,7 @@ const FitnessSessions = () => {
       !startDate ||
       !endDate ||
       !startTime ||
-      !endTIme
+      !endTime
     ) {
       return toast.error("All field are required")
     }
@@ -113,7 +121,7 @@ const FitnessSessions = () => {
         start_date: startDate,
         end_date: endDate,
         start_time: startTime,
-        end_time: endTIme,
+        end_time: endTime,
         center_id: storedFitnessId,
         isApproved: true,
         creator_type: "center",
@@ -228,6 +236,50 @@ const FitnessSessions = () => {
       .catch((error) => {
         console.log("error", error)
       })
+  }
+  const currentSessionId = currentSession?._id
+
+  const handleUpdateSession = async () => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        title: newTitle ? newTitle : currentSession.title,
+        description: newDesc ? newDesc : currentSession.description,
+        start_date: newStartDate ? newStartDate : currentSession.start_date,
+        end_date: newEndDate ? newEndDate : currentSession.end_date,
+        start_time: newStartTime ? newStartTime : currentSession.start_time,
+        end_time: newEndTime ? newEndTime : currentSession.end_time,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/sessions/update/${currentSessionId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "session updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            getAllSessions()
+            getTrainerSession()
+            setIsEdithModal(false)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const column = [
@@ -513,54 +565,76 @@ const FitnessSessions = () => {
             <h1 className="text-lg">Name</h1>
             <Input
               defaultValue={currentSession?.title}
-              // onChange={(e) => (e.target.value)}
+              onChange={(e) => setnewTitle(e.target.value)}
               className="py-4"
             />
           </div>
 
           <div>
-            <h1 className="text-lg">Discription</h1>
+            <h1 className="text-lg">Description</h1>
             <TextArea
               defaultValue={currentSession?.description}
-              // onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setnewDesc(e.target.value)}
               rows={4}
               placeholder="Description"
             />
           </div>
 
-          <h1 className="text-lg">Start Date</h1>
-          <DatePicker
-            defaultValue={currentSession?.start_date}
-            className="py-4"
-            // onChange={(date, dateString) => setStartDate(dateString)}
-          />
-
-          <h1 className="text-lg">End Date</h1>
-          <DatePicker
-            className="py-4"
-            // onChange={(date, dateString) => setEndDate(dateString)}
-          />
-
-          <h1 className="text-lg">Start TIme</h1>
-          <TimePicker
-            className="py-4"
-            // onChange={(time, timeString) => setStartTime(timeString)}
-          />
-
-          <h1 className="text-lg">End Time</h1>
-          <TimePicker
-            className="py-4"
-            // onChange={(time, timeString) => setEndTime(timeString)}
-          />
-
-          <div
-            className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
-            // onClick={() => addSession()}
-          >
-            <h1 className="text-center">
-              {loading ? "Updating..." : "Update Session"}
-            </h1>
+          <div className="flex flex-col">
+            <h1 className="text-lg">Start Date</h1>
+            {/* <p>{formatteDate(currentSession?.start_date)} </p> */}
+            <DatePicker
+              defaultValue={
+                currentSession?.start_date
+                  ? moment(currentSession?.start_date, "YYYY-MM-DD")
+                  : null
+              }
+              className="py-4"
+              onChange={(date, dateString) => setnewStartDate(dateString)}
+            />
           </div>
+
+          <div className="flex flex-col">
+            <h1 className="text-lg">End Date</h1>
+            {/* <h1>{formatteDate(currentSession?.end_date)} </h1> */}
+            <DatePicker
+              defaultValue={
+                currentSession?.start_date
+                  ? moment(currentSession?.start_date, "YYYY-MM-DD")
+                  : null
+              }
+              className="py-4"
+              onChange={(date, dateString) => setnewEndDate(dateString)}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <h1 className="text-lg">Start Time</h1>
+            <h1>{formattedTime(currentSession?.start_time)}</h1>
+            <TimePicker
+              // defaultValue={moment(currentSession?.start_time).format(
+              //   "HH:mm:ss"
+              // )}
+              className="py-4"
+              onChange={(time, timeString) => setnewStartTime(timeString)}
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <h1 className="text-lg">End Time</h1>
+            <h1>{formattedTime(currentSession?.end_time)}</h1>
+            <TimePicker
+              className="py-4"
+              onChange={(time, timeString) => setnewEndTime(timeString)}
+            />
+          </div>
+
+          <button
+            className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
+            onClick={() => handleUpdateSession(currentSessionId)}
+          >
+            <h1 className="text-center">Update Session</h1>
+          </button>
         </Form>
       </Modal>
 
