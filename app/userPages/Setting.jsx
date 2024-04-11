@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react"
-import { Switch } from "antd"
 import toast, { Toaster } from "react-hot-toast"
+import { Popconfirm } from "antd"
 
 const Settings = () => {
   const [user, setUser] = useState({})
+  const [notification, setnotification] = useState()
   let user_id
+  let notificationStatus
   if (typeof sessionStorage !== "undefined") {
     user_id = sessionStorage.getItem("userId")
+    notificationStatus = sessionStorage.getItem("userNotification")
   }
 
   // get current user
@@ -22,7 +25,9 @@ const Settings = () => {
         requestOptions
       )
       const result = await response.json()
-      setUser(result.trainer[0])
+      sessionStorage.setItem("userNotification", result.user[0].isNotification)
+      setUser(result.user[0])
+      setnotification(result.user[0].isNotification)
     } catch (error) {
       console.error(error)
     }
@@ -32,45 +37,104 @@ const Settings = () => {
     getUser()
   }, [])
 
-  const handleToggle = (isNotification) => {
-    const requestOptions = {
-      method: "PUT",
-      redirect: "follow",
+  const handleOpenNotification = async () => {
+    try {
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/users/notification/on/${user_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "notification has been turned on") {
+            toast.success("Notifications enabled")
+            console.log(result)
+            getUser()
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
     }
-
-    const endpoint = isNotification
-      ? `http://localhost:1000/api/v1/users/notification/on/${user_id}`
-      : `http://localhost:1000/api/v1/users/notification/off/${user_id}`
-
-    fetch(endpoint, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.msg === "notification has been turned on") {
-          toast.success("Notification has been turned on")
-          setUser({ ...user, isNotification: true })
-        } else if (result.msg === "notification has been turned off") {
-          toast.success("Notification has been turned off")
-          setUser({ ...user, isNotification: false })
-        } else {
-          toast.error(result.msg)
-        }
-      })
-      .catch((error) => console.error(error))
   }
 
-  const onChange = (checked) => {
-    console.log(`Switch to ${checked}`)
-    handleToggle(checked)
-  }
+  const handleCloseNotification = async () => {
+    try {
+      const requestOptions = {
+        method: "PUT",
+        redirect: "follow",
+      }
 
-  const notification = user.isNotification
+      await fetch(
+        `http://localhost:1000/api/v1/users/notification/off/${user_id}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "notification has been turned off") {
+            toast.success(result.msg)
+            getUser()
+            console.log(result)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <div>
       <h1 className="text-2xl"> Settings</h1>
+
       <div className="mt-10 flex gap-8 items-center">
         <h1 className="text-xl">Notifications</h1>
-        <Switch defaultChecked={notification} onChange={onChange} />
+        <div>
+          {notificationStatus === "true" ? (
+            <div className="flex gap-5">
+              <p className="bg-[#08a88a] text-white p-3 rounded-full px-5">
+                Enabled
+              </p>
+              <Popconfirm
+                description="Do you want to disable notifications?"
+                okText="Disable"
+                okButtonProps={{
+                  style: {
+                    backgroundColor: "#c83a3a",
+                    color: "white",
+                  },
+                }}
+                onConfirm={() => handleCloseNotification()}
+              >
+                <button>Disable</button>
+              </Popconfirm>
+            </div>
+          ) : (
+            <div className="flex items-center gap-8">
+              <p className="bg-[#c83a3a] text-white p-3 rounded-full px-5">
+                Disabled
+              </p>
+              <Popconfirm
+                description="Do you want to enable notifications?"
+                okText="Enable"
+                okButtonProps={{
+                  style: { backgroundColor: "#08a88a", color: "white" },
+                }}
+                onConfirm={() => handleOpenNotification()}
+              >
+                <button>Enable</button>
+              </Popconfirm>
+            </div>
+          )}
+        </div>
       </div>
       <Toaster />
     </div>

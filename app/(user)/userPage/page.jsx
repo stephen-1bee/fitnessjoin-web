@@ -52,9 +52,11 @@ const page = () => {
   // retrieving user id
   let userId
   let user_center_id
+  let notificationStatus
   if (typeof sessionStorage !== "undefined") {
     userId = sessionStorage.getItem("userId")
     user_center_id = sessionStorage.getItem("userCenterId")
+    notificationStatus = sessionStorage.getItem("userNotification")
   }
 
   // get a user
@@ -113,16 +115,24 @@ const page = () => {
     <div className="w-[250px] shadow-md py-5 flex items-center bg-[#fdf9f0]  justify-center rounded-lg">
       {notification.length > 0 ? (
         <div>
-          {notification.map((notice) => (
-            <div className="flex flex-col mt-2">
-              <h1>From: {notice.center[0]?.name} </h1>
-              <div className="flex gap-2 items-center ">
-                <div className=" w-2 h-2 bg-blue-600 rounded-full " />
-                <p>{notice.message}</p>
-              </div>
-              <div className="border-b mt-1" />
+          {notificationStatus === "true" ? (
+            <div>
+              {notification.map((notice) => (
+                <div>
+                  <h1>From: {notice.center[0]?.name} </h1>
+                  <div className="flex gap-2 items-center ">
+                    <div className=" w-2 h-2 bg-blue-600 rounded-full " />
+                    <p>{notice.message}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <div className="flex flex-col items-center justify-center m-auto gap-2">
+              <FrownOutlined />
+              <p>Notifications has been turned off</p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex flex-col items-center gap-3 mt-5">

@@ -2,6 +2,7 @@
 import { Spin } from "antd"
 import React, { useEffect, useState } from "react"
 import { FrownOutlined } from "@ant-design/icons"
+import { toast, Toaster } from "react-hot-toast"
 
 const Membership = () => {
   const [user, setUser] = useState(null)
@@ -31,7 +32,7 @@ const Membership = () => {
         redirect: "follow",
       }
       fetch(
-        `http://localhost:1000/api/v1/trainers/subscribe/${userId}`,
+        `http://localhost:1000/api/v1/users/subscribe/${userId}`,
         requestOptions
       )
         .then((response) => response.json())
@@ -168,6 +169,7 @@ const Membership = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   )
 }

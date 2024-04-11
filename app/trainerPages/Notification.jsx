@@ -9,11 +9,11 @@ const Notification = () => {
 
   let trainer_center_id
   let trainer_id
-  let notificaitonStatus
+  let notificationStatus
   if (typeof sessionStorage !== "undefined") {
     trainer_center_id = sessionStorage.getItem("trainerCenterId")
     trainer_id = sessionStorage.getItem("trainerId")
-    notificaitonStatus = sessionStorage.getItem("notification")
+    notificationStatus = sessionStorage.getItem("tNotification")
   }
 
   // get current trainer
@@ -70,7 +70,7 @@ const Notification = () => {
       <div className="w-[250px] shadow-md py-5 flex items-center bg-[#fdf9f0]  justify-center rounded-lg">
         {notification.length > 0 ? (
           <div>
-            {notificaitonStatus === "true" ? (
+            {notificationStatus === "true" ? (
               <div>
                 {notification.map((notice) => (
                   <div>

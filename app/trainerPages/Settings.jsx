@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
-import { Switch } from "antd"
 import toast, { Toaster } from "react-hot-toast"
-import { Drawer, Popconfirm } from "antd"
+import { Popconfirm } from "antd"
 
 const Settings = () => {
   const [trainer, setTrainer] = useState({})
@@ -10,7 +9,7 @@ const Settings = () => {
   let trainer_id
   if (typeof sessionStorage !== "undefined") {
     trainer_id = sessionStorage.getItem("trainerId")
-    notificationStatus = sessionStorage.getItem("notification")
+    notificationStatus = sessionStorage.getItem("tNotification")
   }
 
   const [isNotificationOpened, setIsNotificationOpened] =
@@ -29,7 +28,7 @@ const Settings = () => {
         requestOptions
       )
       const result = await response.json()
-      sessionStorage.setItem("notification", result.trainer[0].isNotification)
+      sessionStorage.setItem("tNotification", result.trainer[0].isNotification)
       setTrainer(result.trainer[0])
       setIsNotificationOpened(result.trainer[0].isNotification)
     } catch (error) {
