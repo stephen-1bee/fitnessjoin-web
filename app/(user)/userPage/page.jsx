@@ -23,7 +23,7 @@ import {
 import { MenuItem } from "@mui/material"
 import { Dropdown, Modal, Popconfirm, Rate } from "antd"
 import Image from "next/image"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import Dashboard from "@/app/userPages/Dashboard"
 import Center from "@/app/userPages/Center"
 import Nutrition from "@/app/userPages/Nutrition"
@@ -34,7 +34,7 @@ import Profile from "@/app/userPages/Profile"
 import Notification from "@/app/userPages/Notification"
 import { FloatButton } from "antd"
 import toast, { Toaster } from "react-hot-toast"
-import { Result } from "antd"
+import { Button, Divider, Space, Tour } from "antd"
 
 const page = () => {
   const [myState, setMyState] = useState("hidden")
@@ -48,6 +48,29 @@ const page = () => {
   const [value, setValue] = useState(3)
 
   const desc = ["terrible", "bad", "normal", "good", "wonderful"]
+
+  const ref1 = useRef(null)
+  const ref2 = useRef(null)
+  const ref3 = useRef(null)
+  const [open, setOpen] = useState(false)
+
+  const steps = [
+    {
+      title: "Upload File",
+      description: "Put your files here.",
+      target: () => ref1.current,
+    },
+    {
+      title: "Save",
+      description: "Save your changes.",
+      target: () => ref2.current,
+    },
+    {
+      title: "Other Actions",
+      description: "Click to see other actions.",
+      target: () => ref3.current,
+    },
+  ]
 
   // retrieving user id
   let userId
@@ -82,6 +105,7 @@ const page = () => {
     }
   }
 
+  // get notifications
   const handleCenterNotification = async () => {
     try {
       const requestOptions = {
@@ -104,6 +128,12 @@ const page = () => {
     }
   }
 
+  // function setOpenTrue() {
+  //   setOpen(true)
+  // }
+
+  // setTimeout(setOpenTrue, 2000)
+
   // init
   useEffect(() => {
     getUser()
@@ -112,16 +142,35 @@ const page = () => {
 
   // notification ui
   const notificationUi = () => (
-    <div className="w-[250px] shadow-md py-5 flex items-center bg-[#fdf9f0]  justify-center rounded-lg">
+    <div className="w-[390px] h-[400px] shadow-md py-5 flex flex-col bg-[#fdf9f0] rounded-lg overflow-y-auto p-5">
+      <div className="flex items-center justify-between py-1">
+        <h1 className="text-xl font-semibold">Notifications</h1>
+        <div
+          className="cursor-pointer"
+          onClick={() => setActiveModule("settings")}
+        >
+          <SettingsOutlined />
+        </div>
+      </div>
+      <div className="border-b border-gray-200 border-[0.1px] shadow-md" />
       {notification.length > 0 ? (
-        <div>
+        <div className="py-2">
           {notificationStatus === "true" ? (
-            <div>
+            <div className="flex flex-col gap-5">
               {notification.map((notice) => (
-                <div>
-                  <h1>From: {notice.center[0]?.name} </h1>
-                  <div className="flex gap-2 items-center ">
-                    <div className=" w-2 h-2 bg-blue-600 rounded-full " />
+                <div className="flex gap-2 items-center">
+                  <div className=" w-2 h-2 bg-blue-600 rounded-full " />
+                  <Image
+                    src={`http://localhost:1000/${notice.center[0]?.photo}`}
+                    height={100}
+                    width={100}
+                    alt="image"
+                    className="rounded-full h-[50px] w-[50px] object-cover"
+                  />
+                  <div className="flex flex-col">
+                    <h1 className="font-bold text-[17px]">
+                      {notice.center[0]?.name}{" "}
+                    </h1>
                     <p>{notice.message}</p>
                   </div>
                 </div>
@@ -143,7 +192,7 @@ const page = () => {
     </div>
   )
 
-  // menu items
+  // menu dropdown items on nav
   const MyMenu = () => (
     <div className="bg-white p-2 shadow-2xl rounded-xl">
       <MenuItem onClick={() => setActiveModule("profile")} className="gap-2">
@@ -218,6 +267,7 @@ const page = () => {
 
   const handleRating = () => {
     setSuccess(true)
+    setopenRatingModal(false)
   }
 
   const sendMessageUi = () => (
@@ -230,7 +280,7 @@ const page = () => {
         rows={7}
         className="rounded-md py-3 px-3 w-[250px] ring-1 ring-[#ccc] mt-5 outline-black"
       />
-      <button onClick={() => setopenRatingModal(true)}>open</button>
+
       <button
         onClick={() => sendFeedback()}
         className="w-[250px] rounded-full bg-[#08A88A] py-3 text-white "
@@ -266,21 +316,6 @@ const page = () => {
     }
   }
 
-  const successUi = () => (
-    <div>
-      {success && (
-        <div className="z-[999]">
-          <Result
-            status="success"
-            title="Successfully Purchased Cloud Server ECS!"
-            subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
-            extra={<button onClick={() => setSuccess(false)}> Continue</button>}
-          />
-        </div>
-      )}
-    </div>
-  )
-
   return (
     <div className="min-h-screen flex bg-[#fdfaf3]">
       {/* Sidenav */}
@@ -296,6 +331,7 @@ const page = () => {
         </div>
 
         {/* Main Sidebar Elements */}
+        <button onClick={() => setOpen(true)}>open</button>
         <div className="flex flex-col gap-3 p-5">
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
@@ -409,20 +445,32 @@ const page = () => {
           </Dropdown>
         </div>
 
+        {/* main content area */}
         <div className="w-full h-full p-9 bg-[#f0f0f0]">
           <h1>{dynamicPages()}</h1>
         </div>
       </div>
 
       {success && (
-        <div className="">
-          <Result
-            status="success"
-            title="Successfully Purchased Cloud Server ECS!"
-            subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
-            extra={<button onClick={() => setSuccess(false)}> Continue</button>}
-          />
-        </div>
+        <Modal
+          open={success}
+          onCancel={() => setSuccess(false)}
+          footer={false}
+          centered
+        >
+          <div className="flex flex-col items-center gap-3">
+            <Image src="/checked.png" alt="image" width={50} height={50} />
+            <h1 className="text-xl">
+              Your feedback has been sent successfully
+            </h1>
+            <button
+              className="px-5 py-3 bg-[#08a88a] text-white rounded-full"
+              onClick={() => setSuccess(false)}
+            >
+              Continue
+            </button>
+          </div>
+        </Modal>
       )}
 
       {/* Mobile Nav */}
@@ -525,7 +573,18 @@ const page = () => {
             Submit
           </button>
         </div>
+        <Tour
+          open={open}
+          onClose={() => setOpen(false)}
+          steps={steps}
+          indicatorsRender={(current, total) => (
+            <span>
+              {current + 1} / {total}
+            </span>
+          )}
+        />
       </Modal>
+      <Toaster />
     </div>
   )
 }

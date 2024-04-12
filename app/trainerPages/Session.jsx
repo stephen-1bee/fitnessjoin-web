@@ -407,7 +407,9 @@ const Session = () => {
         </div>
       </div>
 
-      <Table columns={column} dataSource={approvedSession} />
+      <div className="p-5 bg-white showdow-md rounded-lg">
+        <Table columns={column} dataSource={approvedSession} />
+      </div>
 
       <div className="mt-10">
         <div className="flex ga-3 py-4">
@@ -416,7 +418,9 @@ const Session = () => {
           </div>
           <h1 className="text-lg font-semibold p-2">Pending Sesisons</h1>
         </div>
-        <Table columns={column} dataSource={pendingSession} />
+        <div className="p-5 bg-white showdow-md rounded-lg">
+          <Table columns={column} dataSource={pendingSession} />
+        </div>
       </div>
 
       {/* Add Session */}

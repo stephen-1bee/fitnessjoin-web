@@ -637,24 +637,28 @@ const FitnessArticles = () => {
               "no image"
             )}
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-bold">Title:</h1>
             <p>{articlePreview.title}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-bold">url:</h1>
             <p>{articlePreview.url}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
 
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Short note:</h1>
             <p>{articlePreview.desc}</p>
           </div>
+          <div className="border-b border-[#ccc] border-1 mt-2 " />
           <br />
           <h1 className="font-bold">Date Created:</h1>
           <p>{formatteDate(articlePreview.dateCreated)}</p>
@@ -664,6 +668,17 @@ const FitnessArticles = () => {
         <div className="flex gap-1 flex-col">
           <h1 className="font-bold">Date Updated:</h1>
           <p>{formatteDate(articlePreview.dateUpdated)}</p>
+        </div>
+        <div className="border-b border-[#ccc] border-1 mt-2 " />
+
+        <br />
+        <div className="flex gap-1 flex-col">
+          <h1 className="font-bold">Status:</h1>
+          <p>
+            <Tag color={articlePreview.isApproved === true ? "green" : "red"}>
+              {articlePreview.isApproved === true ? "Active" : "Pending"}
+            </Tag>
+          </p>
         </div>
       </Modal>
       <Toaster />

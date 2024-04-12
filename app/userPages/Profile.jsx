@@ -209,23 +209,6 @@ const Profile = () => {
         </div>
         <div className="flex gap-5">
           <div>
-            <h1 className="text-lg">Password</h1>
-            <input
-              onChange={(e) => setuser({ ...user, password: e.target.value })}
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-              defaultValue={user ? user?.password : ""}
-            />
-            <div className="flex gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                onChange={() => setShowPassword(!showPassword)}
-              />
-              <p>Show Password</p>
-            </div>
-          </div>
-          <div>
             <h1 className="text-lg">Goal</h1>
             <select
               value={user ? user?.goal : ""}

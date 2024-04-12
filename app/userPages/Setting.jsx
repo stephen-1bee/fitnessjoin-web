@@ -93,14 +93,13 @@ const Settings = () => {
 
   return (
     <div>
-      <h1 className="text-2xl"> Settings</h1>
-
+      <h1 className="text-2xl">Settings</h1>
       <div className="mt-10 flex gap-8 items-center">
         <h1 className="text-xl">Notifications</h1>
         <div>
           {notificationStatus === "true" ? (
             <div className="flex gap-5">
-              <p className="bg-[#08a88a] text-white p-3 rounded-full px-5">
+              <p className="bg-[#08a88a] text-white p-3 px-5 rounded-full ">
                 Enabled
               </p>
               <Popconfirm
@@ -114,12 +113,14 @@ const Settings = () => {
                 }}
                 onConfirm={() => handleCloseNotification()}
               >
-                <button>Disable</button>
+                <button className="border border-[#ccc] px-5 py-3 rounded-full border-dotted">
+                  Disable
+                </button>
               </Popconfirm>
             </div>
           ) : (
             <div className="flex items-center gap-8">
-              <p className="bg-[#c83a3a] text-white p-3 rounded-full px-5">
+              <p className="bg-[#c83a3a] text-white p-3 rounded-full px-4">
                 Disabled
               </p>
               <Popconfirm
@@ -130,7 +131,9 @@ const Settings = () => {
                 }}
                 onConfirm={() => handleOpenNotification()}
               >
-                <button>Enable</button>
+                <button className="border border-[#ccc] px-5 py-3 rounded-full border-dotted">
+                  Enable
+                </button>
               </Popconfirm>
             </div>
           )}

@@ -346,7 +346,14 @@ const Articles = () => {
       render: (_, record) => (
         <Space size="middle">
           <EditOutlined onClick={() => populateArticle(record)} />
-          <EyeOutlined onClick={() => handlePreview(record)} />
+          {eligible === false ? (
+            ""
+          ) : (
+            <div>
+              <EyeOutlined onClick={() => handlePreview(record)} />
+            </div>
+          )}
+
           <Popconfirm
             title="Delete the Article"
             description="Are you sure to delete Article?"

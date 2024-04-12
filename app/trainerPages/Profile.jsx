@@ -15,9 +15,6 @@ const Profile = () => {
   const [newEmail, setnewEmail] = useState("")
   const [newLocation, setnewLocation] = useState("")
   const [newPhone, setPhone] = useState("")
-  const [newPassword, setnewPassword] = useState("")
-
-  const [showPassword, setShowPassword] = useState(false)
 
   // get trainer id
   let trainer_id
@@ -149,7 +146,7 @@ const Profile = () => {
             <h1 className="text-lg">Location</h1>
             <input
               onChange={(e) => setnewLocation(e.target.value)}
-              type="email"
+              type="text"
               placeholder="Email"
               className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
               defaultValue={trainer ? trainer.location : ""}
@@ -160,31 +157,15 @@ const Profile = () => {
             <h1 className="text-lg">Phone</h1>
             <input
               onChange={(e) => setPhone(e.target.value)}
-              type="email"
-              placeholder="Email"
+              type="text"
               className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
               defaultValue={trainer ? trainer.phone : ""}
             />
           </div>
         </div>
 
-        <h1 className="text-lg">Password</h1>
-        <input
-          onChange={(e) => setTrainer({ ...trainer, password: e.target.value })}
-          type={showPassword ? "text" : "password"}
-          placeholder="Password"
-          className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-          defaultValue={trainer ? trainer.password : ""}
-        />
-        <div className="flex gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            onChange={() => setShowPassword(!showPassword)}
-          />
-          <p>Show Password</p>
-        </div>
         <button
-          className="py-4 w-[300px] px-3 rounded-full ring-1 bg-[#08A88A] text-white"
+          className="py-4 w-[300px] px-3 rounded-full ring-1 bg-[#08A88A] text-white m-auto mt-5"
           onClick={() => updateTrainer()}
         >
           Save

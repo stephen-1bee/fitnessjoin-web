@@ -369,7 +369,6 @@ const FitnessMembers = () => {
 
   return (
     <main>
-      <p>User Id: {currentUserId}</p>
       <div className="flex gap-2 items-center">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <Person2Outlined color="white" className="text-white " />

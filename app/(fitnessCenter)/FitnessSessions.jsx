@@ -702,6 +702,16 @@ const FitnessSessions = () => {
             <h1 className="font-bold">Date Updated:</h1>
             <p>{formatteDate(preview.dateUpdated)}</p>
           </div>
+
+          <br />
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold">Status:</h1>
+            <p>
+              <Tag color={preview.isApproved === true ? "green" : "red"}>
+                {preview.isApproved === true ? "Active" : "Pending"}
+              </Tag>
+            </p>
+          </div>
         </div>
       </Modal>
     </div>

@@ -95,11 +95,16 @@ const Users = () => {
         Users
       </p>
       <div className="flex items-center justify-between mb-5">
-        <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
-          <h1>{users.length}</h1>
+        <div className="flex items-center gap-2">
+          <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
+            <h1>{users.length}</h1>
+          </div>
+          <h1 className="text-lg">Assigned Users</h1>
         </div>
       </div>
-      <Table columns={column} dataSource={users} />
+      <div className="p-5 bg-white showdow-md rounded-lg">
+        <Table columns={column} dataSource={users} />
+      </div>
 
       {/* Preview Modal */}
       <Modal
@@ -140,7 +145,7 @@ const Users = () => {
 
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Goal:</h1>
-            <p>{preview?.goal ? userInfo.goal : "no goal choosen"}</p>
+            <p>{preview?.goal ? preview?.goal : "no goal choosen"}</p>
           </div>
           <br />
 

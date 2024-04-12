@@ -63,7 +63,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1 className="text-3xl mb-2">My Dashboard</h1>
       <div className="flex justify-center gap-5">
         {/* Canvas */}
         <div className="bg-white w-[500px] mr-12 p-12  items-center shadow-lg rounded-lg">
