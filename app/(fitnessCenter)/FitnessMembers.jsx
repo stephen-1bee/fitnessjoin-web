@@ -659,18 +659,17 @@ const FitnessMembers = () => {
           <br />
 
           <div className="flex gap-1 flex-col">
-            {/* <h1 className="font-bold text-lg">Trainer:</h1>
+            <h1 className="font-bold text-lg">Trainer:</h1>
             <p>
-              {trainer.name ? (
+              {userInfo?.trainer?.[0]?.name ? (
                 <div className="flex items-center gap-1 ">
                   <UserOutlined />
-                  {trainer.name}
+                  {userInfo?.trainer?.[0]?.name}
                 </div>
               ) : (
                 "not assiged to a Trainer yet"
               )}
-            </p> */}
-            <p>{userInfo.trainer?.name}</p>
+            </p>
           </div>
           <br />
 
