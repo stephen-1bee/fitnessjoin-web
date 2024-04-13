@@ -697,6 +697,7 @@ const FitnessSessions = () => {
             <p>{formatteDate(preview.dateCreated)}</p>
           </div>
           <div className="border-b border-[#ccc] border-1 mt-2 " />
+
           <br />
           <div className="flex gap-1 flex-col">
             <h1 className="font-bold">Date Updated:</h1>

@@ -9,6 +9,7 @@ import {
 } from "@mui/icons-material"
 import { Skeleton } from "antd"
 import { PhoneOutlined, FrownOutlined } from "@ant-design/icons"
+import moment from "moment"
 
 const handleRating = (rate) => {
   const stars = []
@@ -59,6 +60,11 @@ const Page = () => {
     window.history.back()
   }
 
+  // format time
+  const formattedTime = (time) => {
+    return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
+
   return (
     <main className="min-h-screen flex justify-center items-center bg-[#f9fafd]">
       <div className="container mx-auto flex flex-col-reverse lg:flex-row gap-12 items-center p-4">
@@ -86,10 +92,24 @@ const Page = () => {
                 <EmailOutlined className="mr-2" />
                 {center.email}
               </p>
-              <p className="text-[#183642] mb-2 items-center gap-3">
-                <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
+              <p className="text-[#183642] mb-2 flex items-center gap-3">
+                <PhoneOutlined className="scale-x-[-1] " />
                 {center.phone}
               </p>
+              <h1 className="font-bold text-lg">Working Hours</h1>
+              <div className="flex gap-2">
+                <p>
+                  {center.opening_time
+                    ? formattedTime(center.opening_time)
+                    : "N/A"}
+                </p>
+                <h1> to </h1>
+                <p>
+                  {center.closing_time
+                    ? formattedTime(center.closing_time)
+                    : "N/A"}
+                </p>
+              </div>
               <p>
                 {center.rating === 0 ? (
                   <p className="gray-700">No ratings yet </p>
@@ -105,7 +125,7 @@ const Page = () => {
                     <p>Opened</p>
                   </div>
                 ) : (
-                  <div className="bg-[#ffd5cd] p-3 w-fit px-9 border-l-[3px] border-l-[tomato]">
+                  <div className="bg-[#ffd5cd] p-3 px-9 border-l-[3px] border-l-[tomato] w-full">
                     <p>Closed</p>
                   </div>
                 )}
@@ -139,7 +159,7 @@ const Page = () => {
                 src={
                   center ? `http://localhost:1000/${center.photo}` : "no photo"
                 }
-                className="rounded-md photoDetail w-full object-fit"
+                className="rounded-md photoDetail w-full object-cover h-[500px]"
               />
             </div>
           ) : (

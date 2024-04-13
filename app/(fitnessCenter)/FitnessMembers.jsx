@@ -20,18 +20,20 @@ const FitnessMembers = () => {
   const [loading, setloading] = useState(false)
   const [currentTrainerId, setCurrentTrainerId] = useState("")
   const [centerTrainers, setCenterTrainer] = useState([])
+  const [goal, setGoal] = useState([])
+  const [goalField, setgoalField] = useState("")
 
   // logs
-  console.log("Trainer Id: ", currentTrainerId)
+  // console.log("Trainer Id: ", currentTrainerId)
 
   const deleteCancel = (e) => {
     console.log(e)
   }
 
-  // get all user state
+  // get all users state
   const [allUsers, setAllUsers] = useState([])
 
-  // add new users state
+  // add new users state variables
   const [firstName, setFirst_name] = useState("")
   const [lastName, setLast_name] = useState("")
   const [email, setEmail] = useState("")
@@ -40,12 +42,13 @@ const FitnessMembers = () => {
   const [newUsers, setnewUsers] = useState([])
   const [assignAdding, setAssignAdding] = useState(false)
 
-  // update state variables
+  // update user state variables
   const [updateFirstname, setupdateFirstname] = useState("")
   const [updateLastname, setupdateLastname] = useState("")
   const [updateEmail, setupdateEmail] = useState("")
   const [updatePhone, setupdatePhone] = useState("")
   const [currentUserId, setCurrentUserId] = useState("")
+  const [updateGoalField, setupdateGoalField] = useState("")
 
   // state to get and populate current user
   const [currentUser, setCurrentUser] = useState(null)
@@ -77,6 +80,8 @@ const FitnessMembers = () => {
     storedFitnessId = sessionStorage.getItem("fitnessCenterId")
   }
 
+  console.log(allUsers)
+
   // get center trainers
   const getCenterTrainers = async () => {
     try {
@@ -101,7 +106,7 @@ const FitnessMembers = () => {
 
   // add a member
   const addUser = async () => {
-    if (!email || !password || !firstName || !phone || !location) {
+    if (!email || !password || !firstName || !phone) {
       return toast.error("All fields are required")
     }
     try {
@@ -115,6 +120,7 @@ const FitnessMembers = () => {
         email: email,
         password: password,
         phone: phone,
+        goal: goalField,
         center_id: storedFitnessId,
       })
 
@@ -146,8 +152,32 @@ const FitnessMembers = () => {
     }
   }
 
+  const getFitnessGoals = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/goal/center/${storedFitnessId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setGoal(result.center_goals)
+          console.log(result.center_goals)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  // grab current user id
   const userId = currentUser?._id
 
+  // update user details
   const handleUpdate = async (userId) => {
     try {
       const myHeaders = new Headers()
@@ -159,6 +189,7 @@ const FitnessMembers = () => {
         email: updateEmail ? updateEmail : currentUser?.email,
         phone: updatePhone ? updatePhone : currentUser?.phone,
         password: currentUser?.password,
+        goal: updateGoalField ? updateGoalField : currentUser?.goal,
       })
 
       const requestOptions = {
@@ -189,24 +220,24 @@ const FitnessMembers = () => {
     }
   }
 
-  // get all users
+  // get fitness center users
   const getAllUsers = async () => {
     try {
-      var requestOptions = {
+      const requestOptions = {
         method: "GET",
         redirect: "follow",
       }
 
-      await fetch(
-        `http://localhost:1000/api/v1/users/user/${storedFitnessId}`,
+      fetch(
+        `http://localhost:1000/api/v1/users/all/center/${storedFitnessId}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          setAllUsers(result.all_users)
-          console.log(result.all_users)
+          setAllUsers(result.users)
+          console.log(result.users)
         })
-        .catch((error) => console.log("error", error))
+        .catch((error) => console.error(error))
     } catch (err) {
       console.log(err)
     }
@@ -239,6 +270,7 @@ const FitnessMembers = () => {
     getAllUsers()
     getNewUsers()
     getCenterTrainers()
+    getFitnessGoals()
   }, [])
 
   // delete user
@@ -333,6 +365,8 @@ const FitnessMembers = () => {
       ),
     },
   ]
+
+  console.log(`user info ${userInfo.name}`)
 
   // handle assign trainer
   const handleAssignTrainer = async (trainer_id) => {
@@ -484,6 +518,21 @@ const FitnessMembers = () => {
               />
             </div>
 
+            <div>
+              <h1 className="text-lg">Choose a goal</h1>
+              <select
+                onChange={(e) => setgoalField(e.target.value)}
+                className="rounded-md h-12 ring-1 ring-[#ccc] w-full"
+              >
+                <option value="">Select a goal from this fitness center</option>
+                {goal?.map((g) => (
+                  <option key={g.goal} value={g.goal}>
+                    {g.goal}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div
               className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
               onClick={() => addUser()}
@@ -541,6 +590,22 @@ const FitnessMembers = () => {
             />
           </div>
 
+          <div>
+            <h1 className="text-lg">Choose a goal</h1>
+            <select
+              defaultValue={currentUser?.goal}
+              onChange={(e) => setupdateGoalField(e.target.value)}
+              className="rounded-md h-12 ring-1 ring-[#ccc] w-full"
+            >
+              <option value="">Select a goal from this fitness center</option>
+              {goal?.map((g) => (
+                <option key={g.goal} value={g.goal}>
+                  {g.goal}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div
             className="flex mt-5 bg-[#08a88a] w-full text-center text-white py-4 rounded-md justify-center cursor-pointer"
             onClick={() => handleUpdate(userId)}
@@ -559,42 +624,58 @@ const FitnessMembers = () => {
       >
         <div>
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold">First Name:</h1>
-            <p>{userInfo.first_name}</p>
+            <h1 className="font-bold text-lg">First Name:</h1>
+            <p>{userInfo.first_name ? userInfo.first_name : "N/A"}</p>
           </div>
           <br />
 
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold">Last Name:</h1>
-            <p>{userInfo.last_name}</p>
+            <h1 className="font-bold text-lg">Last Name:</h1>
+            <p>{userInfo.last_name ? userInfo.last_name : "N/A"}</p>
           </div>
           <br />
 
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold">Email:</h1>
-            <p>{userInfo.email}</p>
+            <h1 className="font-bold text-lg">Email:</h1>
+            <p>{userInfo.email ? userInfo.email : "N/A"}</p>
           </div>
           <br />
 
           <div className="flex gap-1 flex-col">
-            <h1 className="font-bold">Phone:</h1>
-            <p>{userInfo.phone}</p>
+            <h1 className="font-bold text-lg">Phone:</h1>
+            <p>{userInfo.phone ? userInfo.phone : "N/A"}</p>
           </div>
           <br />
           <div className="flex gap-1 flex-col">
-            <h1 className="font-bold">Memberhsip:</h1>
-            <p>{userInfo.membership_id}</p>
+            <h1 className="font-bold text-lg">Memberhsip:</h1>
+            <p>{userInfo.membership_id ? userInfo.membership_id : "N/A"}</p>
           </div>
           <br />
 
           <div className="flex gap-1 flex-col">
-            <h1 className="font-bold">Goal:</h1>
+            <h1 className="font-bold text-lg">Goal:</h1>
             <p>{userInfo.goal ? userInfo.goal : "no goal choosen"}</p>
           </div>
           <br />
 
           <div className="flex gap-1 flex-col">
-            <h1 className="font-bold">Date Created:</h1>
+            {/* <h1 className="font-bold text-lg">Trainer:</h1>
+            <p>
+              {trainer.name ? (
+                <div className="flex items-center gap-1 ">
+                  <UserOutlined />
+                  {trainer.name}
+                </div>
+              ) : (
+                "not assiged to a Trainer yet"
+              )}
+            </p> */}
+            <p>{userInfo.trainer?.name}</p>
+          </div>
+          <br />
+
+          <div className="flex gap-1 flex-col">
+            <h1 className="font-bold text-lg">Date Created:</h1>
             <p>{formatteDate(userInfo.dateCreated)}</p>
           </div>
           <br />

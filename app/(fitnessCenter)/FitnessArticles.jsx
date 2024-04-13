@@ -161,7 +161,7 @@ const FitnessArticles = () => {
     }
   }
 
-  // articles from traier
+  // articles from trainer
   const getTrainerArticle = async () => {
     try {
       const requestOptions = {
@@ -618,7 +618,7 @@ const FitnessArticles = () => {
 
       {/* preview */}
       <Modal
-        title="User Preview"
+        title="Article Preview"
         open={isViewModal}
         onCancel={() => setisViewModal(false)}
         footer={false}
@@ -629,8 +629,8 @@ const FitnessArticles = () => {
               <Image
                 width={100}
                 height={100}
-                alt="article  image"
-                src={`http:/localhost:1000/${articlePreview.photo}`}
+                alt="article image"
+                src={`http://localhost:1000/${articlePreview?.photo}`}
                 className="rounded-lg"
               />
             ) : (

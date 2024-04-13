@@ -8,11 +8,11 @@ import {
   ArrowRight,
   EmailOutlined,
   LocationOnOutlined,
-  Tag,
 } from "@mui/icons-material"
-import { Drawer, Popconfirm } from "antd"
+import { Drawer, Popconfirm, TimePicker } from "antd"
 import { toast, Toaster } from "react-hot-toast"
 import Image from "next/image"
+import moment from "moment"
 
 const FitnessSettings = () => {
   // State variables
@@ -26,6 +26,15 @@ const FitnessSettings = () => {
   const [desc, setDesc] = useState("")
   const [telephone, setTelephone] = useState("")
   const [location, setLocation] = useState("")
+  const [openingTime, setOpeningTime] = useState("")
+  const [closingTime, setClosingTime] = useState("")
+
+  console.log(openingTime)
+  console.log(closingTime)
+
+  const formattedTime = (time) => {
+    return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
 
   // Retrieve admin ID from session storage
   const centerId = sessionStorage.getItem("fitnessCenterId")
@@ -59,6 +68,7 @@ const FitnessSettings = () => {
     }
   }
 
+  // functionality to open notification
   const handleOpenNotification = async () => {
     try {
       const requestOptions = {
@@ -86,6 +96,7 @@ const FitnessSettings = () => {
     }
   }
 
+  // functionality to close notification
   const handleCloseNotification = async () => {
     try {
       const requestOptions = {
@@ -128,6 +139,14 @@ const FitnessSettings = () => {
       formdata.append("phone", telephone ? telephone : admin[0]?.phone)
       formdata.append("name", businessName ? businessName : admin[0]?.name)
       formdata.append("desc", desc ? desc : admin[0]?.desc)
+      formdata.append(
+        "opening_time",
+        openingTime ? openingTime : admin[0]?.opening_time
+      )
+      formdata.append(
+        "closing_time",
+        closingTime ? closingTime : admin[0]?.closing_time
+      )
 
       const requestOptions = {
         method: "PUT",
@@ -432,6 +451,28 @@ const FitnessSettings = () => {
               placeholder="Description"
               className="outline-[#08A88A] rounded-lg ring-1 ring-[#ccc] px-3 py-3 "
             />
+
+            <div className="flex gap-5 items-center justify-between w-full">
+              <div className="flex flex-col gap-1">
+                <h1 className="text-[17px]">Opening Time</h1>
+                <h1>{formattedTime(admin[0]?.opening_time)}</h1>
+                <TimePicker
+                  // defaultValue={formattedTime(admin[0]?.opening_time)}
+                  className="py-4"
+                  onChange={(date, dateString) => setOpeningTime(dateString)}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <h1 className="text-[17px]">Closing Time</h1>
+                <h1>{formattedTime(admin[0]?.closing_time)}</h1>
+                <TimePicker
+                  // defaultValue={formattedTime(admin[0]?.closing_time)}
+                  className="py-4"
+                  onChange={(date, dateString) => setClosingTime(dateString)}
+                />
+              </div>
+            </div>
 
             <button
               onClick={() => handleUpdate(admin[0]._id)}

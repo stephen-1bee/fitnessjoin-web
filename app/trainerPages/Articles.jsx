@@ -47,6 +47,7 @@ const Articles = () => {
 
   // handle Preview
   const handlePreview = (info) => {
+    console.log(info)
     setarticlePreview(info)
     setisViewModal(true)
   }
@@ -65,7 +66,7 @@ const Articles = () => {
     return moment(date).format("dddd, MMMM D, YYYY")
   }
 
-  const gettrainer = async (req, res) => {
+  const gettrainer = async () => {
     try {
       const requestOptions = {
         method: "GET",
@@ -509,18 +510,18 @@ const Articles = () => {
 
       {/* preview modal */}
       <Modal
-        title="User Preview"
+        title="Article Preview"
         open={isViewModal}
         onCancel={() => setisViewModal(false)}
         footer={false}
       >
         <div>
           <div>
-            {articlePreview.photo ? (
+            {articlePreview?.photo ? (
               <Image
                 width={100}
                 height={100}
-                alt="article  image"
+                alt="article image"
                 src={`http:/localhost:1000/${articlePreview?.photo}`}
                 className="rounded-lg"
               />
