@@ -566,7 +566,7 @@ const FitnessSessions = () => {
       >
         <Form className="flex flex-col gap-4">
           <div>
-            <h1 className="text-lg">Name</h1>
+            <h1 className="text-lg">Title</h1>
             <Input
               defaultValue={currentSession?.title}
               onChange={(e) => setnewTitle(e.target.value)}

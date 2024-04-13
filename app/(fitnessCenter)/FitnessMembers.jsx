@@ -674,7 +674,7 @@ const FitnessMembers = () => {
           <br />
 
           <div className="flex gap-1 flex-col">
-            <h1 className="font-bold text-lg">Date Created:</h1>
+            <h1 className="font-bold text-lg">Date Registered:</h1>
             <p>{formatteDate(userInfo.dateCreated)}</p>
           </div>
           <br />

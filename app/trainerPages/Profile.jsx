@@ -58,7 +58,6 @@ const Profile = () => {
         email: newEmail ? newEmail : trainer?.email,
         location: newLocation ? newLocation : trainer?.location,
         phone: newPhone ? newPhone : trainer?.phone,
-        password: newPassword ? newPassword : trainer?.password,
       })
 
       const requestOptions = {
@@ -68,7 +67,7 @@ const Profile = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/trainers/update/${trainer_id}`,
         requestOptions
       )
@@ -88,9 +87,9 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex gap-5 mt-5">
-      <div className="p-10 shadow bg-white rounded-lg w-[500px]">
-        <div className="flex flex-col ">
+    <div className="flex gap-5 mt-5 w-full bg-white shadow-md p-5 rounded-lg flex-col">
+      <div className="p-10 shadow bg-white rounded-lg w-[500px] items-center justify-center">
+        <div className="flex flex-col">
           {/* profile */}
           <div className="items-center justify-center flex">
             <Avatar size={70} icon={<UserOutlined />} />
@@ -115,7 +114,8 @@ const Profile = () => {
           {trainer?.location}
         </div>
       </div>
-      <Form className="flex px-20 flex-col gap-4">
+
+      <Form className="flex px-20 flex-col gap-4 items-center justify-center">
         <h1 className="text-3xl">Update Profile</h1>
         <div className="flex gap-5">
           <div>
@@ -171,6 +171,7 @@ const Profile = () => {
           Save
         </button>
       </Form>
+      <Toaster />
     </div>
   )
 }

@@ -29,9 +29,6 @@ const FitnessSettings = () => {
   const [openingTime, setOpeningTime] = useState("")
   const [closingTime, setClosingTime] = useState("")
 
-  console.log(openingTime)
-  console.log(closingTime)
-
   const formattedTime = (time) => {
     return moment(time, "HH:mm:ss").format("hh:mm A")
   }
@@ -354,6 +351,8 @@ const FitnessSettings = () => {
           Update Profile
         </div>
       </div>
+
+      {/* update drawer */}
       <Drawer
         title="Update Profile"
         open={profileModal}
@@ -364,28 +363,42 @@ const FitnessSettings = () => {
         <div className="flex items-center justify-center gap-10">
           <div className="flex flex-col items-center justify-center rounded-lg p-5">
             {admin.map((ad) => (
-              <div className="items-center justify-center flex flex-col">
-                <Image
-                  className="rounded-lg w-[150px] h-[150px] object-cover"
-                  src={`http://localhost:1000/${ad.photo}`}
-                  height={500}
-                  width={500}
-                  alt="image"
-                />
-                <p className="flex gap-1 items-center py-2">{ad.name}</p>
+              <div className="items-center flex flex-col">
+                <div className="flex flex-col gap-2">
+                  <Image
+                    className="rounded-lg w-[150px] h-[150px] object-cover"
+                    src={`http://localhost:1000/${ad.photo}`}
+                    height={500}
+                    width={500}
+                    alt="image"
+                  />
+                  <p className="flex gap-1 items-center py-2">{ad.name}</p>
+                </div>
+                <div className="border-b w-full border-gray-200 mb-2" />
 
-                <div className="border-1 border-b border-[#ccc] my-2" />
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-5 justify-between w-full">
+                    <p className="flex gap-1">
+                      <EmailOutlined />
+                      {ad.email}
+                    </p>
 
-                <div className="flex items-center gap-5 justify-between">
-                  <p className="flex gap-1">
-                    <EmailOutlined />
-                    {ad.email}
-                  </p>
-
-                  <p className="items-center flex gap-1">
-                    <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
-                    {ad.phone}
-                  </p>
+                    <p className="items-center flex gap-1">
+                      <PhoneOutlined className="scale-x-[-1] ml-[2px]" />
+                      {ad.phone}
+                    </p>
+                  </div>
+                  <br />
+                  {/* working hours */}
+                  <h1>Working hours</h1>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="w-full">
+                      {formattedTime(ad.opening_time)}
+                    </div>
+                    <div className="w-full">
+                      {formattedTime(ad.closing_time)}
+                    </div>
+                  </div>
                 </div>
 
                 <br />
