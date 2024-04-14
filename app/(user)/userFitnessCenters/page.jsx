@@ -142,7 +142,7 @@ const Center = () => {
           <p className="text-xl mt-4">No fitness centers found</p>
         ) : (
           <div className="text-left mt-4">
-            <h1 className="text-3xl text-left font-bold my-5">
+            <h1 className="text-3xl text-left font-bold my-5 ml-[170px]">
               Matching Fitness Center
             </h1>
             <div className="flex flex-wrap gap-2 justify-center">
@@ -202,10 +202,10 @@ const Center = () => {
       ) : (
         <>
           <div>
-            <h1 className="text-3xl text-left font-bold my-6">
+            <h1 className="flex text-3xl text-left font-bold my-6">
               Recommended Fitness Centers
             </h1>
-            <div className="flex items-start justify-start">
+            <div className="flex items-start justify-start"> 
               <div className="flex flex-wrap gap-2 justify-center">
                 {loading ? (
                   <Skeleton active className="w-[100%]" />

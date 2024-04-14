@@ -8,9 +8,10 @@ import { Dropdown, Popconfirm, Avatar } from "antd"
 import React, { useState, useEffect } from "react"
 import moment from "moment"
 import toast, { Toaster } from "react-hot-toast"
+import { SettingsOutlined } from "@mui/icons-material"
 import MenuItem from "antd/es/menu/MenuItem"
 
-const CenterNav = () => {
+const CenterNav = ({ setActiveItem, activeItem }) => {
   const [notification, setNotification] = useState([])
   const [admin, setAdmin] = useState([])
 
@@ -128,13 +129,34 @@ const CenterNav = () => {
     },
   ]
 
+  // // set active item in session
+  // useEffect(() => {
+  //   const storedActiveItem = sessionStorage.getItem("activeItem")
+  //   if (storedActiveItem) {
+  //     setActiveItem(storedActiveItem)
+  //   }
+  // }, [setActiveItem])
+
+  // const handleItemClick = (item) => {
+  //   setActiveItem(item)
+  //   sessionStorage.setItem("activeItem", item)
+  // }
+
   //notificaton ui
   const notificationUi = (
     <div className="p-5">
-      <div className="w-[420px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] justify-center rounded-lg overflow-y-auto">
-        <h1 className="text-xl font-semibold">
-          {notificationOpened === "true" ? "Notifications" : ""}
-        </h1>
+      <div className="w-[450px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] justify-center rounded-lg overflow-y-auto">
+        {notificationOpened === "false" ? (
+          ""
+        ) : (
+          <div className="flex flex-col w-full px-5">
+            <div className="flex items-center justify-between py-2 mt-2 ">
+              <h1 className="text-xl font-semibold">Notifications</h1>
+              <SettingsOutlined />
+            </div>
+            <div className="w-full border-gray-200 border-[0.1px]" />
+          </div>
+        )}
         {notification?.length > 0 ? (
           <div>
             {notificationOpened === "true" ? (

@@ -9,6 +9,7 @@ import {
   SettingOutlined,
   UserOutlined,
   MessageOutlined,
+  EllipsisOutlined,
 } from "@ant-design/icons"
 import { FrownOutlined } from "@ant-design/icons"
 import {
@@ -34,7 +35,7 @@ import Profile from "@/app/userPages/Profile"
 import Notification from "@/app/userPages/Notification"
 import { FloatButton } from "antd"
 import toast, { Toaster } from "react-hot-toast"
-import { Button, Divider, Space, Tour } from "antd"
+import { Tour } from "antd"
 
 const page = () => {
   const [myState, setMyState] = useState("hidden")
@@ -52,21 +53,22 @@ const page = () => {
   const ref1 = useRef(null)
   const ref2 = useRef(null)
   const ref3 = useRef(null)
+  const ref4 = useRef(null)
   const [open, setOpen] = useState(false)
 
   const steps = [
     {
-      title: "Upload File",
+      title: "View Your Fitness Session Created for you",
       description: "Put your files here.",
       target: () => ref1.current,
     },
     {
-      title: "Save",
-      description: "Save your changes.",
+      title: "Rate and Send us feedback",
+      description: "By clincking on it",
       target: () => ref2.current,
     },
     {
-      title: "Other Actions",
+      title: "Update Your Settings",
       description: "Click to see other actions.",
       target: () => ref3.current,
     },
@@ -128,12 +130,6 @@ const page = () => {
     }
   }
 
-  // function setOpenTrue() {
-  //   setOpen(true)
-  // }
-
-  // setTimeout(setOpenTrue, 2000)
-
   // init
   useEffect(() => {
     getUser()
@@ -142,21 +138,32 @@ const page = () => {
 
   // notification ui
   const notificationUi = () => (
-    <div className="w-[390px] h-[400px] shadow-md py-5 flex flex-col bg-[#fdf9f0] rounded-lg overflow-y-auto p-5">
-      <div className="flex items-center justify-between py-1">
-        <h1 className="text-xl font-semibold">Notifications</h1>
-        <div
-          className="cursor-pointer"
-          onClick={() => setActiveModule("settings")}
-        >
-          <SettingsOutlined />
+    <div className="w-[450px] h-[500px] shadow-md py-5 flex flex-col bg-[#fdf9f0] rounded-lg overflow-y-auto p-5">
+      {notificationStatus === "false" ? (
+        ""
+      ) : (
+        <div>
+          {" "}
+          <div className="flex items-center justify-between py-1">
+            <h1 className="text-xl font-semibold">Notifications</h1>
+            <div
+              className="cursor-pointer"
+              onClick={() => setActiveModule("settings")}
+            >
+              <SettingsOutlined />
+            </div>
+          </div>
+          <div className="border-b border-gray-200 border-[0.1px] shadow-md" />
         </div>
-      </div>
-      <div className="border-b border-gray-200 border-[0.1px] shadow-md" />
+      )}
+
       {notification.length > 0 ? (
-        <div className="py-2">
+        <div className="py-2 mt-2">
           {notificationStatus === "true" ? (
-            <div className="flex flex-col gap-5">
+            <div
+              onClick={() => setActiveModule("notification")}
+              className="flex flex-col gap-5 hover:bg-gray-100 hover:p-1 delay-75 duration-100 transition-all hover:rounded-lg hover:cursor-pointer"
+            >
               {notification.map((notice) => (
                 <div className="flex gap-2 items-center">
                   <div className=" w-2 h-2 bg-blue-600 rounded-full " />
@@ -169,7 +176,7 @@ const page = () => {
                   />
                   <div className="flex flex-col">
                     <h1 className="font-bold text-[17px]">
-                      {notice.center[0]?.name}{" "}
+                      {notice.center[0]?.name}
                     </h1>
                     <p>{notice.message}</p>
                   </div>
@@ -177,9 +184,9 @@ const page = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center m-auto gap-2">
+            <div className="flex flex-col justify-center m-auto items-center gap-3 mt-5">
               <FrownOutlined />
-              <p>Notifications has been turned off</p>
+              <p>notification has been turned off</p>
             </div>
           )}
         </div>
@@ -331,7 +338,22 @@ const page = () => {
         </div>
 
         {/* Main Sidebar Elements */}
-        <button onClick={() => setOpen(true)}>open</button>
+        <>
+          <button type="primary" onClick={() => setOpen(true)}>
+            Begin Tour
+          </button>
+
+          <Tour
+            open={open}
+            onClose={() => setOpen(false)}
+            steps={steps}
+            indicatorsRender={(current, total) => (
+              <span>
+                {current + 1} / {total}
+              </span>
+            )}
+          />
+        </>
         <div className="flex flex-col gap-3 p-5">
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
@@ -341,6 +363,7 @@ const page = () => {
             <p>Dashboard</p>
           </div>
           <div
+            ref={ref1}
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
             onClick={() => setActiveModule("sessions")}
           >
@@ -379,6 +402,7 @@ const page = () => {
           {/*  */}
           <div className="pl-6 absolute bottom-8 flex flex-col items-center justify-center">
             <div
+              ref3={ref3}
               className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
               onClick={() => setActiveModule("settings")}
             >
@@ -434,6 +458,7 @@ const page = () => {
             </Dropdown>
           </div>
           <Dropdown
+            ref2={ref2}
             overlay={sendMessageUi}
             trigger={["click"]}
             className="cursor-pointer"
@@ -530,6 +555,7 @@ const page = () => {
           {/* bottom */}
           <div className="pl-6 absolute bottom-8 flex flex-col items-center justify-center">
             <div
+              ref3={ref3}
               className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
               onClick={() => setActiveModule("settings")}
             >

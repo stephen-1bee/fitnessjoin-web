@@ -20,8 +20,8 @@ import {
 import { Popconfirm } from "antd"
 
 const NewSideNave = ({ setActiveItem, activeItem }) => {
+  
   // set active item in session
-
   useEffect(() => {
     const storedActiveItem = sessionStorage.getItem("activeItem")
     if (storedActiveItem) {

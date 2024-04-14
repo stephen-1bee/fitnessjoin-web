@@ -4,23 +4,23 @@ import {
   LocationOnOutlined,
   Message,
   Phone,
-} from "@mui/icons-material";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+} from "@mui/icons-material"
+import moment from "moment"
+import React, { useEffect, useState } from "react"
 
 const Center = () => {
-  const [user, setUser] = useState(null);
-  const [userCenter, setUserCenter] = useState(null);
+  const [user, setUser] = useState(null)
+  const [userCenter, setUserCenter] = useState(null)
 
   // retrieving user id
-  let userId;
+  let userId
 
   if (typeof sessionStorage !== "undefined") {
-    userId = sessionStorage.getItem("userId");
+    userId = sessionStorage.getItem("userId")
   }
 
   // console.log("User: ", user);
-  console.log("User Center: ", userCenter);
+  console.log("User Center: ", userCenter)
 
   // get a user
   const getUser = async () => {
@@ -28,7 +28,7 @@ const Center = () => {
       var requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `http://localhost:1000/api/v1/users/one/${userId}`,
@@ -36,24 +36,29 @@ const Center = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setUser(result.user);
-          setUserCenter(result.user[0].fitness_center);
-          console.log(result.user);
+          setUser(result.user)
+          setUserCenter(result.user[0].fitness_center)
+          console.log(result.user)
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // load
   useEffect(() => {
-    getUser();
-  }, []);
+    getUser()
+  }, [])
+
+  // format time
+  const formattedTime = (time) => {
+    return moment(time, "HH:mm:ss").format("hh:mm A")
+  }
 
   return (
     <div>
-      <h1 className="text-2xl">Your Center</h1>
+      <h1 className="text-2xl">My Fitness Center Profile</h1>
       <br />
       <div className="w-fit">
         <div className="p-5 bg-[#08a88a] text-white rounded shadow-2xl md:flex-row flex  flex-col-reverse gap-5 w-fit">
@@ -79,7 +84,21 @@ const Center = () => {
                 {userCenter ? userCenter[0]?.phone : null}
               </div>
               <div className="text-white mt-2 gap-2 flex">
-                Rating: {userCenter ? userCenter[0]?.rating : null}
+                Rating: {userCenter[0]?.rating ? userCenter[0]?.rating : "0"}
+              </div>
+
+              <h1>Working hours</h1>
+              <div className="flex items-center gap-5">
+                <div className="text-white gap-2 flex">
+                  {userCenter[0]?.opening_time
+                    ? formattedTime(userCenter[0]?.opening_time)
+                    : "N/A"}
+                </div>
+                <div className="text-white  gap-2 flex">
+                  {userCenter[0]?.closing_time
+                    ? formattedTime(userCenter[0]?.closing_time)
+                    : "N/A"}
+                </div>
               </div>
             </div>
           ) : (
@@ -89,7 +108,7 @@ const Center = () => {
       </div>
       {/* <Tag */}
     </div>
-  );
-};
+  )
+}
 
-export default Center;
+export default Center

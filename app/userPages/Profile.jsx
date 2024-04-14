@@ -118,122 +118,124 @@ const Profile = () => {
   }, [])
 
   return (
-    <div className="flex gap-5 mt-5 items-center justify-center lg:flex-row">
-      <div className="p-10 shadow bg-white rounded-lg w-[500px] h-[500px]">
-        <div className="flex flex-col">
-          {/* name */}
-          <div className="items-center justify-center flex">
-            <Avatar size={70} icon={<UserOutlined />} />
+    <div>
+      <h1 className="text-3xl"> Profile</h1>
+      <div className="lg:flex-row flex gap-5 mt-5 items-center justify-center bg-white shadow-lg">
+        <div className="p-10 shadow bg-white rounded-lg w-[500px] h-[500px]">
+          <div className="flex flex-col">
+            {/* name */}
+            <div className="items-center justify-center flex">
+              <Avatar size={70} icon={<UserOutlined />} />
+            </div>
+            <div className="flex gap-1 items-center justify-center">
+              <h1 className="text-2xl font-semibold text-center">
+                {user?.first_name}
+              </h1>
+              <h1 className="text-2xl font-semibold text-center">
+                {user?.last_name}
+              </h1>
+            </div>
+
+            <p className="text-center text-[15px] text-gray-600">
+              {user?.fitness_center[0]?.name}
+            </p>
+            <div className="border-b border-[#ccc] py-1" />
           </div>
-          <div className="flex gap-1 items-center justify-center">
-            <h1 className="text-2xl font-semibold text-center">
-              {user?.first_name}
+
+          <div className="flex mt-5 items-center justify-between">
+            <div className="flex gap-2">
+              <EmailOutlined />
+              <p className=" text-gray-600 ">{user?.email}</p>
+            </div>
+            <h1 className=" text-gray-600 gap-1 flex items-center">
+              <PhoneOutlined className="transform scale-x-[-1]" />
+              {user?.phone}
             </h1>
-            <h1 className="text-2xl font-semibold text-center">
-              {user?.last_name}
-            </h1>
           </div>
-
-          <p className="text-center text-[15px] text-gray-600">
-            {user?.fitness_center[0]?.name}
-          </p>
-          <div className="border-b border-[#ccc] py-1" />
-        </div>
-
-        <div className="flex mt-5 items-center justify-between">
-          <div className="flex gap-2">
-            <EmailOutlined />
-            <p className=" text-gray-600 ">{user?.email}</p>
-          </div>
-          <h1 className=" text-gray-600 gap-1 flex items-center">
-            <PhoneOutlined className="transform scale-x-[-1]" />
-            {user?.phone}
-          </h1>
-        </div>
-        <div className="flex mt-5 items-center justify-between">
-          <div>
-            <LocationOnOutlined />
-            {user?.location}
-          </div>
-          <div>{user?.goal}</div>
-        </div>
-      </div>
-
-      {/* form */}
-      <Form className="flex  px-20 flex-col gap-5 ">
-        <h1 className="text-3xl">Update Profile</h1>
-        <div className="flex gap-5">
-          <div className="gap-1">
-            <h1 className="text-lg">Firstname</h1>
-            <input
-              onChange={(e) => setfirstname(e.target.value)}
-              type="text"
-              placeholder="firstname"
-              defaultValue={user?.first_name}
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-            />
-          </div>
-          <div className="gap-1">
-            <h1 className="text-lg">Lastname</h1>
-            <input
-              onChange={(e) => setlastname(e.target.value)}
-              type="text"
-              defaultValue={user?.last_name}
-              placeholder="lastname"
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-            />
+          <div className="flex mt-5 items-center justify-between">
+            <div>
+              <LocationOnOutlined />
+              {user?.location}
+            </div>
+            <div>{user?.goal}</div>
           </div>
         </div>
 
-        <div className="flex gap-5">
-          <div className="gap-1">
-            <h1 className="text-lg">Email</h1>
-            <input
-              onChange={(e) => setemail(e.target.value)}
-              type="email"
-              placeholder="email"
-              defaultValue={user?.email}
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-            />
+        {/* form */}
+        <Form className="flex  px-20 flex-col gap-5 ">
+          <div className="flex gap-5">
+            <div className="gap-1">
+              <h1 className="text-lg">Firstname</h1>
+              <input
+                onChange={(e) => setfirstname(e.target.value)}
+                type="text"
+                placeholder="firstname"
+                defaultValue={user?.first_name}
+                className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+              />
+            </div>
+            <div className="gap-1">
+              <h1 className="text-lg">Lastname</h1>
+              <input
+                onChange={(e) => setlastname(e.target.value)}
+                type="text"
+                defaultValue={user?.last_name}
+                placeholder="lastname"
+                className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+              />
+            </div>
           </div>
-          <div className="gap-1">
-            <h1 className="text-lg">Phone</h1>
-            <input
-              onChange={(e) => setphone(e.target.value)}
-              type="text"
-              placeholder="phone number"
-              defaultValue={user?.phone}
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
-            />
+
+          <div className="flex gap-5">
+            <div className="gap-1">
+              <h1 className="text-lg">Email</h1>
+              <input
+                onChange={(e) => setemail(e.target.value)}
+                type="email"
+                placeholder="email"
+                defaultValue={user?.email}
+                className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+              />
+            </div>
+            <div className="gap-1">
+              <h1 className="text-lg">Phone</h1>
+              <input
+                onChange={(e) => setphone(e.target.value)}
+                type="text"
+                placeholder="phone number"
+                defaultValue={user?.phone}
+                className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+              />
+            </div>
           </div>
-        </div>
-        <div className="flex gap-5">
-          <div>
-            <h1 className="text-lg">Goal</h1>
-            <select
-              value={user ? user?.goal : ""}
-              onChange={(e) => setgoalField(e.target.value)}
-              className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+          <div className="flex gap-5">
+            <div>
+              <h1 className="text-lg">Goal</h1>
+              <select
+                value={user ? user?.goal : ""}
+                onChange={(e) => setgoalField(e.target.value)}
+                className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
+              >
+                <option value="">Select a goal from this fitness center</option>
+                {goal?.map((g) => (
+                  <option key={g.goal} value={g.goal}>
+                    {g.goal}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => updateUser()}
+              className="py-4 w-[300px] px-3 rounded-full ring-1 bg-[#08A88A] text-white text-center flex items-center justify-center"
             >
-              <option value="">Select a goal from this fitness center</option>
-              {goal?.map((g) => (
-                <option key={g.goal} value={g.goal}>
-                  {g.goal}
-                </option>
-              ))}
-            </select>
+              <h1 className="text-center">Save</h1>
+            </button>
           </div>
-        </div>
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => updateUser()}
-            className="py-4 w-[300px] px-3 rounded-full ring-1 bg-[#08A88A] text-white text-center flex items-center justify-center"
-          >
-            <h1 className="text-center">Save</h1>
-          </button>
-        </div>
-      </Form>
-      <Toaster />
+        </Form>
+        <Toaster />
+      </div>
     </div>
   )
 }
