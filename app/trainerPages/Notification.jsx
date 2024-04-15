@@ -54,7 +54,7 @@ const Notification = () => {
         .then((response) => response.json())
         .then((result) => {
           settrainerNotification(result.activity)
-          console.log(result.activity)
+          console.log("trainer activity", result.activity)
         })
         .catch((error) => console.error(error))
     } catch (err) {

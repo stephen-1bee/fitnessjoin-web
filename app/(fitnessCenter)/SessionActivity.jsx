@@ -19,9 +19,10 @@ const SessionActivity = () => {
   const [addModal, setaddModal] = useState(false)
   const [fitnessSession, setFitnessSession] = useState([])
   const [fitnessSessionActivity, setFitnessSessionActivity] = useState([])
-  const [sessionId, setsessionId] = useState("")
   const [sessionActivityInfo, setSessionActivityInfo] = useState(null)
   const [previewModal, setpreviewModal] = useState(false)
+  const [updateModal, setupdateModal] = useState(false)
+  const [currentSessionActivity, setcurrentSessionActivity] = useState(null)
 
   // getting fitness id from the fitnessCenter
   let storedFitnessId
@@ -32,12 +33,22 @@ const SessionActivity = () => {
   //   state for adding session activity
   const [title, settitle] = useState("")
   const [desc, setdesc] = useState("")
+  const [sessionId, setsessionId] = useState("")
 
   //   console.log(sessionId)
+  // states for updating session activity
+  const [newTitle, setnewTitle] = useState("")
+  const [newDesc, setnewDesc] = useState("")
+  const [newSessionId, setnewSessionId] = useState("")
 
   const handlePreview = (info) => {
     setSessionActivityInfo(info)
     setpreviewModal(true)
+  }
+
+  const populateSessionActivity = (info) => {
+    setcurrentSessionActivity(info)
+    setupdateModal(true)
   }
 
   // formatt date
@@ -134,6 +145,47 @@ const SessionActivity = () => {
     }
   }
 
+  const updateSessionActivity = async (activityId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        title: newTitle ? newTitle : currentSessionActivity?.title,
+        desc: newDesc ? newDesc : currentSessionActivity?.desc,
+        session_id: newSessionId
+          ? newSessionId
+          : currentSessionActivity.session_id,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/session-activity/update/${activityId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "Activity updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            getSessionActivity()
+            setupdateModal(false)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   useEffect(() => {
     getSessionActivity()
     getFitnessSession()
@@ -218,7 +270,7 @@ const SessionActivity = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => populateSession(record)} />
+          <EditOutlined onClick={() => populateSessionActivity(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Trainer"
@@ -439,6 +491,59 @@ const SessionActivity = () => {
             <p>{sessionActivityInfo?.dateCreated}</p>
           </div>
         </div>
+      </Modal>
+
+      {/* update modla */}
+      {/* update modal */}
+      <Modal
+        title="Update Session Activity"
+        open={updateModal}
+        onCancel={() => setupdateModal(false)}
+        footer={[false]}
+      >
+        <Form className="flex flex-col gap-4" key={currentSessionActivity?._id}>
+          <div>
+            <h1 className="text-lg">Title</h1>
+            <Input
+              defaultValue={currentSessionActivity?.title}
+              onChange={(e) => setnewTitle(e.target.value)}
+              className="py-4"
+            />
+          </div>
+
+          <div>
+            <h1 className="text-lg">Discription</h1>
+            <TextArea
+              defaultValue={currentSessionActivity?.desc}
+              onChange={(e) => setnewDesc(e.target.value)}
+              rows={4}
+              placeholder="Description"
+            />
+          </div>
+
+          <div>
+            <h1 className="text-lg">Select a Fitness Session</h1>
+            <select
+              onChange={(e) => setnewSessionId(e.target.value)}
+              className="rounded-md h-12 ring-1 ring-[#ccc] w-full"
+            >
+              <option value="" defaultValue={currentSessionActivity?.sessionId}>
+                Select Session
+              </option>
+              {fitnessSession?.map((session) => (
+                <option key={session._id} value={session._id}>
+                  {session.title}
+                </option>
+              ))}
+            </select>
+            <button
+              className="p-3 py-3 bg-[#08a88a] text-white rounded-md w-full mt-5"
+              onClick={() => updateSessionActivity(currentSessionActivity?._id)}
+            >
+              Update Session Activity
+            </button>
+          </div>
+        </Form>
       </Modal>
     </div>
   )

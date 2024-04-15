@@ -16,6 +16,7 @@ import {
   PlusOutlined,
   CheckOutlined,
   DeleteOutlined,
+  FrownOutlined,
 } from "@ant-design/icons"
 import moment from "moment"
 import { CategoryOutlined, ArrowRight } from "@mui/icons-material"
@@ -166,7 +167,7 @@ const FitnessSessions = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/sessions/center-sessions/${storedFitnessId}`,
         requestOptions
       )
@@ -446,6 +447,12 @@ const FitnessSessions = () => {
           >
             <DeleteOutlined />
           </Popconfirm>
+          <button
+            onClick={() => populateSessionActivity(record)}
+            className="border rounded-lg p-2 border-dotted border-gray-400"
+          >
+            Activities
+          </button>
           <button
             className="text-white w-[100px] rounded-full py-3 bg-[#08a88a]"
             type="primary"
@@ -738,16 +745,28 @@ const FitnessSessions = () => {
         footer={[false]}
         centered
       >
-        {/* <div>
-          <h1 className="text-xl">Activities</h1>
-          <p>
-            {sessionActivity.activties.map((activity) => (
-              <div>
-                <p>{activity.title}</p>
-              </div>
-            ))}
-          </p>
-        </div> */}
+        <h1 className="text-xl">Activities</h1>
+        <div>
+          {sessionActivity?.activties?.length > 0 ? (
+            <div>
+              {sessionActivity?.activties?.map((activity) => (
+                <div className="flex  bg-white shadow flex-col p-2">
+                  <h1 className="text-lg">Title</h1>
+                  <p>{activity.title}</p>
+
+                  <h1 className="text-lg ">Description</h1>
+                  <p>{activity.desc}</p>
+                  <br />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 items-center justrify-center ">
+              <FrownOutlined />
+              No session Activity
+            </div>
+          )}
+        </div>
       </Modal>
     </div>
   )

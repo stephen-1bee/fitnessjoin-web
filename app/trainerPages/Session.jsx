@@ -3,6 +3,7 @@ import {
   EditOutlined,
   EyeOutlined,
   DeleteOutlined,
+  FrownOutlined,
 } from "@ant-design/icons"
 import { ArrowRight } from "@mui/icons-material"
 import {
@@ -440,7 +441,7 @@ const Session = () => {
 
       {/* Add Session */}
       <Modal
-        title="Add Sessions"
+        title="Add Session Session"
         open={addModal}
         onCancel={() => setaddModal(false)}
         footer={[false]}
@@ -647,16 +648,28 @@ const Session = () => {
         footer={[false]}
         centered
       >
-        {/* <div>
-          <h1 className="text-xl">Activities</h1>
-          <p>
-            {sessionActivity.activties.map((activity) => (
-              <div>
-                <p>{activity.title}</p>
-              </div>
-            ))}
-          </p>
-        </div> */}
+        <h1 className="text-xl">Activities</h1>
+        <div>
+          {sessionActivity?.activties?.length > 0 ? (
+            <div>
+              {sessionActivity?.activties?.map((activity) => (
+                <div className="flex  bg-white shadow flex-col p-2">
+                  <h1 className="text-lg">Title</h1>
+                  <p>{activity.title}</p>
+
+                  <h1 className="text-lg ">Description</h1>
+                  <p>{activity.desc}</p>
+                  <br />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 items-center justrify-center ">
+              <FrownOutlined />
+              No session Activity
+            </div>
+          )}
+        </div>
       </Modal>
       <Toaster />
     </div>

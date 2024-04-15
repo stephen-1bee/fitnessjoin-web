@@ -133,15 +133,15 @@ const Nutrition = () => {
           <div className="flex gap-5">
             {isLoading ? (
               <Spin size="small" />
-            ) : trainerNutrition.length === 0 ? (
+            ) : trainerNutrition?.length === 0 ? (
               <div className="m-auto flex py-3 flex-col items-center gap-2">
                 <FrownOutlined />
                 <p className="text-[#818181]">
-                  No new Nutritions added yet from nutrition
+                  No new Nutritions added From Administrator yet
                 </p>
               </div>
             ) : (
-              trainerNutrition.map((nutrition, index) => (
+              trainerNutrition?.map((nutrition, index) => (
                 <div
                   key={index}
                   onClick={() => populateNutrition(nutrition)}

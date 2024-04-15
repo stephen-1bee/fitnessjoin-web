@@ -136,7 +136,7 @@ const Page = () => {
               {center.isOpened === true ? (
                 <div>
                   <Link
-                    href="membershipU"
+                    href="trainerMembership"
                     className="bg-[#08A88A] text-text text-md py-4 px-[5rem] rounded-full w-[100%]"
                   >
                     Register Now

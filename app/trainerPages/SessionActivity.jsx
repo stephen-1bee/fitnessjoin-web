@@ -1,7 +1,5 @@
 "use client"
-import { LocalActivityOutlined } from "@mui/icons-material"
-import { CategoryOutlined, ArrowRight } from "@mui/icons-material"
-import { Popconfirm, Modal, Table, Space, Tag, Form, Input } from "antd"
+import { Popconfirm, Modal, Table, Space, Form, Input } from "antd"
 import {
   EditOutlined,
   EyeOutlined,
@@ -12,6 +10,7 @@ import React, { useState, useEffect } from "react"
 import { toast, Toaster } from "react-hot-toast"
 import TextArea from "antd/es/input/TextArea"
 import moment from "moment"
+import { CategoryOutlined, ArrowRight } from "@mui/icons-material"
 
 const SessionActivity = () => {
   const [addModal, setaddModal] = useState(false)
@@ -20,18 +19,33 @@ const SessionActivity = () => {
   const [sessionActivityInfo, setSessionActivityInfo] = useState(null)
   const [trainerSession, setTrainerSession] = useState([])
   const [trainer, setTrainer] = useState([])
-
-  const [sessionId, setsessionId] = useState("")
+  const [updateModal, setupdateModal] = useState(false)
+  const [currentSessionActivity, setcurrentSessionActivity] = useState(null)
 
   //   state for adding session activity
   const [title, settitle] = useState("")
   const [desc, setdesc] = useState("")
+  const [sessionId, setsessionId] = useState("")
+
+  // states for updating session activity
+  const [newTitle, setnewTitle] = useState("")
+  const [newDesc, setnewDesc] = useState("")
+  const [newSessionId, setnewSessionId] = useState("")
+
+  // console.log(newTitle)
+  // console.log(newDesc)
+  // console.log(newSessionId)
 
   const handlePreview = (info) => {
     setSessionActivityInfo(info)
     setpreviewModal(true)
   }
-  console.log(sessionId)
+
+  const populateSessionActivity = (info) => {
+    setcurrentSessionActivity(info)
+    setupdateModal(true)
+  }
+  // console.log(sessionId)
 
   // formatt date
   const formatteDate = (date) => {
@@ -69,7 +83,7 @@ const SessionActivity = () => {
     }
   }
 
-  // handle delete session
+  // handle delete session activity
   const handleDeleteSessionActivity = async (activityId) => {
     try {
       const requestOptions = {
@@ -97,6 +111,48 @@ const SessionActivity = () => {
     }
   }
 
+  // handle update session activity
+  const updateSessionActivity = async (activityId) => {
+    try {
+      const myHeaders = new Headers()
+      myHeaders.append("Content-Type", "application/json")
+
+      const raw = JSON.stringify({
+        title: newTitle ? newTitle : currentSessionActivity?.title,
+        desc: newDesc ? newDesc : currentSessionActivity?.desc,
+        session_id: newSessionId
+          ? newSessionId
+          : currentSessionActivity.session_id,
+      })
+
+      const requestOptions = {
+        method: "PUT",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/session-activity/update/${activityId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "Activity updated successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            getSessionActivity()
+            setupdateModal(false)
+          } else {
+            toast.error(result.msg)
+          }
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   const eligible = trainer.isAccepted
 
   // get affiliate trainer sessions
@@ -108,13 +164,13 @@ const SessionActivity = () => {
       }
 
       await fetch(
-        `http://localhost:1000/api/v1/sessions/approved/${trainer_id}`,
+        `http://localhost:1000/api/v1/sessions/trainer/${trainer_id}`,
         requestOptions
       )
         .then((response) => response.json())
         .then((result) => {
-          setTrainerSession(result.approved_sessions)
-          console.log(result.approved_sessions)
+          setTrainerSession(result.trainer_sessions)
+          console.log(result.trainer_sessions)
         })
         .catch((error) => console.error(error))
     } catch (err) {
@@ -144,13 +200,24 @@ const SessionActivity = () => {
     }
   }
 
+  const openEligibleTrainer = () => {
+    if (eligible === false) {
+      toast.error(
+        "You are not eligible to add Session Activity yet. Please contact the  administrator."
+      )
+    } else {
+      setaddModal(true)
+    }
+  }
+
+  useEffect(() => {
+    gettrainer()
+    getTrainerSession()
+    getSessionActivity()
+  }, [])
+
   // add sesison activity
   const handleAddSessionActivity = async () => {
-    if (eligible === false) {
-      return toast.error(
-        "You are not eligible to add Nutrition yet. Please contact the  administrator."
-      )
-    }
     try {
       const myHeaders = new Headers()
       myHeaders.append("Content-Type", "application/json")
@@ -192,12 +259,6 @@ const SessionActivity = () => {
     }
   }
 
-  useEffect(() => {
-    gettrainer()
-    getTrainerSession()
-    getSessionActivity()
-  }, [])
-
   const columns = [
     {
       title: "Title",
@@ -222,7 +283,7 @@ const SessionActivity = () => {
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <EditOutlined onClick={() => populateSession(record)} />
+          <EditOutlined onClick={() => populateSessionActivity(record)} />
           <EyeOutlined onClick={() => handlePreview(record)} />
           <Popconfirm
             title="Delete the Trainer"
@@ -243,26 +304,32 @@ const SessionActivity = () => {
   return (
     <div>
       {" "}
-      <div className="w-full gap-2 items-center flex bg-white p-5 rounded-lg">
-        <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
-          <LocalActivityOutlined className="text-white" />
-        </div>
-        <h1 className="text-2xl ">My Session Activities</h1>
-      </div>
+      <h1 className="text-3xl">Session Activity</h1>
+      <p className="flex text-[16px]">
+        Home{" "}
+        <span>
+          <ArrowRight />
+        </span>
+        Sessions
+        <span>
+          <ArrowRight />
+        </span>
+        Session Activity
+      </p>
       <div className="flex items-center justify-between py-5">
         <div className="flex gap-2">
-          <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow">
-            <h1 className="text-lg">
+          <div className="h-12 w-12 bg-[#fdfaf3] items-center justify-center flex rounded shadow-md">
+            <h1 className="">
               {sessionActivity ? sessionActivity?.length : "0"}
             </h1>
           </div>
-          <h1 className="text-2xl font-semibold py-2">My Session Activities</h1>
+          <h1 className="text-lg font-semibold p-2">Sessions Activities</h1>
         </div>
 
         {/* add new activity */}
         <div
           className="flex p-3 bg-[#08a88a] text-white  cursor-pointer items-center justify-center rounded-md gap-2 w-fit"
-          onClick={() => setaddModal(true)}
+          onClick={() => openEligibleTrainer()}
         >
           <PlusOutlined />
           <p>Add Session Activity</p>
@@ -338,6 +405,57 @@ const SessionActivity = () => {
             <p>{sessionActivityInfo?.dateCreated}</p>
           </div>
         </div>
+      </Modal>
+      {/* update modal */}
+      <Modal
+        title="Update Session Activity"
+        open={updateModal}
+        onCancel={() => setupdateModal(false)}
+        footer={[false]}
+      >
+        <Form className="flex flex-col gap-4" key={currentSessionActivity?._id}>
+          <div>
+            <h1 className="text-lg">Title</h1>
+            <Input
+              defaultValue={currentSessionActivity?.title}
+              onChange={(e) => setnewTitle(e.target.value)}
+              className="py-4"
+            />
+          </div>
+
+          <div>
+            <h1 className="text-lg">Discription</h1>
+            <TextArea
+              defaultValue={currentSessionActivity?.desc}
+              onChange={(e) => setnewDesc(e.target.value)}
+              rows={4}
+              placeholder="Description"
+            />
+          </div>
+
+          <div>
+            <h1 className="text-lg">Select a Fitness Session</h1>
+            <select
+              onChange={(e) => setnewSessionId(e.target.value)}
+              className="rounded-md h-12 ring-1 ring-[#ccc] w-full"
+            >
+              <option value="" defaultValue={currentSessionActivity?.sessionId}>
+                Select Session
+              </option>
+              {trainerSession?.map((session) => (
+                <option key={session._id} value={session._id}>
+                  {session.title}
+                </option>
+              ))}
+            </select>
+            <button
+              className="p-3 py-3 bg-[#08a88a] text-white rounded-md w-full mt-5"
+              onClick={() => updateSessionActivity(currentSessionActivity?._id)}
+            >
+              Update Session Activity
+            </button>
+          </div>
+        </Form>
       </Modal>
       <Toaster />
     </div>

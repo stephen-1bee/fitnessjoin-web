@@ -125,7 +125,7 @@ const Articles = () => {
             ))}
           </div>
         ) : (
-          <div>
+          <div className="flex items-center m-auto justify-center">
             <FrownOutlined />
             <p>No articles From Fintess Center Today</p>
           </div>
