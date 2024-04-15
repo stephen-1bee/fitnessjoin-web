@@ -14,6 +14,7 @@ import FitnessSettings from "../FitnessSettings"
 import Broadcast from "../Broadcast"
 import CenterNav from "@/app/components/CenterNav"
 import NewSideNave from "@/app/components/NewSideNave"
+import SessionActivity from "../SessionActivity"
 
 const page = () => {
   const [activeItem, setActiveItem] = useState("")
@@ -48,6 +49,12 @@ const page = () => {
         return (
           <div>
             <FitnessSessions />
+          </div>
+        )
+      case "SessionActivity":
+        return (
+          <div>
+            <SessionActivity />
           </div>
         )
       case "FitnessNutrition":

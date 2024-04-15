@@ -38,8 +38,14 @@ import toast, { Toaster } from "react-hot-toast"
 import { Tour } from "antd"
 
 const page = () => {
+  let myActiveNav = ""
+
+  if (typeof sessionStorage !== "undefined") {
+    myActiveNav = sessionStorage.getItem("activeNav")
+  }
+
   const [myState, setMyState] = useState("hidden")
-  const [activeModule, setActiveModule] = useState("")
+  const [activeModule, setActiveModule] = useState(myActiveNav)
   const [user, setUser] = useState([])
   const [notification, setnotification] = useState([])
   const [message, setmessage] = useState("")
@@ -74,6 +80,12 @@ const page = () => {
     },
   ]
 
+  // get active module
+  const getActiveModule = (value) => {
+    setActiveModule(value)
+    sessionStorage.getItem("activeNav", value)
+  }
+
   // retrieving user id
   let userId
   let user_center_id
@@ -105,6 +117,13 @@ const page = () => {
     } catch (err) {
       console.log(err)
     }
+  }
+
+  const trainerId = user.map((trainer) => trainer.trainer_id)
+
+  // grab user trainer id
+  if (typeof sessionStorage !== "undefined") {
+    sessionStorage.setItem("userTrianerId", trainerId)
   }
 
   // get notifications
@@ -342,7 +361,6 @@ const page = () => {
           <button type="primary" onClick={() => setOpen(true)}>
             Begin Tour
           </button>
-
           <Tour
             open={open}
             onClose={() => setOpen(false)}
@@ -357,7 +375,7 @@ const page = () => {
         <div className="flex flex-col gap-3 p-5">
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("dashboard")}
+            onClick={() => getActiveModule("dashboard")}
           >
             <AppstoreOutlined />
             <p>Dashboard</p>
@@ -365,35 +383,35 @@ const page = () => {
           <div
             ref={ref1}
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("sessions")}
+            onClick={() => getActiveModule("sessions")}
           >
             <SportsGymnasticsOutlined />
             <p>Sessions</p>
           </div>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("center")}
+            onClick={() => getActiveModule("center")}
           >
             <BankOutlined />
             <p>View Center</p>
           </div>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("nutrition")}
+            onClick={() => getActiveModule("nutrition")}
           >
             <FoodBankOutlined />
             <p>Nutrition</p>
           </div>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("membership")}
+            onClick={() => getActiveModule("membership")}
           >
             <CardTravelOutlined />
             <p>Membership</p>
           </div>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActiveModule("Articles")}
+            onClick={() => getActiveModule("Articles")}
           >
             <PaperClipOutlined />
             <p>Articles</p>
@@ -404,7 +422,7 @@ const page = () => {
             <div
               ref3={ref3}
               className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-              onClick={() => setActiveModule("settings")}
+              onClick={() => getActiveModule("settings")}
             >
               <SettingOutlined />
               <p>Settings</p>

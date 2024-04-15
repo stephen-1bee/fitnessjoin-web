@@ -20,7 +20,14 @@ import {
 import { Popconfirm } from "antd"
 
 const NewSideNave = ({ setActiveItem, activeItem }) => {
-  
+  const [sessionBtn, setSessionBtn] = useState(1)
+
+  const sessionstate = () => {
+    setSessionBtn(sessionBtn + 1)
+  }
+
+  console.log(sessionstate)
+
   // set active item in session
   useEffect(() => {
     const storedActiveItem = sessionStorage.getItem("activeItem")
@@ -30,6 +37,11 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
   }, [setActiveItem])
 
   const handleItemClick = (item) => {
+    if (item === "FitnessSessions") {
+      sessionstate()
+      setActiveItem(item)
+      sessionStorage.setItem("activeItem", item)
+    }
     setActiveItem(item)
     sessionStorage.setItem("activeItem", item)
   }
@@ -105,14 +117,21 @@ const NewSideNave = ({ setActiveItem, activeItem }) => {
 
             <button
               onClick={() => handleItemClick("FitnessSessions")}
-              className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
+              className={`session-btn hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${
                 activeItem === "FitnessSessions" ? "active" : ""
               }`}
             >
               <CategoryOutlined className="text-[18px]" />
               <p className="text-[16px]">Sessions</p>
             </button>
-
+            <button
+              onClick={() => handleItemClick("SessionActivity")}
+              className={`p-2 activity-btn ${
+                sessionBtn % 2 != 0 ? "hidden" : "block"
+              }`}
+            >
+              Activities
+            </button>
             <button
               onClick={() => handleItemClick("FitnessNutrition")}
               className={`hover:bg-[#18ceac] hover:text-white flex items-center gap-3 p-3 rounded-lg duration-300 text-[#818181] cursor-pointer transform transition-transform ease-in-out  hover:translate-x-2 ${

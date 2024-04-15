@@ -142,3 +142,11 @@ html {
 .m-box:hover p {
   color: #183642;
 }
+
+/* .activity-btn{
+  display: none;
+}
+
+.session-btn:active .activity-btn{
+  display: block;
+} */

@@ -1,16 +1,16 @@
-"use client";
-import { FrownOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
-import React, { useEffect, useState } from "react";
+"use client"
+import { FrownOutlined } from "@ant-design/icons"
+import { Spin } from "antd"
+import React, { useEffect, useState } from "react"
 
 const Session = () => {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState([])
 
   // get user center id
-  let userCenterId;
+  let userCenterId
 
   if (typeof sessionStorage !== "undefined") {
-    userCenterId = sessionStorage.getItem("userCenterId");
+    userCenterId = sessionStorage.getItem("userCenterId")
   }
 
   // get all center sessions
@@ -19,7 +19,7 @@ const Session = () => {
       var requestOptions = {
         method: "GET",
         redirect: "follow",
-      };
+      }
 
       await fetch(
         `https://fitness-join-api-xe62.onrender.com/api/v1/sessions/all/center/${userCenterId}`,
@@ -27,19 +27,19 @@ const Session = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setSessions(result.sessions);
-          console.log(result.sessions);
+          setSessions(result.sessions)
+          console.log(result.sessions)
         })
-        .catch((error) => console.log("error", error));
+        .catch((error) => console.log("error", error))
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   // init
   useEffect(() => {
-    getSessions();
-  }, []);
+    getSessions()
+  }, [])
   return (
     <div className="">
       <h1 className="text-2xl">My Session</h1>
@@ -50,7 +50,7 @@ const Session = () => {
         <p>No session assign to you yet</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Session;
+export default Session

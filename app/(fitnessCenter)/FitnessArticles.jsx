@@ -472,7 +472,7 @@ const FitnessArticles = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center bg-white w-full py-5 px-5 shadow rounded-lg">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <ReadOutlined className="text-white text-lg" />
         </div>

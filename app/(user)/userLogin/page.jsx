@@ -62,6 +62,7 @@ const UserLogin = () => {
             setLoading(false)
             setuser_id(result.user._id)
             setuserCenterId(result.user?.center_id)
+
             location.href = "/userPage"
           } else {
             toast.error(result.msg)

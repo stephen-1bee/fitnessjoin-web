@@ -213,7 +213,7 @@ const Broadcast = () => {
 
   return (
     <div>
-      <div className="flex items-center gap-2">
+      <div className="flex gap-2 items-center bg-white w-full py-5 px-5 shadow rounded-lg">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <BroadcastOnPersonal color="white" className="text-white " />
         </div>

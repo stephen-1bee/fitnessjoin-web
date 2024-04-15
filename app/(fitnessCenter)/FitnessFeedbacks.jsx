@@ -104,10 +104,9 @@ const FitnessFeedbacks = () => {
   return (
     <div className="flex gap-3 w-full">
       <br />
-
       <div className="flex gap-4 w-full flex-col">
         <div className="flex gap-2 flex-col ">
-          <div className="flex items-center gap-2">
+          <div className="flex gap-2 items-center bg-white w-full py-5 px-5 shadow rounded-lg">
             <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
               <Person2Outlined color="white" className="text-white " />
             </div>

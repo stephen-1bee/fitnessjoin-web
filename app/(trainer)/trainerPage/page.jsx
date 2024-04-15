@@ -35,6 +35,7 @@ import Profile from "@/app/trainerPages/Profile"
 import Notification from "@/app/trainerPages/Notification"
 import { FloatButton } from "antd"
 import toast, { Toaster } from "react-hot-toast"
+import SessionActivity from "@/app/trainerPages/SessionActivity"
 
 const page = () => {
   const [activePage, setActivePage] = useState("")
@@ -44,6 +45,16 @@ const page = () => {
   const [ratingModal, setratingModal] = useState(false)
   const [successModal, setsuccessModal] = useState(false)
   const [trainerNotification, settrainerNotification] = useState([])
+  const [sessionBtn, setSessionBtn] = useState(false)
+
+  const sessionstate = () => {
+    setSessionBtn(!sessionBtn)
+  }
+
+  const handleShowSessionActivity = (value) => {
+    sessionstate()
+    setActivePage(value)
+  }
 
   console.log(message)
   let trainerName
@@ -288,6 +299,8 @@ const page = () => {
         return <Dashboard />
       case "session":
         return <Session />
+      case "session activity":
+        return <SessionActivity />
       case "center":
         return <TrainerCenter />
       case "nutrition":
@@ -349,11 +362,19 @@ const page = () => {
           </div>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
-            onClick={() => setActivePage("session")}
+            onClick={() => handleShowSessionActivity("session")}
           >
             <SportsGymnasticsOutlined />
             <p>Sessions</p>
           </div>
+          <button
+            className={`p-2 activity-btn ${
+              sessionBtn === true ? "block" : "hidden"
+            }`}
+            onClick={() => setActivePage("session activity")}
+          >
+            Session Activity
+          </button>
           <div
             className="flex items-center gap-4 cursor-pointer hover:bg-[#f9fafd] p-3 rounded-full pl-6"
             onClick={() => setActivePage("center")}

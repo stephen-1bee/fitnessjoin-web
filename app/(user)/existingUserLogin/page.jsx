@@ -12,11 +12,11 @@ const Page = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [user_id, setuser_id] = useState("")
-  const [userCenter_Id, setUserCenterId] = useState("")
+  const [userCenterId, setUserCenterId] = useState("")
 
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.setItem("userId", user_id)
-    sessionStorage.setItem("userCenterId", userCenter_Id)
+    sessionStorage.setItem("userCenterId", userCenterId)
   }
 
   const handleLogin = async (e) => {

@@ -32,6 +32,8 @@ const FitnessSessions = () => {
   const [endDate, setEndDate] = useState("")
   const [startTime, setStartTime] = useState("")
   const [endTime, setEndTime] = useState("")
+  const [viewActivities, setviewActivities] = useState(false)
+  const [sessionActivity, setsessionActivity] = useState([])
 
   // state for update fields
   const [newTitle, setnewTitle] = useState("")
@@ -170,8 +172,8 @@ const FitnessSessions = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          setAllSessions(result.center)
-          console.log(result.center[0])
+          setAllSessions(result.center_sessions)
+          console.log(result.center_sessions[0])
         })
         .catch((error) => console.error(error))
     } catch (err) {
@@ -187,7 +189,7 @@ const FitnessSessions = () => {
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/sessions/trainer-sessions/${storedFitnessId}`,
         requestOptions
       )
@@ -238,7 +240,7 @@ const FitnessSessions = () => {
       })
   }
   const currentSessionId = currentSession?._id
-
+  // update api
   const handleUpdateSession = async () => {
     try {
       const myHeaders = new Headers()
@@ -281,6 +283,13 @@ const FitnessSessions = () => {
       console.log(err)
     }
   }
+
+  const populateSessionActivity = (info) => {
+    setviewActivities(true)
+    setsessionActivity(info)
+  }
+
+  console.log(sessionActivity)
 
   const column = [
     {
@@ -350,6 +359,12 @@ const FitnessSessions = () => {
           >
             <DeleteOutlined />
           </Popconfirm>
+          <button
+            onClick={() => populateSessionActivity(record)}
+            className="border rounded-lg p-2 border-dotted border-gray-400"
+          >
+            Activities
+          </button>
         </Space>
       ),
     },
@@ -448,7 +463,7 @@ const FitnessSessions = () => {
 
   return (
     <div className="min-h-screen gap-5 ">
-      <div className="flex items-center gap-2">
+      <div className="flex gap-2 items-center bg-white w-full py-5 px-5 shadow rounded-lg">
         <div className="bg-blue-500 flex rounded-lg items-center justify-center w-12 h-12">
           <CategoryOutlined color="white" className="text-white " />
         </div>
@@ -714,6 +729,25 @@ const FitnessSessions = () => {
             </p>
           </div>
         </div>
+      </Modal>
+
+      {/* view session activities */}
+      <Modal
+        open={viewActivities}
+        onCancel={() => setviewActivities(false)}
+        footer={[false]}
+        centered
+      >
+        {/* <div>
+          <h1 className="text-xl">Activities</h1>
+          <p>
+            {sessionActivity.activties.map((activity) => (
+              <div>
+                <p>{activity.title}</p>
+              </div>
+            ))}
+          </p>
+        </div> */}
       </Modal>
     </div>
   )

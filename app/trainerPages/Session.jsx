@@ -36,6 +36,8 @@ const Session = () => {
   const [isViewModal, setisViewModal] = useState(false)
   const [isEdithModal, setIsEdithModal] = useState(false)
   const [preview, setpreview] = useState([])
+  const [viewActivities, setviewActivities] = useState(false)
+  const [sessionActivity, setsessionActivity] = useState([])
 
   // state for update fields
   const [newTitle, setnewTitle] = useState("")
@@ -44,6 +46,13 @@ const Session = () => {
   const [newEndDate, setnewEndDate] = useState("")
   const [newStartTime, setnewStartTime] = useState("")
   const [newEndTime, setnewEndTime] = useState("")
+
+  const populateSessionActivity = (info) => {
+    setviewActivities(true)
+    setsessionActivity(info)
+  }
+
+  console.log(sessionActivity)
 
   // get trainer id
   let trainer_id
@@ -316,6 +325,12 @@ const Session = () => {
               </div>
             )}
           </Popconfirm>
+          <button
+            onClick={() => populateSessionActivity(record)}
+            className="border rounded-lg p-2 border-dotted border-gray-400"
+          >
+            Activities
+          </button>
         </Space>
       ),
     },
@@ -623,6 +638,25 @@ const Session = () => {
             </p>
           </div>
         </div>
+      </Modal>
+
+      {/* view session activities */}
+      <Modal
+        open={viewActivities}
+        onCancel={() => setviewActivities(false)}
+        footer={[false]}
+        centered
+      >
+        {/* <div>
+          <h1 className="text-xl">Activities</h1>
+          <p>
+            {sessionActivity.activties.map((activity) => (
+              <div>
+                <p>{activity.title}</p>
+              </div>
+            ))}
+          </p>
+        </div> */}
       </Modal>
       <Toaster />
     </div>
