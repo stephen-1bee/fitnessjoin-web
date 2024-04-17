@@ -62,6 +62,7 @@ const Navbar = () => {
             <Menu className="md:hidden" />
           </button>
         </div>
+
         {/* Mobile Navigation */}
         {menuVisible && (
           <div className="fixed inset-0 bg-white h-screen w-screen flex flex-col items-center justify-center mobile-nav">

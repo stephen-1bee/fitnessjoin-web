@@ -20,6 +20,8 @@ const Users = () => {
     trainer_id = sessionStorage.getItem("trainerId")
   }
 
+  sessionStorage.setItem("users", users)
+
   // formatt date
   const formatteDate = (date) => {
     return moment(date).format("dddd, MMMM D, YYYY")

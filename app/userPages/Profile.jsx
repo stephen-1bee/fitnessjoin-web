@@ -80,6 +80,7 @@ const Profile = () => {
           if (result.msg === "user updated successfully") {
             toast.success(result.msg)
             console.log(result)
+            getUser()
           } else {
             toast.error(result.msg)
           }
@@ -120,7 +121,7 @@ const Profile = () => {
   return (
     <div>
       <h1 className="text-3xl"> Profile</h1>
-      <div className="lg:flex-row flex gap-5 mt-5 items-center justify-center bg-white shadow-lg">
+      <div className="lg:flex-row flex gap-5 mt-5 items-center justify-center bg-white shadow-lg rounded">
         <div className="p-10 shadow bg-white rounded-lg w-[500px] h-[500px]">
           <div className="flex flex-col">
             {/* name */}
@@ -153,10 +154,6 @@ const Profile = () => {
             </h1>
           </div>
           <div className="flex mt-5 items-center justify-between">
-            <div>
-              <LocationOnOutlined />
-              {user?.location}
-            </div>
             <div>{user?.goal}</div>
           </div>
         </div>

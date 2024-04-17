@@ -651,15 +651,22 @@ const Session = () => {
         <h1 className="text-xl">Activities</h1>
         <div>
           {sessionActivity?.activties?.length > 0 ? (
-            <div>
+            <div className="flex flex-col gap-6">
               {sessionActivity?.activties?.map((activity) => (
-                <div className="flex  bg-white shadow flex-col p-2">
-                  <h1 className="text-lg">Title</h1>
-                  <p>{activity.title}</p>
-
-                  <h1 className="text-lg ">Description</h1>
+                <div className="flex  bg-white border-b-[2px] border-b-[#ccc] border-dashed pb-4 flex-col p-2 gap-3">
+                  <h2 className="text-lg">{activity.title}</h2>
                   <p>{activity.desc}</p>
-                  <br />
+                  <p>
+                    {activity.status === "true" ? (
+                      <div className="bg-[#caffe2]">
+                        <p color="green">Completed</p>
+                      </div>
+                    ) : (
+                      <div className="bg-[#f7ecea] p-2">
+                        <p className="text-[black]">Incomplete</p>
+                      </div>
+                    )}
+                  </p>
                 </div>
               ))}
             </div>

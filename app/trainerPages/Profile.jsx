@@ -18,8 +18,10 @@ const Profile = () => {
 
   // get trainer id
   let trainer_id
+  let users
   if (typeof sessionStorage !== "undefined") {
     trainer_id = sessionStorage.getItem("trainerId")
+    users = sessionStorage.getItem("users")
   }
 
   const getTrainer = async () => {
@@ -110,7 +112,7 @@ const Profile = () => {
               <EmailOutlined />
               <p className=" text-gray-600 ">{trainer?.email}</p>
             </div>
-            <h1 className=" text-gray-600">50+ trained people</h1>
+            <h1 className=" text-gray-600">{users?.length ? users?.length : "0"} trained people</h1>
           </div>
           <div className="text-center py-2">
             <LocationOnOutlined />
@@ -149,7 +151,7 @@ const Profile = () => {
               <input
                 onChange={(e) => setnewLocation(e.target.value)}
                 type="text"
-                placeholder="Email"
+                placeholder="Accra, Ghana"
                 className="py-4 w-[300px] px-3 rounded-full ring-1 ring-[#ccc] outline-[#08A88A]"
                 defaultValue={trainer ? trainer.location : ""}
               />

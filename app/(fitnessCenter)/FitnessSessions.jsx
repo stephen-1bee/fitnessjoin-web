@@ -756,7 +756,17 @@ const FitnessSessions = () => {
 
                   <h1 className="text-lg ">Description</h1>
                   <p>{activity.desc}</p>
-                  <br />
+
+                  <h1 className="text-lg"> Status</h1>
+                  <p>
+                    {activity.status === "true" ? (
+                      <div>
+                        <Tag color="green">Completed</Tag>
+                      </div>
+                    ) : (
+                      <Tag color="red">Incomplete</Tag>
+                    )}
+                  </p>
                 </div>
               ))}
             </div>

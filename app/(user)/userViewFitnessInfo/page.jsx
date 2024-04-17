@@ -47,8 +47,8 @@ const Page = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          console.log(result.admin[0])
-          setCenter(result.admin[0])
+          console.log(result.admin)
+          setCenter(result.admin)
           setLoading(false)
         })
         .catch((error) => console.log("error", error))
@@ -80,47 +80,47 @@ const Page = () => {
             "Loading fitness center info"
           ) : (
             <div>
-              <h2 className="text-6xl font-semibold mb-4">{center.name}</h2>
+              <h2 className="text-6xl font-semibold mb-4">{center?.name}</h2>
               <p className="mb-4 text-[#183642] text-2xl mt-[-1rem]">
                 {" "}
-                {!center.desc ? "No decsription" : center.desc}
+                {!center?.desc ? "No decsription" : center?.desc}
               </p>
               <p className="text-[#183642]">
-                <LocationOnOutlined className="mr-2" /> {center.location}
+                <LocationOnOutlined className="mr-2" /> {center?.location}
               </p>
               <p className="text-[#183642] mb-1">
                 <EmailOutlined className="mr-2" />
-                {center.email}
+                {center?.email}
               </p>
               <p className="text-[#183642] mb-2 flex items-center gap-3">
                 <PhoneOutlined className="scale-x-[-1] " />
-                {center.phone}
+                {center?.phone}
               </p>
               <h1 className="font-bold text-lg">Working Hours</h1>
               <div className="flex gap-2">
                 <p>
-                  {center.opening_time
-                    ? formattedTime(center.opening_time)
+                  {center?.opening_time
+                    ? formattedTime(center?.opening_time)
                     : "N/A"}
                 </p>
                 <h1> to </h1>
                 <p>
-                  {center.closing_time
-                    ? formattedTime(center.closing_time)
+                  {center?.closing_time
+                    ? formattedTime(center?.closing_time)
                     : "N/A"}
                 </p>
               </div>
               <p>
-                {center.rating === 0 ? (
+                {center?.rating === 0 ? (
                   <p className="gray-700">No ratings yet </p>
                 ) : (
-                  handleRating(center.rating).map((star, index) => (
+                  handleRating(center?.rating).map((star, index) => (
                     <span key={index}>{star}</span>
                   ))
                 )}
               </p>
               <p className="my-4 mb-9">
-                {center.isOpened ? (
+                {center?.isOpened ? (
                   <div className="bg-[#d0fff6] p-3 px-9 border-l-[3px] border-l-[#08A88A] w-full">
                     <p>Opened</p>
                   </div>
@@ -131,7 +131,7 @@ const Page = () => {
                 )}
               </p>
               <div className="my-5"></div>
-              {center.isOpened === true ? (
+              {center?.isOpened === true ? (
                 <div>
                   <Link
                     href="membershipU"

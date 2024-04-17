@@ -1,8 +1,5 @@
 "use client"
-import {
-  DeleteOutlineOutlined,
-  NotificationsNoneOutlined,
-} from "@mui/icons-material"
+import { NotificationsNoneOutlined } from "@mui/icons-material"
 import { DeleteOutlined, FrownOutlined, UserOutlined } from "@ant-design/icons"
 import { Dropdown, Popconfirm, Avatar } from "antd"
 import React, { useState, useEffect } from "react"
@@ -75,14 +72,14 @@ const CenterNav = ({ setActiveItem, activeItem }) => {
     }
   }
 
-  const deleteNotification = (notificationId) => {
+  const deleteNotification = async (notificationId) => {
     try {
       const requestOptions = {
         method: "DELETE",
         redirect: "follow",
       }
 
-      fetch(
+      await fetch(
         `http://localhost:1000/api/v1/activities/delete/${notificationId}`,
         requestOptions
       )
@@ -145,7 +142,7 @@ const CenterNav = ({ setActiveItem, activeItem }) => {
   //notificaton ui
   const notificationUi = (
     <div className="p-5">
-      <div className="w-[450px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] justify-center rounded-lg overflow-y-auto">
+      <div className="w-[450px] h-[500px] shadow-md flex py-5 flex-col items-center bg-[#fdf9f0] rounded-lg overflow-y-auto">
         {notificationOpened === "false" ? (
           ""
         ) : (
