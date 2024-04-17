@@ -757,18 +757,19 @@ const FitnessSessions = () => {
                   <h1 className="text-lg ">Description</h1>
                   <p>{activity.desc}</p>
 
-                  <h1 className="text-lg"> Status</h1>
-                  <p>
+                  {/* <h1 className="text-lg"> Status</h1> */}
+                  {/* <p>
                     {activity.status === "true" ? (
                       <div>
-                        <Tag color="green">Completed</Tag>
+                      <Tag color="green">Completed</Tag>
                       </div>
                     ) : (
                       <Tag color="red">Incomplete</Tag>
                     )}
-                  </p>
+                  </p> */}
                 </div>
               ))}
+              <div className="flex  bg-white border-b-[2px] border-b-[#ccc] border-dashed pb-4 flex-col p-2 gap-3" />
             </div>
           ) : (
             <div className="flex flex-col gap-2 items-center justrify-center ">

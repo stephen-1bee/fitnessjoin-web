@@ -9,6 +9,32 @@ const Membership = () => {
   const [fitnessMemberships, setfitnessMemberships] = useState([])
   const [loading, setLoading] = useState(false)
   const [userMembership, setUserMembership] = useState(null)
+  const [currentMembership, setCurrentMembership] = useState(null)
+  const [userMID, setUserMID] = useState(null)
+
+  console.log("User: ", user)
+
+  // get current membership
+  const getCurrentMembership = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      fetch(
+        "http://localhost:1000/api/v1/memberships/one/661fdfd28c7716920bcc827f",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setCurrentMembership(result.membership)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   // retrieving user id
   let userId
@@ -40,8 +66,8 @@ const Membership = () => {
           if (result.msg === "membership subscribed successfully") {
             toast.success("Membership Updated successfully")
             console.log(result)
-            getUser()
-            getFitnessMemberships()
+            // getUser()
+            getCurrentMembership()
           } else {
             toast.error(result.msg)
           }
@@ -55,25 +81,41 @@ const Membership = () => {
   // get a user
   const getUser = async () => {
     try {
-      let headersList = {
-        Accept: "*/*",
-        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+      //   let headersList = {
+      //     Accept: "*/*",
+      //     "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+      //   }
+
+      //   let response = await fetch(
+      //     `http://localhost:1000/api/v1/users/one/${userId}`,
+      //     {
+      //       method: "GET",
+      //       headers: headersList,
+      //     }
+      //   )
+
+      //   let data = await response.json()
+      //   setUser(data.user)
+      //   console.log(data.user)
+      //   console.log(data.user)
+      //   setUserMembership(data.user[0]?.membership)
+      //   console.log(data.user[0]?.membership)
+
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
       }
 
-      let response = await fetch(
+      await fetch(
         `http://localhost:1000/api/v1/users/one/${userId}`,
-        {
-          method: "GET",
-          headers: headersList,
-        }
+        requestOptions
       )
-
-      let data = await response.json()
-      setUser(data.user)
-      console.log(data.user)
-      console.log(data.user)
-      setUserMembership(data.user[0]?.membership)
-      console.log(data.user[0]?.membership)
+        .then((response) => response.json())
+        .then((result) => {
+          setUser(result.user)
+          setUserMID(result.user.membership_id)
+        })
+        .catch((error) => console.error(error))
     } catch (err) {
       console.log(err)
     }
@@ -107,6 +149,7 @@ const Membership = () => {
   useEffect(() => {
     getUser()
     getFitnessMemberships()
+    getCurrentMembership()
   }, [])
 
   return (
@@ -115,18 +158,19 @@ const Membership = () => {
         {/* <Tag */}
         <div className="w-fit">
           <h1 className="text-2xl py-2">My Membership</h1>
+          <p>Membership iD: {userMID}</p>
           <div className="p-5 bg-[dodgerblue] text-white rounded shadow-2xl md:flex-row flex w-[200px] flex-col-reverse gap-5 ">
-            {userMembership ? (
+            {currentMembership ? (
               <div className="w-full">
                 <h2 className="text-xl font-bold">
-                  {userMembership ? userMembership[0]?.name : null}
+                  {currentMembership ? currentMembership.name : null}
                 </h2>
                 <div className="text-white mt-2">
                   {/* <Message/> */}
                   <p>
                     <span className="text-sm">GHS </span>
                     <span className="font-bold text-xl">
-                      {userMembership ? userMembership[0]?.price : null}
+                      {currentMembership ? currentMembership.price : null}
                     </span>
                   </p>
                 </div>

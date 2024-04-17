@@ -107,6 +107,7 @@ const Dashboard = () => {
     <div className="flex flex-col justify-center gap-5">
       <h1 className="text-2xl">Dashboard</h1>
       <div className="flex">
+        
         <div className="bg-white w-[500px] mr-12 p-12  items-center shadow-lg rounded-lg">
           <PieChart width={800} height={400}>
             <Pie

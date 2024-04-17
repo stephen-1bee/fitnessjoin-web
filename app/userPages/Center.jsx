@@ -14,9 +14,11 @@ const Center = () => {
 
   // retrieving user id
   let userId
+  let userCenterId
 
   if (typeof sessionStorage !== "undefined") {
     userId = sessionStorage.getItem("userId")
+    userCenterId = sessionStorage.getItem("userCenterId")
   }
 
   // console.log("User: ", user);
@@ -46,9 +48,32 @@ const Center = () => {
     }
   }
 
+  // get users center
+  const getUsersCenter = async () => {
+    try {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      }
+
+      await fetch(
+        `http://localhost:1000/api/v1/admins/one/${userCenterId}`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((result) => {
+          setUserCenter(result.admin)
+        })
+        .catch((error) => console.error(error))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   // load
   useEffect(() => {
     getUser()
+    getUsersCenter()
   }, [])
 
   // format time
@@ -60,28 +85,29 @@ const Center = () => {
     <div>
       <h1 className="text-2xl">My Fitness Center Profile</h1>
       <br />
+
       <div className="w-fit">
         <div className="p-5 bg-[#08a88a] text-white rounded shadow-2xl md:flex-row flex  flex-col-reverse gap-5 w-fit">
           {userCenter ? (
             <div className="w-full">
               <h2 className="text-xl font-bold">
-                {userCenter ? userCenter[0]?.name : null}
+                {userCenter ? userCenter.name : null}
               </h2>
               <div className="text-white mt-2">
                 {/* <Message/> */}
-                {userCenter ? userCenter[0]?.desc : null}
+                {userCenter ? userCenter.desc : null}
               </div>
               <div className="text-white mt-2 gap-2 flex">
                 <EmailOutlined />
-                {userCenter ? userCenter[0]?.email : null}
+                {userCenter ? userCenter.email : null}
               </div>
               <div className="text-white mt-2 gap-2 flex">
                 <LocationOnOutlined />
-                {userCenter ? userCenter[0]?.location : null}
+                {userCenter ? userCenter.location : null}
               </div>
               <div className="text-white mt-2 gap-2 flex">
                 <Phone />
-                {userCenter ? userCenter[0]?.phone : null}
+                {userCenter ? userCenter.phone : null}
               </div>
               <div className="text-white mt-2 gap-2 flex">
                 Rating: {userCenter[0]?.rating ? userCenter[0]?.rating : "0"}

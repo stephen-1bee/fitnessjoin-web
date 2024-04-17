@@ -103,10 +103,6 @@ const Center = () => {
   return (
     <div className="bg-[#edf1f7] min-h-screen flex flex-col items-center gap-5 w-full">
       <div className="w-full h-[50vh] home flex flex-col justify-center items-center">
-        <button className="text-white flex bg-[#08A88A] px-5 py-3 rounded-full gap-1 absolute top-3 right-[40px] cursor-pointer">
-          <LocationOnOutlined />
-          <h1>Near Me</h1>
-        </button>
         <div className="text-center">
           <div
             className="bg-white rounded-full items-center absolute top-5 left-[45px] cursor-pointer"
@@ -205,7 +201,7 @@ const Center = () => {
             <h1 className="flex text-3xl text-left font-bold my-6">
               Recommended Fitness Centers
             </h1>
-            <div className="flex items-start justify-start"> 
+            <div className="flex items-start justify-start">
               <div className="flex flex-wrap gap-2 justify-center">
                 {loading ? (
                   <Skeleton active className="w-[100%]" />

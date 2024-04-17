@@ -118,3 +118,75 @@ export default userSignupForm;
 //             </div>
 //           </div>
 //         </div>
+
+
+
+const handleSignUp = async (e) => {
+  e.preventDefault()
+  if (
+    !email ||
+    !password ||
+    !businessName ||
+    !desc ||
+    !telephone ||
+    !location ||
+    !photo
+  ) {
+    return toast.error("All fields are required")
+  }
+  try {
+    setLoading(true)
+    let headersList = {
+      Accept: "*/*",
+      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+    }
+
+    let bodyContent = new FormData()
+    bodyContent.append("name", businessName)
+    bodyContent.append("desc", desc)
+    bodyContent.append("email", email)
+    bodyContent.append("location", location)
+    bodyContent.append("phone", telephone)
+    bodyContent.append("password", password)
+    bodyContent.append("location", location)
+    bodyContent.append("photo", photo[0])
+
+    let response = await fetch("http://localhost:1000/api/v1/admins/create", {
+      method: "POST",
+      body: bodyContent,
+      headers: headersList,
+    })
+
+    let data = await response.json()
+    if (data.msg === "Fitness center created successfully") {
+      toast.success(data.msg)
+      console.log(data.msg)
+      window.location.href = "/adminLogin"
+      setLoading(false)
+    } else {
+      toast.error(data.msg)
+      setLoading(false)
+      console.log(data.msg)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+
+const fetchFitnessCenter = async () => {
+  try {
+    const response = await fetch(
+      `http://localhost:1000/api/v1/admins/one/${centerId}`
+    )
+    const result = await response.json()
+    sessionStorage.setItem("notification", result.admin[0].isNotification)
+    sessionStorage.setItem("profile", result.admin[0].isOpened)
+    // Set admin state and open status
+    setAdmin(result.admin)
+    setIsOpened(result.admin?.isOpened)
+    setIsNotificationOpened(result.admin?.isNotification)
+  } catch (error) {
+    console.error("Error fetching fitness center data:", error)
+  }
+}

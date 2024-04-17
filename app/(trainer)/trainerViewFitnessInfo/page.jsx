@@ -51,8 +51,8 @@ const Page = () => {
       )
         .then((response) => response.json())
         .then((result) => {
-          console.log(result.admin[0])
-          setCenter(result.admin[0])
+          console.log(result.admin)
+          setCenter(result.admin)
           setLoading(false)
         })
         .catch((error) => console.log("error", error))

@@ -34,37 +34,35 @@ const page = () => {
     }
     try {
       setLoading(true)
-      let headersList = {
-        Accept: "*/*",
-        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-      }
+      const formdata = new FormData()
+      formdata.append("photo", photo[0])
+      formdata.append("email", email)
+      formdata.append("desc", desc)
+      formdata.append("password", password)
+      formdata.append("location", location)
+      formdata.append("phone", telephone)
+      formdata.append("name", businessName)
 
-      let bodyContent = new FormData()
-      bodyContent.append("name", businessName)
-      bodyContent.append("desc", desc)
-      bodyContent.append("email", email)
-      bodyContent.append("location", location)
-      bodyContent.append("phone", telephone)
-      bodyContent.append("password", password)
-      bodyContent.append("photo", photo[0])
-
-      let response = await fetch("http://localhost:1000/api/v1/admins/create", {
+      const requestOptions = {
         method: "POST",
-        body: bodyContent,
-        headers: headersList,
-      })
-
-      let data = await response.json()
-      if (data.msg === "Fitness center created successfully") {
-        toast.success(data.msg)
-        console.log(data.msg)
-        window.location.href = "/adminLogin"
-        setLoading(false)
-      } else {
-        toast.error(data.msg)
-        setLoading(false)
-        console.log(data.msg)
+        body: formdata,
+        redirect: "follow",
       }
+
+      await fetch("http://localhost:1000/api/v1/admins/create", requestOptions)
+        .then((response) => response.json())
+        .then((result) => {
+          if (result.msg === "Fitness center created successfully") {
+            toast.success(result.msg)
+            console.log(result)
+            window.location.href = "/adminLogin"
+            setLoading(false)
+          } else {
+            toast.error(result.msg)
+            setLoading(false)
+          }
+        })
+        .catch((error) => console.error(error))
     } catch (err) {
       console.log(err)
     }

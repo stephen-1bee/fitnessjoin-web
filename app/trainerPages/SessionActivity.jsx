@@ -385,6 +385,7 @@ const SessionActivity = () => {
           </div>
         </Form>
       </Modal>
+
       {/* preview modal */}
       <Modal
         open={previewModal}
@@ -406,6 +407,7 @@ const SessionActivity = () => {
           </div>
         </div>
       </Modal>
+      
       {/* update modal */}
       <Modal
         title="Update Session Activity"

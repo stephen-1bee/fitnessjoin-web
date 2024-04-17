@@ -230,6 +230,7 @@ const page = () => {
         className="gap-2"
       >
         {" "}
+        {userId}
         <NotificationsOutlined /> Notification
       </MenuItem>
       <MenuItem onClick={() => setActiveModule("settings")} className="gap-2">

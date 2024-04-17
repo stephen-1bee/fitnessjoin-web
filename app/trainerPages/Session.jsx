@@ -656,7 +656,7 @@ const Session = () => {
                 <div className="flex  bg-white border-b-[2px] border-b-[#ccc] border-dashed pb-4 flex-col p-2 gap-3">
                   <h2 className="text-lg">{activity.title}</h2>
                   <p>{activity.desc}</p>
-                  <p>
+                  {/* <p>
                     {activity.status === "true" ? (
                       <div className="bg-[#caffe2]">
                         <p color="green">Completed</p>
@@ -666,7 +666,7 @@ const Session = () => {
                         <p className="text-[black]">Incomplete</p>
                       </div>
                     )}
-                  </p>
+                  </p> */}
                 </div>
               ))}
             </div>

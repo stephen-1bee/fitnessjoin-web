@@ -10,11 +10,14 @@ import { ArrowLeft } from "@mui/icons-material"
 
 const TrainerSignup = () => {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  // const [password, setPassword] = useState("")
   const [fullName, setFullName] = useState("")
   const [phone, setPhone] = useState("")
   const [location, setLocation] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showpassword, setshowpassword] = useState(false)
+
+  // console.log(password)
 
   // retrive center id and trainer memeberhipid
   let trainer_center_id
@@ -153,10 +156,15 @@ const TrainerSignup = () => {
             onChange={(e) => setEmail(e.target.value)}
           />{" "}
           <h1 className="mb-2 mt-3">Password</h1>
-          <Input.Password
-            className="w-[350px] h-12  rounded-full"
+          <div onClick={() => setshowpassword(!showpassword)}>Show</div>
+          <input
+            type={showpassword ? "text" : "password"}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {/* <Input.Password
+            className="w-[350px] h-12  rounded-full"
+            onChange={(e) => setPassword(e.target.value)}
+          /> */}
           <h1 className="mb-2 mt-3">Phone</h1>
           <Input
             placeholder="+123-4932-3453"
